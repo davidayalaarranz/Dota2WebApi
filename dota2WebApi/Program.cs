@@ -8,17 +8,29 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using DataAccessLibrary.Data;
+using Serilog;
+using System.IO;
 
 namespace dota2WebApi
 {
     public class Program
     {
+        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+        .Build();
+
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(Configuration)
+            .CreateLogger();
+
             //CreateHostBuilder(args).Build().Run();
             var host = CreateHostBuilder(args).Build();
             // El siguiente servicio solo lo añadimos cuando la base de datos no existe.
-            CreateDbIfNotExists(host);
+            //CreateDbIfNotExists(host);
             host.Run();
         }
 
@@ -45,7 +57,9 @@ namespace dota2WebApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseConfiguration(Configuration)
+                    .UseSerilog(); ;
                 });
     }
 }

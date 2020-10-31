@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BusinessLibrary.Service
 {
-    class HeroService
+    public class HeroService : IHeroService
     {
     }
 }
