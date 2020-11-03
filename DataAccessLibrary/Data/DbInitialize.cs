@@ -89,74 +89,92 @@ namespace DataAccessLibrary.Data
 
         public static void InitializeItems(string pathJson, Dota2AppDbContext context)
         {
-            string pathJsonItems = String.Concat(pathJson, "\\GetItems en_US.json");
-            GetItemsResponseModel o;
-            if (File.Exists(pathJsonItems))
-            {
-                string jsonString = File.ReadAllText(pathJsonItems);
-                var serializeOptions = new JsonSerializerOptions
+            try { 
+                string pathJsonItems = String.Concat(pathJson, "\\GetItems en_US.json");
+                GetItemsResponseModel o;
+                if (File.Exists(pathJsonItems))
                 {
-                    ReadCommentHandling = JsonCommentHandling.Skip
-                };
-                serializeOptions.Converters.Add(new GetItemsJsonConverter());
-                o = JsonSerializer.Deserialize<GetItemsResponseModel>(jsonString, serializeOptions);
-                string pathJsonItems2 = String.Concat(pathJson, "\\items.json");
-                if (File.Exists(pathJsonItems2))
-                {
-                    jsonString = File.ReadAllText(pathJsonItems2);
-                    JsonDocumentOptions jsonOptions = new JsonDocumentOptions
+                    string jsonString = File.ReadAllText(pathJsonItems);
+                    var serializeOptions = new JsonSerializerOptions
                     {
-                        CommentHandling = JsonCommentHandling.Skip
+                        ReadCommentHandling = JsonCommentHandling.Skip
                     };
-                    JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString, jsonOptions).RootElement.GetProperty("itemdata");
-                    JsonElement.ObjectEnumerator ae = root.EnumerateObject();
-                    NumberFormatInfo fp = new NumberFormatInfo();
-                    fp.NumberDecimalSeparator = ".";
-
-                    while (ae.MoveNext())
+                    serializeOptions.Converters.Add(new GetItemsJsonConverter());
+                    o = JsonSerializer.Deserialize<GetItemsResponseModel>(jsonString, serializeOptions);
+                    string pathJsonItems2 = String.Concat(pathJson, "\\items.json");
+                    if (File.Exists(pathJsonItems2))
                     {
-                        System.Text.Json.JsonProperty aux = ae.Current;
-                        string name = aux.Name;
-                        if (o != null)
+                        jsonString = File.ReadAllText(pathJsonItems2);
+                        JsonDocumentOptions jsonOptions = new JsonDocumentOptions
                         {
-                            HeroItem currentHeroItem = o.result.items.Find(h => h.ShortName == name);
-                            if (currentHeroItem != null)
+                            CommentHandling = JsonCommentHandling.Skip
+                        };
+                        JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString, jsonOptions).RootElement.GetProperty("itemdata");
+                        JsonElement.ObjectEnumerator ae = root.EnumerateObject();
+                        NumberFormatInfo fp = new NumberFormatInfo();
+                        fp.NumberDecimalSeparator = ".";
+
+                        while (ae.MoveNext())
+                        {
+                            System.Text.Json.JsonProperty aux = ae.Current;
+                            string name = aux.Name;
+                            if (o != null)
                             {
-                                currentHeroItem.HeroItemId = aux.Value.GetProperty("id").GetInt32();
-                                currentHeroItem.Descripction = aux.Value.GetProperty("desc").GetString();
-                                currentHeroItem.Notes = aux.Value.GetProperty("notes").GetString();
-                                currentHeroItem.Lore = aux.Value.GetProperty("lore").GetString();
-                                currentHeroItem.Attrib = aux.Value.GetProperty("attrib").GetString();
-                                currentHeroItem.Created = aux.Value.GetProperty("created").GetBoolean();
-
-                                if (aux.Value.GetProperty("components").ValueKind != JsonValueKind.Null && aux.Value.GetProperty("components").GetArrayLength() > 0)
+                                HeroItem currentHeroItem = o.result.items.Find(h => h.ShortName == name);
+                                if (currentHeroItem != null)
                                 {
-                                    JsonElement.ArrayEnumerator aeComponents = aux.Value.GetProperty("components").EnumerateArray();
-                                    while (aeComponents.MoveNext())
-                                    {
-                                        if (aeComponents.Current.ValueKind == JsonValueKind.String)
-                                        {
-                                            string componentName = aeComponents.Current.GetString();
-                                            // Aquí tenemos que buscar el HeroItem que tenga el nombre del componente
-                                            HeroItem componentHeroItem = o.result.items.Find(h => h.ShortName.Replace("_","") == componentName.Replace("_",""));
-                                            if (componentHeroItem != null)
-                                            {
-                                                HeroItemComponent currentHic = currentHeroItem.Components.Find(hi => hi.ComponentId == componentHeroItem.HeroItemId);
-                                                if (currentHic != null) 
-                                                {
-                                                    currentHic.Quantity++;
-                                                }
-                                                else 
-                                                {
-                                                    HeroItemComponent hic = new HeroItemComponent();
-                                                    hic.HeroItem = currentHeroItem;
-                                                    hic.HeroItemId = currentHeroItem.HeroItemId;
-                                                    hic.Component = componentHeroItem;
-                                                    hic.ComponentId = componentHeroItem.HeroItemId;
-                                                    hic.Quantity = 1;
+                                    currentHeroItem.HeroItemId = aux.Value.GetProperty("id").GetInt32();
+                                    currentHeroItem.Description = aux.Value.GetProperty("desc").ValueKind != JsonValueKind.Null ? aux.Value.GetProperty("desc").GetString() : "";
+                                    if (aux.Value.GetProperty("cd").ValueKind == JsonValueKind.Number)
+                                        currentHeroItem.Cooldown = aux.Value.GetProperty("cd").GetInt32();
+                                    if (aux.Value.GetProperty("mc").ValueKind == JsonValueKind.Number)
+                                        currentHeroItem.ManaCost = aux.Value.GetProperty("mc").GetInt32();
+                                    currentHeroItem.Notes = aux.Value.GetProperty("notes").GetString();
+                                    currentHeroItem.Lore = aux.Value.GetProperty("lore").GetString();
+                                    currentHeroItem.Attrib = aux.Value.GetProperty("attrib").GetString();
+                                    currentHeroItem.Created = aux.Value.GetProperty("created").GetBoolean();
 
-                                                    currentHeroItem.Components.Add(hic);
-                                                    componentHeroItem.IsComponentOf.Add(hic);
+                                    if (aux.Value.GetProperty("components").ValueKind != JsonValueKind.Null && aux.Value.GetProperty("components").GetArrayLength() > 0)
+                                    {
+                                        HeroItem recipe = o.result.items.Find(h => h.Name == string.Concat("item_recipe_", currentHeroItem.Name.Substring(5)));
+                                        if (recipe != null)
+                                        {
+                                            HeroItemComponent hicRecipe = new HeroItemComponent();
+                                            hicRecipe.HeroItem = currentHeroItem;
+                                            hicRecipe.HeroItemId = currentHeroItem.HeroItemId;
+                                            hicRecipe.Component = recipe;
+                                            hicRecipe.ComponentId = recipe.HeroItemId;
+                                            hicRecipe.Quantity = 1;
+                                            currentHeroItem.Components.Add(hicRecipe);
+                                            recipe.IsComponentOf.Add(hicRecipe);
+                                        }
+                                        JsonElement.ArrayEnumerator aeComponents = aux.Value.GetProperty("components").EnumerateArray();
+                                        while (aeComponents.MoveNext())
+                                        {
+                                            if (aeComponents.Current.ValueKind == JsonValueKind.String)
+                                            {
+                                                string componentName = aeComponents.Current.GetString();
+                                                // Aquí tenemos que buscar el HeroItem que tenga el nombre del componente
+                                                HeroItem componentHeroItem = o.result.items.Find(h => h.ShortName.Replace("_","") == componentName.Replace("_",""));
+                                                if (componentHeroItem != null)
+                                                {
+                                                    HeroItemComponent currentHic = currentHeroItem.Components.Find(hi => hi.ComponentId == componentHeroItem.HeroItemId);
+                                                    if (currentHic != null) 
+                                                    {
+                                                        currentHic.Quantity++;
+                                                    }
+                                                    else 
+                                                    {
+                                                        HeroItemComponent hic = new HeroItemComponent();
+                                                        hic.HeroItem = currentHeroItem;
+                                                        hic.HeroItemId = currentHeroItem.HeroItemId;
+                                                        hic.Component = componentHeroItem;
+                                                        hic.ComponentId = componentHeroItem.HeroItemId;
+                                                        hic.Quantity = 1;
+
+                                                        currentHeroItem.Components.Add(hic);
+                                                        componentHeroItem.IsComponentOf.Add(hic);
+                                                    }
                                                 }
                                             }
                                         }
@@ -165,11 +183,14 @@ namespace DataAccessLibrary.Data
                             }
                         }
                     }
+                    foreach (HeroItem hi in o.result.items)
+                    {
+                        context.HeroItems.Add(hi);
+                    }
                 }
-                foreach (HeroItem hi in o.result.items)
-                {
-                    context.HeroItems.Add(hi);
-                }
+            }catch(Exception e)
+            {
+
             }
         }
 

@@ -7,7 +7,7 @@ namespace BusinessLibrary.Model
 {
     public class HeroItemResponseModel
     {
-        public int nHeroItems { get { return this.HeroItems.Count; } }
-        public List<HeroItem> HeroItems { get; set; }
+        public int nHeroItems { get; set; }
+        public IEnumerable<HeroItem> HeroItems { get; set; }
     }
 }

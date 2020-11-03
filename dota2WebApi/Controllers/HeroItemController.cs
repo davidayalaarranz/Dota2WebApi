@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLibrary.Model;
 using BusinessLibrary.Service;
+using DataModel;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -21,7 +23,7 @@ namespace dota2WebApi.Controllers
         }
 
         // GET: api/<HeroItemController>
-        [HttpGet]
+        //[HttpGet]
         public async Task<IActionResult> Get()
         {
             try
@@ -34,15 +36,50 @@ namespace dota2WebApi.Controllers
             }
         }
 
-        //[HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Get([FromQuery] DataTableParameters parameters)
         {
             try
             {
                 //Log.Information("Get customer executing");
-                return Ok(await _heroItemService.GetHeroItems(parameters));
+                HeroItemResponseModel hir = await _heroItemService.GetHeroItems(parameters);
+                var result = hir.HeroItems.Select(hi => new
+                {
+                    HeroItemId = hi.HeroItemId,
+                    Name = hi.Name,
+                    LocalizedName = hi.LocalizedName,
+                    ShortName = hi.ShortName,
+                    ImageUrl = hi.ImageUrl,
+                    IsRecipe = hi.IsRecipe,
+                    IsSecretShop = hi.IsSecretShop,
+                    IsSideShop = hi.IsSideShop,
+                    Description = hi.Description,
+                    Notes = hi.Notes,
+                    Lore = hi.Lore,
+                    Attrib = hi.Attrib,
+                    Cost = hi.Cost,
+                    Cooldown = hi.Cooldown,
+                    ManaCost = hi.ManaCost,
+                    Created = hi.Created,
+                    Components = hi.Components.Select(hic => new
+                    {
+                        Quantity = hic.Quantity,
+                        ComponentId = hic.Component.HeroItemId,
+                        Name = hic.Component.LocalizedName,
+                        ImageUrl = hic.Component.ImageUrl,
+                    }
+                    ).ToList()
+                });
+                var ret = new
+                {
+                    HeroItems = result,
+                    nHeroItems = hir.nHeroItems,
+                };
+                
+                return Ok(ret);
+                //return Ok(await _heroItemService.GetHeroItems(parameters));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return BadRequest("Error getting Hero Items");
             }

@@ -23,6 +23,7 @@ namespace dota2WebApi
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -34,6 +35,29 @@ namespace dota2WebApi
             // El siguiente servicio solo lo añadimos cuando la base de datos no existe.
             services.AddDbContext<Dota2AppDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Dota2WebApiDbContext"), b => b.MigrationsAssembly("Dota2WebApi")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    //builder.WithOrigins("http://localhost:5000")
+                    //    .AllowAnyHeader()
+                    //    .AllowAnyMethod();
+                    //builder.WithOrigins("http://192.168.1.35:5000")
+                    //    .AllowAnyHeader()
+                    //    .AllowAnyMethod();
+                    builder.WithOrigins("http://192.168.1.35:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    //builder.WithOrigins("http://192.168.1.33:5000")
+                    //    .AllowAnyHeader()
+                    //    .AllowAnyMethod();
+                });
+            });
 
             services.AddControllers();
         }
@@ -49,6 +73,8 @@ namespace dota2WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 
