@@ -1,12 +1,10 @@
 ﻿using BusinessLibrary.Model;
 using DataAccessLibrary.Data;
-using DataModel;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using DataModel.Model;
 
 namespace BusinessLibrary.Service
 {
@@ -39,7 +37,7 @@ namespace BusinessLibrary.Service
                 crm.nHeroItems = (from a in db.HeroItems select new HeroItem { HeroItemId = a.HeroItemId }).Count();
                 param.length = param.length < 1 ? crm.nHeroItems : param.length;
 
-                var query = from a in db.HeroItems//.AsNoTracking()
+                var query = from a in db.HeroItems.AsNoTracking()
                             select a;
                 if (!String.IsNullOrWhiteSpace(param.filter))
                     query = query.Where(x => x.Name.Contains(param.filter) || x.LocalizedName.Contains(param.filter));

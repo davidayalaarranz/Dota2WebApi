@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using BusinessLibrary.Model;
+using BusinessLibrary.Service;
+using DataModel.Model.JsonConverters;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,18 +16,43 @@ namespace dota2WebApi.Controllers
     [ApiController]
     public class HeroController : ControllerBase
     {
-        // GET: api/<HeroController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IHeroService _heroService;
+        public HeroController(IHeroService heroService)
         {
-            return new string[] { "value1", "value2" };
+            _heroService = heroService;
         }
 
-        // GET api/<HeroController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET: api/<HeroItemController>
+        //[HttpGet]
+        //public async Task<IActionResult> Get()
+        //{
+        //    try
+        //    {
+        //        return Ok(await _heroService.GetHeroes());
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return BadRequest("Error getting Heroes");
+        //    }
+        //}
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] DataTableParameters parameters)
         {
-            return "value";
+            try
+            {
+                //var serializeOptions = new JsonSerializerOptions
+                //{
+                //    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                //};
+                //serializeOptions.Converters.Add(new HeroPrincipalAttributeJsonConverter());
+                //serializeOptions.WriteIndented = true;
+                return Ok(await _heroService.GetHeroes(parameters));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Error getting Heroes");
+            }
         }
 
         // POST api/<HeroController>

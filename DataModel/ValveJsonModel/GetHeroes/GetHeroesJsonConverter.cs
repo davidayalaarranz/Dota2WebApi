@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DataModel.Model;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

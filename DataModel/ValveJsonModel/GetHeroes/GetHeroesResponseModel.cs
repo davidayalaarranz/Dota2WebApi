@@ -1,6 +1,5 @@
-﻿using System;
+﻿using DataModel.Model;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DataModel.ValveJsonModel.GetHeroes
 {

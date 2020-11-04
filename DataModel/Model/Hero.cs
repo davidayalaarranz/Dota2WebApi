@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataModel.Model.JsonConverters;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using System.Text.Json.Serialization;
 
-namespace DataModel
+namespace DataModel.Model
 {
     public enum HeroPrincipalAttribute
     {
@@ -36,8 +34,9 @@ namespace DataModel
 
         public string Name { get; set; }
         public string ShortName { get { return Name.Remove(0,14); } }
-        public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 5), "_lg.png"); } }
+        public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 14), "_lg.png"); } }
         public string LocalizedName { get; set; }
+        [JsonConverter(typeof(HeroPrincipalAttributeJsonConverter))]
         public HeroPrincipalAttribute PrincipalAttribute { get; set; }
         public int MinDamage { get; set; }
         public int MaxDamage { get; set; }

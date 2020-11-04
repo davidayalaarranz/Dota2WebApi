@@ -1,13 +1,11 @@
-﻿using DataModel;
-using System;
+﻿using DataModel.Model;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLibrary.Model
 {
     public class HeroResponseModel
     {
         public int nHeroes { get; set; }
-        public List<Hero> Heores { get; set; }
+        public IEnumerable<Hero> Heroes { get; set; }
     }
 }

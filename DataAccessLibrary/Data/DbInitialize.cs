@@ -6,10 +6,9 @@ using System.Text;
 using System.IO;
 using System.Text.Json;
 using DataModel.ValveJsonModel.GetHeroes;
-using DataModel;
-using Newtonsoft.Json.Serialization;
 using System.Globalization;
 using DataModel.ValveJsonModel.GetItems;
+using DataModel.Model;
 
 namespace DataAccessLibrary.Data
 {
