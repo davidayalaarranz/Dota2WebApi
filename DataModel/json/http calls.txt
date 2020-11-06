@@ -16,3 +16,9 @@ https://www.dota2.com/jsfeed/heropediadata?feeds=itemdata&l=english
 
 Habilidades:
 https://www.dota2.com/jsfeed/heropediadata?feeds=abilitydata&l=english
+
+Rareza de un objeto estético:
+http://api.steampowered.com/IEconDOTA2_205790/GetRarities/v1 
+
+205790 = test
+570 = production

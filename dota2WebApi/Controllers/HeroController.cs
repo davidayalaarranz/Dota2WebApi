@@ -55,6 +55,19 @@ namespace dota2WebApi.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            try
+            {
+                return Ok(await _heroService.GetHero(id));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Error getting Heroes");
+            }
+        }
+
         // POST api/<HeroController>
         [HttpPost]
         public void Post([FromBody] string value)

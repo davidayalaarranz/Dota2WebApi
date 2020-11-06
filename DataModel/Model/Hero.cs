@@ -1,4 +1,6 @@
-﻿using DataModel.Model.JsonConverters;
+﻿//using DataModel.Model.JsonConverters;
+using DataModel.Model.JsonConverters;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -18,6 +20,23 @@ namespace DataModel.Model
         public decimal Initial { get; set; }
         public decimal Gain { get; set; }
     }
+    public class HeroAbility
+    {
+        public long Id { get; set; }
+        public int Order { get; set; }
+        public string ShortName { get { return Name.Remove(0, 5); } }
+        public string Name { get; set; }
+        public string LocalizedName { get; set; }
+        public string Affects { get; set; }
+        public string Description { get; set; }
+        public string Notes { get; set; }
+        public string Damage { get; set; }
+        public string Attrib { get; set; }
+        public string Cmb { get; set; }
+        public string Lore { get; set; }
+        public string Hurl { get; set; }
+        public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/abilities/", Name, "_lg.png"); } }
+    }
 
     public class Hero
     {
@@ -26,6 +45,7 @@ namespace DataModel.Model
             Strength = new HeroAttribute();
             Agility = new HeroAttribute();
             Inteligence = new HeroAttribute();
+            Abilities = new List<HeroAbility>();
         }
 
         [Key]
@@ -35,6 +55,7 @@ namespace DataModel.Model
         public string Name { get; set; }
         public string ShortName { get { return Name.Remove(0,14); } }
         public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 14), "_lg.png"); } }
+        public string VerticalImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 14), "_vert.jpg"); } }
         public string LocalizedName { get; set; }
         [JsonConverter(typeof(HeroPrincipalAttributeJsonConverter))]
         public HeroPrincipalAttribute PrincipalAttribute { get; set; }
@@ -47,6 +68,8 @@ namespace DataModel.Model
         public HeroAttribute Strength { get; set; }
         public HeroAttribute Agility { get; set; }
         public HeroAttribute Inteligence { get; set; }
+
+        public List<HeroAbility> Abilities { get; set; }
 
         public string RightClickAttack { get; set; }
     }

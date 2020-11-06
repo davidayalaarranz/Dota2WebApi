@@ -16,6 +16,10 @@ namespace DataAccessLibrary.Data
     {
         public static void InitializeHeroes(string pathJson, Dota2AppDbContext context)
         {
+            JsonDocumentOptions jsonOptions = new JsonDocumentOptions
+            {
+                CommentHandling = JsonCommentHandling.Skip
+            };
             string pathJsonHeroes = String.Concat(pathJson, "\\GetHeroes en_US.json");
             GetHeroesResponseModel o;
             if (File.Exists(pathJsonHeroes))
@@ -32,10 +36,6 @@ namespace DataAccessLibrary.Data
                 if (File.Exists(pathJsonHeroes2))
                 {
                     jsonString = File.ReadAllText(pathJsonHeroes2);
-                    JsonDocumentOptions jsonOptions = new JsonDocumentOptions
-                    {
-                        CommentHandling = JsonCommentHandling.Skip
-                    };
                     JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString, jsonOptions).RootElement.GetProperty("herodata");
                     JsonElement.ObjectEnumerator ae = root.EnumerateObject();//.EnumerateArray();
                     NumberFormatInfo fp = new NumberFormatInfo();
@@ -79,11 +79,43 @@ namespace DataAccessLibrary.Data
                         }
                     }
                 }
+                GetHeroAbilitiesResponseModel harm = null;
+                string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
+                if (File.Exists(pathJsonHeroes2))
+                {
+                    jsonString = File.ReadAllText(pathJsonHeroAbilities);
+                    var serializeOptions2 = new JsonSerializerOptions
+                    {
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    };
+                    serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
+                    harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
+
+
+                }
+
                 foreach (Hero h in o.result.heroes)
                 {
+                    List<KeyValuePair<string, HeroAbility>> keys = harm.abilitydata.Where(
+                        hi => compara(hi.Key, h.ShortName)
+                    ).ToList();
+                    for (int i = 0; i < keys.Count(); i++)
+                    {
+                        KeyValuePair<string, HeroAbility> kvp = keys[i];
+                        kvp.Value.Order = (i + 1);
+                        kvp.Value.Name = kvp.Key;
+                    }
+
+                    h.Abilities.AddRange(keys.Select(k => k.Value));
+
                     context.Heroes.Add(h);
                 }
             }
+        }
+
+        private static bool compara (string key, string heroName)
+        {
+            return (key.IndexOf(heroName) == 0);
         }
 
         public static void InitializeItems(string pathJson, Dota2AppDbContext context)

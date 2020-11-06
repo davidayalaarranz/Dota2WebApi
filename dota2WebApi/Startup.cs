@@ -32,6 +32,7 @@ namespace dota2WebApi
         {
             services.AddTransient<IHeroService, HeroService>();
             services.AddTransient<IHeroItemService, HeroItemService>();
+            services.AddTransient<IUrlService, UrlService>();
 
             // El siguiente servicio solo lo añadimos cuando la base de datos no existe.
             services.AddDbContext<Dota2AppDbContext>(options =>

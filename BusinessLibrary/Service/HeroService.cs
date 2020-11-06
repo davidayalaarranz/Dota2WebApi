@@ -5,14 +5,27 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace BusinessLibrary.Service
 {
     public class HeroService : IHeroService
     {
-        public Task<Hero> GetHero(int id)
+        public async Task<Hero> GetHero(int id)
         {
-            throw new NotImplementedException();
+            Hero h;
+            using (Dota2AppDbContext db = new Dota2AppDbContext())
+            {
+                List<Hero> lh = await (from a in db.Heroes.AsNoTracking()
+                     select a)
+                    .Where(x => x.HeroId == id)
+                    .Include(h => h.Strength)
+                    .Include(h => h.Agility)
+                    .Include(h => h.Inteligence)
+                    .Include(h => h.Abilities)
+                    .ToListAsync();
+                return lh[0];
+            }
         }
 
         public async Task<HeroResponseModel> GetHeroes(DataTableParameters param)
@@ -42,7 +55,9 @@ namespace BusinessLibrary.Service
                               .Include(h => h.Strength)
                               .Include(h => h.Agility)
                               .Include(h => h.Inteligence)
+                              .Include(h => h.Abilities)
                               .ToListAsync();
+                crm.Heroes.ToList().ForEach(h => h.Abilities = h.Abilities.OrderBy(h => h.Order).ToList());
                 return crm;
             }
         }
