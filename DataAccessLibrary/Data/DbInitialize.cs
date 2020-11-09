@@ -79,9 +79,54 @@ namespace DataAccessLibrary.Data
                         }
                     }
                 }
+                GetHeropickerdataResponseModel hprm = null;
+                string pathJsonHeroPickerData = String.Concat(pathJson, "\\heropickerdata.json");
+                if (File.Exists(pathJsonHeroPickerData))
+                {
+                    jsonString = File.ReadAllText(pathJsonHeroPickerData);
+                    JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString).RootElement;
+                    JsonElement.ObjectEnumerator oe = root.EnumerateObject();
+
+                    while (oe.MoveNext())
+                    {
+                        System.Text.Json.JsonProperty aux = oe.Current;
+                        string name = aux.Name;
+                        if (o != null)
+                        {
+                            Hero currentHero = o.result.heroes.Find(h => h.ShortName == name);
+                            if (currentHero != null)
+                            {
+                                currentHero.Biography = aux.Value.GetProperty("bio").GetString();
+                            }
+                        }
+                    }
+                }
+
+                string pathJsonMyHeroesData = String.Concat(pathJson, "\\MyHeroes.json");
+                if (File.Exists(pathJsonMyHeroesData))
+                {
+                    jsonString = File.ReadAllText(pathJsonMyHeroesData);
+                    JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString).RootElement;
+                    JsonElement.ObjectEnumerator oe = root.EnumerateObject();
+
+                    while (oe.MoveNext())
+                    {
+                        System.Text.Json.JsonProperty aux = oe.Current;
+                        string name = aux.Name;
+                        if (o != null)
+                        {
+                            Hero currentHero = o.result.heroes.Find(h => h.ShortName == name);
+                            if (currentHero != null)
+                            {
+                                currentHero.BaseArmor = aux.Value.GetProperty("baseArmor").GetDecimal();
+                            }
+                        }
+                    }
+                }
+
                 GetHeroAbilitiesResponseModel harm = null;
                 string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
-                if (File.Exists(pathJsonHeroes2))
+                if (File.Exists(pathJsonHeroAbilities))
                 {
                     jsonString = File.ReadAllText(pathJsonHeroAbilities);
                     var serializeOptions2 = new JsonSerializerOptions
@@ -90,9 +135,8 @@ namespace DataAccessLibrary.Data
                     };
                     serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
                     harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
-
-
                 }
+                
 
                 foreach (Hero h in o.result.heroes)
                 {

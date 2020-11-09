@@ -13,18 +13,25 @@ namespace BusinessLibrary.Service
     {
         public async Task<Hero> GetHero(int id)
         {
-            Hero h;
             using (Dota2AppDbContext db = new Dota2AppDbContext())
             {
                 List<Hero> lh = await (from a in db.Heroes.AsNoTracking()
-                     select a)
+                                       select a)
                     .Where(x => x.HeroId == id)
                     .Include(h => h.Strength)
                     .Include(h => h.Agility)
                     .Include(h => h.Inteligence)
                     .Include(h => h.Abilities)
                     .ToListAsync();
-                return lh[0];
+                if (lh.Count > 0)
+                {
+                    lh[0].Abilities = lh[0].Abilities.OrderBy(h => h.Order).ToList();
+                    return lh[0];
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

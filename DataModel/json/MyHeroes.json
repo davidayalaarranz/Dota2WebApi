@@ -1,0 +1,944 @@
+{
+  "antimage": {
+    "name": "Anti-Mage",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "axe": {
+    "name": "Axe",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": -1,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "bane": {
+    "name": "Bane",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "bloodseeker": {
+    "name": "Bloodseeker",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "crystal_maiden": {
+    "name": "Crystal Maiden",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "drow_ranger": {
+    "name": "Drow Ranger",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "earthshaker": {
+    "name": "Earthshaker",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "juggernaut": {
+    "name": "Juggernaut",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "mirana": {
+    "name": "Mirana",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "nevermore": {
+    "name": "Shadow Fiend",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "morphling": {
+    "name": "Morphling",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "phantom_lancer": {
+    "name": "Phantom Lancer",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "puck": {
+    "name": "Puck",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "pudge": {
+    "name": "Pudge",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "razor": {
+    "name": "Razor",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "sand_king": {
+    "name": "Sand King",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "storm_spirit": {
+    "name": "Storm Spirit",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "sven": {
+    "name": "Sven",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "tiny": {
+    "name": "Tiny",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "vengefulspirit": {
+    "name": "Vengeful Spirit",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "windrunner": {
+    "name": "Windranger",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "zuus": {
+    "name": "Zeus",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "kunkka": {
+    "name": "Kunkka",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "lina": {
+    "name": "Lina",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "lich": {
+    "name": "Lich",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "lion": {
+    "name": "Lion",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "shadow_shaman": {
+    "name": "Shadow Shaman",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "slardar": {
+    "name": "Slardar",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "tidehunter": {
+    "name": "Tidehunter",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "witch_doctor": {
+    "name": "Witch Doctor",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "riki": {
+    "name": "Riki",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "enigma": {
+    "name": "Enigma",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "tinker": {
+    "name": "Tinker",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "sniper": {
+    "name": "Sniper",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "necrolyte": {
+    "name": "Necrophos",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "warlock": {
+    "name": "Warlock",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "beastmaster": {
+    "name": "Beastmaster",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "queenofpain": {
+    "name": "Queen of Pain",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "venomancer": {
+    "name": "Venomancer",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "faceless_void": {
+    "name": "Faceless Void",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "skeleton_king": {
+    "name": "Wraith King",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "death_prophet": {
+    "name": "Death Prophet",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "phantom_assassin": {
+    "name": "Phantom Assassin",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "pugna": {
+    "name": "Pugna",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "templar_assassin": {
+    "name": "Templar Assassin",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "viper": {
+    "name": "Viper",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "luna": {
+    "name": "Luna",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "dragon_knight": {
+    "name": "Dragon Knight",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "dazzle": {
+    "name": "Dazzle",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "rattletrap": {
+    "name": "Clockwerk",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "leshrac": {
+    "name": "Leshrac",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "furion": {
+    "name": "Nature's Prophet",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "life_stealer": {
+    "name": "Lifestealer",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "dark_seer": {
+    "name": "Dark Seer",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "clinkz": {
+    "name": "Clinkz",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "omniknight": {
+    "name": "Omniknight",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "enchantress": {
+    "name": "Enchantress",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "huskar": {
+    "name": "Huskar",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "night_stalker": {
+    "name": "Night Stalker",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "broodmother": {
+    "name": "Broodmother",
+    "baseHpRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0,
+    "baseManaRegen": 0
+  },
+  "bounty_hunter": {
+    "name": "Bounty Hunter",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "jakiro": {
+    "name": "Jakiro",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "batrider": {
+    "name": "Batrider",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "chen": {
+    "name": "Chen",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "spectre": {
+    "name": "Spectre",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "doom_bringer": {
+    "name": "Doom",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "ancient_apparition": {
+    "name": "Ancient Apparition",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "ursa": {
+    "name": "Ursa",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "spirit_breaker": {
+    "name": "Spirit Breaker",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "gyrocopter": {
+    "name": "Gyrocopter",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "alchemist": {
+    "name": "Alchemist",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "invoker": {
+    "name": "Invoker",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "silencer": {
+    "name": "Silencer",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "obsidian_destroyer": {
+    "name": "Outworld Devourer",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "lycan": {
+    "name": "Lycan",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "brewmaster": {
+    "name": "Brewmaster",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "shadow_demon": {
+    "name": "Shadow Demon",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "lone_druid": {
+    "name": "Lone Druid",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "chaos_knight": {
+    "name": "Chaos Knight",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "meepo": {
+    "name": "Meepo",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "treant": {
+    "name": "Treant Protector",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "ogre_magi": {
+    "name": "Ogre Magi",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "undying": {
+    "name": "Undying",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "rubick": {
+    "name": "Rubick",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "disruptor": {
+    "name": "Disruptor",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "nyx_assassin": {
+    "name": "Nyx Assassin",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "naga_siren": {
+    "name": "Naga Siren",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "keeper_of_the_light": {
+    "name": "Keeper of the Light",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "wisp": {
+    "name": "Io",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "visage": {
+    "name": "Visage",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "slark": {
+    "name": "Slark",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "medusa": {
+    "name": "Medusa",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "troll_warlord": {
+    "name": "Troll Warlord",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "centaur": {
+    "name": "Centaur Warrunner",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "magnataur": {
+    "name": "Magnus",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "shredder": {
+    "name": "Timbersaw",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "bristleback": {
+    "name": "Bristleback",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "tusk": {
+    "name": "Tusk",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "skywrath_mage": {
+    "name": "Skywrath Mage",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "abaddon": {
+    "name": "Abaddon",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "elder_titan": {
+    "name": "Elder Titan",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "legion_commander": {
+    "name": "Legion Commander",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "ember_spirit": {
+    "name": "Ember Spirit",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "earth_spirit": {
+    "name": "Earth Spirit",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "terrorblade": {
+    "name": "Terrorblade",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "phoenix": {
+    "name": "Phoenix",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "oracle": {
+    "name": "Oracle",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0
+  },
+  "techies": {
+    "name": "Techies",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "winter_wyvern": {
+    "name": "Winter Wyvern",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "arc_warden": {
+    "name": "Arc Warden",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "abyssal_underlord": {
+    "name": "Underlord",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "monkey_king": {
+    "name": "Monkey King",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "pangolier": {
+    "name": "Pangolier",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "dark_willow": {
+    "name": "Dark Willow",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "grimstroke": {
+    "name": "Grimstroke",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "mars": {
+    "name": "Mars",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "void_spirit": {
+    "name": "Void Spirit",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  },
+  "snapfire": {
+    "name": "Snapfire",
+    "baseHpRegen": 0,
+    "baseManaRegen": 0,
+    "baseArmor": 0,
+    "daySightRange": 0,
+    "nightSightRange": 0
+  }
+}

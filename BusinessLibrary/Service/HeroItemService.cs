@@ -10,7 +10,7 @@ namespace BusinessLibrary.Service
 {
     public class HeroItemService : IHeroItemService
     {
-        public async Task<HeroItem> GetHeroItem(int id)
+        public Task<HeroItem> GetHeroItem(int id)
         {
             throw new NotImplementedException();
         }
@@ -34,11 +34,16 @@ namespace BusinessLibrary.Service
             HeroItemResponseModel crm = new HeroItemResponseModel();
             using (Dota2AppDbContext db = new Dota2AppDbContext())
             {
-                crm.nHeroItems = (from a in db.HeroItems select new HeroItem { HeroItemId = a.HeroItemId }).Count();
+                crm.nHeroItems = (from a in db.HeroItems
+                                  where !a.IsRecipe
+                                  select 
+                                  new HeroItem { HeroItemId = a.HeroItemId })
+                                  .Count();
                 param.length = param.length < 1 ? crm.nHeroItems : param.length;
 
-                var query = from a in db.HeroItems.AsNoTracking()
-                            select a;
+                var query = (from a in db.HeroItems.AsNoTracking()
+                            select a)
+                            .Where(hi => !hi.IsRecipe);
                 if (!String.IsNullOrWhiteSpace(param.filter))
                     query = query.Where(x => x.Name.Contains(param.filter) || x.LocalizedName.Contains(param.filter));
                 crm.nHeroItems = query.Count();

@@ -59,18 +59,22 @@ namespace DataModel.Model
         public string LocalizedName { get; set; }
         [JsonConverter(typeof(HeroPrincipalAttributeJsonConverter))]
         public HeroPrincipalAttribute PrincipalAttribute { get; set; }
-        public int MinDamage { get; set; }
-        public int MaxDamage { get; set; }
-        public int MovementSpeed { get; set; }
-        public decimal Armor { get; set; }
         public string Roles { get; set; }
-        
+        public string RightClickAttack { get; set; }
+        public string Biography { get; set; }
+
         public HeroAttribute Strength { get; set; }
         public HeroAttribute Agility { get; set; }
         public HeroAttribute Inteligence { get; set; }
 
         public List<HeroAbility> Abilities { get; set; }
 
-        public string RightClickAttack { get; set; }
+        public decimal BaseHpRegen { get; set; }
+        public decimal BaseManaRegen { get; set; }
+        public int MinDamage { get; set; }
+        public int MaxDamage { get; set; }
+        public int MovementSpeed { get; set; }
+        public decimal Armor { get; set; }
+        public decimal BaseArmor { get; set; }
     }
 }
