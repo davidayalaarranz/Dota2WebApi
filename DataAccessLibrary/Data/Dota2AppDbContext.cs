@@ -18,6 +18,7 @@ namespace DataAccessLibrary.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<HeroItem> HeroItems { get; set; }
+        public DbSet<Match> Matches { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,9 +36,26 @@ namespace DataAccessLibrary.Data
             builder.Entity<Hero>().ToTable("Heroes");
             builder.Entity<HeroItem>().ToTable("HeroItems");
             builder.Entity<HeroItemComponent>().ToTable("HeroItemComponents");
+            builder.Entity<Match>().ToTable("Matches");
 
-            //builder.Entity<HeroItem>()
-            //    .HasMany<HeroItemComponent>(hi => hi.Componentes);
+
+            builder.Entity<MatchPlayer>()
+                .HasKey(k => new { k.MatchId, k.PlayerId, k.PlayerSlot });
+            builder.Entity<MatchPlayer>()
+                .HasOne(mp => mp.Match)
+                .WithMany(m => m.Players)
+                .HasForeignKey(mp => mp.MatchId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<MatchPlayer>()
+                .HasOne(mp => mp.Player)
+                .WithMany(p => p.Matches)
+                .HasForeignKey(mp => mp.PlayerId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<MatchPlayer>()
+                .HasOne(mp => mp.Hero)
+                .WithMany(h => h.Matches)
+                .HasForeignKey(mp => mp.HeroId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<HeroItemComponent>()
                 .HasKey(t => new { t.ComponentId, t.HeroItemId });

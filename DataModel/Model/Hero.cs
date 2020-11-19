@@ -69,6 +69,8 @@ namespace DataModel.Model
 
         public List<HeroAbility> Abilities { get; set; }
 
+        public List<MatchPlayer> Matches { get; set; }
+
         public decimal BaseHpRegen { get; set; }
         public decimal BaseManaRegen { get; set; }
         public int MinDamage { get; set; }

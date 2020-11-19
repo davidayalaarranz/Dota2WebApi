@@ -9,11 +9,42 @@ using DataModel.ValveJsonModel.GetHeroes;
 using System.Globalization;
 using DataModel.ValveJsonModel.GetItems;
 using DataModel.Model;
+using DataModel.ValveJsonModel.GetMatchHistory;
 
 namespace DataAccessLibrary.Data
 {
     public static class DbInitialize
     {
+        public static void InitializeMatches(string pathJson, Dota2AppDbContext context)
+        {
+            JsonDocumentOptions jsonOptions = new JsonDocumentOptions
+            {
+                CommentHandling = JsonCommentHandling.Skip
+            };
+            string pathJsonMatchHistory = String.Concat(pathJson, "\\GetMatchHistory.json");
+            GetMatchHistoryResponseModel o;
+            if (File.Exists(pathJsonMatchHistory))
+            {
+                string jsonString = File.ReadAllText(pathJsonMatchHistory);
+                var serializeOptions = new JsonSerializerOptions
+                {
+                    ReadCommentHandling = JsonCommentHandling.Skip
+                };
+                serializeOptions.Converters.Add(new GetMatchHistoryJsonConverter());
+                o = JsonSerializer.Deserialize<GetMatchHistoryResponseModel>(jsonString, serializeOptions);
+
+                foreach (Match m in o.result.matches)
+                {
+                    foreach (MatchPlayer mp in m.Players)
+                    {
+                        mp.Hero = context.Heroes.First(h => h.HeroId == mp.Hero.HeroId);
+                        mp.Player = m.Players.First(p => p.PlayerId == mp.Player.PlayerId).Player;
+                    }
+                    context.Matches.Add(m);
+                }
+                context.SaveChanges();
+            }
+        }
         public static void InitializeHeroes(string pathJson, Dota2AppDbContext context)
         {
             JsonDocumentOptions jsonOptions = new JsonDocumentOptions
@@ -154,6 +185,7 @@ namespace DataAccessLibrary.Data
 
                     context.Heroes.Add(h);
                 }
+                context.SaveChanges();
             }
         }
 
@@ -262,6 +294,7 @@ namespace DataAccessLibrary.Data
                     {
                         context.HeroItems.Add(hi);
                     }
+                    context.SaveChanges();
                 }
             }catch(Exception e)
             {
@@ -280,8 +313,9 @@ namespace DataAccessLibrary.Data
                 string pathJson = Path.GetFullPath("..\\DataModel\\json");
                 InitializeHeroes(pathJson, context);
                 InitializeItems(pathJson, context);
+                InitializeMatches(pathJson, context);
 
-                context.SaveChanges();
+                //context.SaveChanges();
             }
             catch (Exception e)
             {
