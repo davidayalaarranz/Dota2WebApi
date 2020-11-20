@@ -6,10 +6,11 @@ using BusinessLibrary.Service;
 using DataModel.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace dota2WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MatchController : ControllerBase
