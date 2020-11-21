@@ -7,6 +7,7 @@ using DataModel.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace dota2WebApi.Controllers
 {
@@ -23,10 +24,12 @@ namespace dota2WebApi.Controllers
 
         // GET: api/Match
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Match>>> GetMatches()
+        public async Task<ActionResult<MatchResponseModel>> GetMatches()
         {
             try
             {
+                //User.FindFirst(ClaimTypes.NameIdentifier).Value
+                //string c = User.FindFirst(ClaimTypes.Email).Value;
                 MatchResponseModel mr = await _matchService.getMatches();
                 foreach (Match m in mr.Matches)
                 {
@@ -34,29 +37,32 @@ namespace dota2WebApi.Controllers
                     {
                         mp.Hero.Matches = null;
                         mp.Player.Matches = null;
+                        mp.Match = null;
                     }
                 }
-                var result = mr.Matches.Select(m => new
-                {
-                    MatchId = m.MatchId,
-                    MatchSeqNum = m.MatchSeqNum,
-                    StartTime = m.StartTime,
-                    Players = m.Players.Select(mp => new
-                    {
-                        Hero = mp.Hero,
-                        Player = mp.Player,
-                        PlayerSlot = mp.PlayerSlot
-                    })
 
-                }).ToList();
+                return Ok(mr);
+                //var result = mr.Matches.Select(m => new
+                //{
+                //    MatchId = m.MatchId,
+                //    MatchSeqNum = m.MatchSeqNum,
+                //    StartTime = m.StartTime,
+                //    Players = m.Players.Select(mp => new
+                //    {
+                //        Hero = mp.Hero,
+                //        Player = mp.Player,
+                //        PlayerSlot = mp.PlayerSlot
+                //    })
 
-                var ret = new
-                {
-                    Matches = result,
-                    nMatches = mr.nMatches
-                };
+                //}).ToList();
 
-                return Ok(ret);
+                //var ret = new
+                //{
+                //    Matches = result,
+                //    nMatches = mr.nMatches
+                //};
+
+                //return Ok(ret);
             }
             catch (Exception e)
             {

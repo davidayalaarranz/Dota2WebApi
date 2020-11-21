@@ -33,6 +33,42 @@ namespace DataAccessLibrary.Data
                 serializeOptions.Converters.Add(new GetMatchHistoryJsonConverter());
                 o = JsonSerializer.Deserialize<GetMatchHistoryResponseModel>(jsonString, serializeOptions);
 
+
+                GetMatchDetailsResponseModel md = null;
+                string pathJsonMatchDetails = String.Concat(pathJson, "\\GetMatchDetails.json");
+                if (File.Exists(pathJsonMatchDetails))
+                {
+                    jsonString = File.ReadAllText(pathJsonMatchDetails);
+
+                    JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString).RootElement;
+                    JsonElement.ObjectEnumerator oe = root.EnumerateObject();
+
+                    while (oe.MoveNext())
+                    {
+                        System.Text.Json.JsonProperty aux = oe.Current;
+                        string name = aux.Name;
+                        if (o != null)
+                        {
+                            long currentMatchId = aux.Value.GetProperty("match_id").GetInt64();
+                            Match currentMatch = o.result.matches.Find(m => m.MatchId == currentMatchId);
+                            if (currentMatch != null)
+                            { 
+                                currentMatch.RadiantWin = aux.Value.GetProperty("radiant_win").GetBoolean();
+                                currentMatch.Duration = aux.Value.GetProperty("duration").GetInt32();
+                                currentMatch.PreGameDuration = aux.Value.GetProperty("pre_game_duration").GetInt32();
+                                currentMatch.TowerStatusRadiant = aux.Value.GetProperty("tower_status_radiant").GetInt32();
+                                currentMatch.TowerStatusDire = aux.Value.GetProperty("tower_status_dire").GetInt32();
+                                currentMatch.BarracksStatusRadiant = aux.Value.GetProperty("barracks_status_radiant").GetInt32();
+                                currentMatch.BarracksStatusDire = aux.Value.GetProperty("barracks_status_dire").GetInt32();
+                                currentMatch.FirstBloodTime = aux.Value.GetProperty("first_blood_time").GetInt32();
+                                currentMatch.GameMode = aux.Value.GetProperty("game_mode").GetInt32();
+                                currentMatch.RadiantScore = aux.Value.GetProperty("radiant_score").GetInt32();
+                                currentMatch.DireScore = aux.Value.GetProperty("dire_score").GetInt32();
+                            }
+                        }
+                    }
+                }
+
                 foreach (Match m in o.result.matches)
                 {
                     foreach (MatchPlayer mp in m.Players)

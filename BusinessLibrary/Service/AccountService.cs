@@ -3,6 +3,7 @@ using DataModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,6 +24,36 @@ namespace BusinessLibrary.Service
             _signInManager = signInManager;
         }
 
+        public async Task<ApplicationUser> SaveUser(ApplicationUser user)
+        {
+            try
+            {
+                IdentityResult ir = await _userManager.UpdateAsync(user);
+                if (ir.Succeeded)
+                    return await _userManager.FindByNameAsync(user.Email);
+                else
+                    throw new Exception("Error saving user");
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<ApplicationUser> GetUser(string username)
+        {
+            try
+            {
+
+                ApplicationUser user = await _userManager.FindByNameAsync(username);
+                return user;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public async Task<ApplicationUser> GetUser(string username, string password)
         {
             try
@@ -40,8 +71,84 @@ namespace BusinessLibrary.Service
 
         public string getSteamIdFromCode(string code)
         {
-            return string.Empty;
-            //STEAM_1:0:74926258
+            try
+            {
+                long lcode = long.Parse(code);
+                BitArray ba = new BitArray(BitConverter.GetBytes(lcode));
+
+                bool[] YComponent = new bool[1];
+                YComponent[0] = ba.Get(0);
+                BitArray baY = new BitArray(YComponent);
+                int[] YSteamId = new int[1];
+                baY.CopyTo(YComponent, 0);
+
+                bool[] XComponentUniverse = new bool[8];
+                for (var i = 56; i < 63; i++)
+                {
+                    XComponentUniverse[i - 56] = ba.Get(i);
+                }
+                BitArray baXUniverse = new BitArray(XComponentUniverse);
+                int[] XSteamId = new int[1];
+                baXUniverse.CopyTo(XSteamId, 0);
+
+                bool[] ZComponent = new bool[31];
+                for (var i = 1; i < 32; i++)
+                {
+                    ZComponent[i - 1] = ba.Get(i);
+                }
+                BitArray baZ = new BitArray(ZComponent);
+                int[] ZSteamId = new int[1];
+                baZ.CopyTo(ZSteamId, 0);
+
+                return string.Concat("STEAM_", XSteamId[0].ToString(), ":", YSteamId[0].ToString(), ":", ZSteamId[0].ToString());
+            }
+            catch (Exception e)
+            {
+                return string.Empty;
+            }
+        }
+
+        public long getSteamPlayerId(long steamId64)
+        {
+            try
+            {
+                BitArray ba = new BitArray(BitConverter.GetBytes(steamId64));
+
+                bool[] ZComponent = new bool[31];
+                for (var i = 1; i < 32; i++)
+                {
+                    ZComponent[i - 1] = ba.Get(i);
+                }
+                BitArray baZ = new BitArray(ZComponent);
+                int[] ZSteamId = new int[1];
+                baZ.CopyTo(ZSteamId, 0);
+
+                return (ZSteamId[0] * 2);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<ApplicationUser> AssociateSteamIdWithUser(ApplicationUser user, string SteamId)
+        {
+            try
+            {
+                user.SteamId64 = long.Parse(SteamId);
+                user.SteamIdCode = getSteamIdFromCode(SteamId);
+                user.SteamPlayerId = getSteamPlayerId(user.SteamId64);
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return await _userManager.FindByNameAsync(user.Email);
+                }
+                throw new Exception(result.Errors.ToString() + ": Associate SteamId With User error");
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public string getPlayerIdFromSteamId(string SteamId)
@@ -90,7 +197,7 @@ namespace BusinessLibrary.Service
         public async Task<bool> CheckUser(string username, string password)
         {
             try
-            { 
+            {
                 var user = await _userManager.FindByNameAsync(username);
                 return (user != null && await _userManager.CheckPasswordAsync(user, password));
             }
@@ -124,5 +231,7 @@ namespace BusinessLibrary.Service
                 throw e;
             }
         }
+
+
     }
 }

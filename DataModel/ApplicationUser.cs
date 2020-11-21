@@ -9,6 +9,8 @@ namespace DataModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string SteamId { get; set; }
+        public long SteamId64 { get; set; }
+        public string SteamIdCode { get; set; }
+        public long SteamPlayerId { get; set; }
     }
 }

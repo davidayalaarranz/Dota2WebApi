@@ -12,7 +12,10 @@ namespace BusinessLibrary.Service
     {
         Task<bool> CheckUser(string username, string password);
         Task<ApplicationUser> SignUp(SignUpModel user);
+        Task<ApplicationUser> GetUser(string username);
         Task<ApplicationUser> GetUser(string username, string password);
         Task<JwtSecurityToken> GetToken(string username, string password);
+        Task<ApplicationUser> SaveUser(ApplicationUser user);
+        Task<ApplicationUser> AssociateSteamIdWithUser(ApplicationUser user, string SteamId);
     }
 }

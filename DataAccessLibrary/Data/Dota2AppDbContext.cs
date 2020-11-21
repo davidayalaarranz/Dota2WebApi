@@ -37,7 +37,14 @@ namespace DataAccessLibrary.Data
             builder.Entity<HeroItem>().ToTable("HeroItems");
             builder.Entity<HeroItemComponent>().ToTable("HeroItemComponents");
             builder.Entity<Match>().ToTable("Matches");
+            builder.Entity<MatchPlayer>().ToTable("MatchPlayers");
+            builder.Entity<Pick>().ToTable("Picks");
+            builder.Entity<Ban>().ToTable("Bans");
 
+            builder.Entity<Pick>()
+                .HasKey(k => new { k.MatchId, k.Order });
+            builder.Entity<Ban>()
+                .HasKey(k => new { k.MatchId, k.Order });
 
             builder.Entity<MatchPlayer>()
                 .HasKey(k => new { k.MatchId, k.PlayerId, k.PlayerSlot });

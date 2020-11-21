@@ -40,12 +40,15 @@ namespace TravelAgencyWebApi.Controllers
             {
                 ApplicationUser au = await _accountService.GetUser(value.Username, value.Password);
                 JwtSecurityToken token = await _accountService.GetToken(value.Username, value.Password);
+                
                 LoginResponse response = new LoginResponse()
                 {
                     user = new ApplicationUser{
                         FirstName = au.FirstName,
                         LastName = au.LastName,
-                        SteamId = au.SteamId,
+                        SteamId64 = au.SteamId64,
+                        SteamIdCode = au.SteamIdCode,
+                        SteamPlayerId = au.SteamPlayerId,
                         Email = au.Email
                     },
                     token = new JwtSecurityTokenHandler().WriteToken(token),
