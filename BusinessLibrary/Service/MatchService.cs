@@ -6,13 +6,48 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using DataModel.Model;
 
 namespace BusinessLibrary.Service
 {
     public class MatchService : IMatchService
     {
+        public async Task<Match> GetMatch(long id)
+        {
+            using (Dota2AppDbContext db = new Dota2AppDbContext())
+            {
+                List<Match> lh = await (from a in db.Matches.AsNoTracking()
+                                       select a)
+                    .Where(x => x.MatchId == id)
+                    .Include(m => m.Players)
+                        .ThenInclude(mp => mp.Hero)
+                    .Include(m => m.Players)
+                        .ThenInclude(mp => mp.Hero)
+                        .ThenInclude(h => h.Strength)
+                    .Include(m => m.Players)
+                        .ThenInclude(mp => mp.Hero)
+                        .ThenInclude(h => h.Agility)
+                    .Include(m => m.Players)
+                        .ThenInclude(mp => mp.Hero)
+                        .ThenInclude(h => h.Inteligence)
+                    .Include(m => m.Players)
+                        .ThenInclude(mp => mp.Player)
+                    .Include(m => m.Players)
+                        .ThenInclude(mp => mp.Hero)
+                        .ThenInclude(h => h.Abilities)
+                    .ToListAsync();
+                if (lh.Count > 0)
+                {
+                    return lh[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
-        public async Task<MatchResponseModel> getMatches()
+        public async Task<MatchResponseModel> GetMatches()
         //public MatchResponseModel getMatches()
         {
             MatchResponseModel mrm = new MatchResponseModel();

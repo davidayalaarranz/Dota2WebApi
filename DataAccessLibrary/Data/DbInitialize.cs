@@ -64,6 +64,25 @@ namespace DataAccessLibrary.Data
                                 currentMatch.GameMode = aux.Value.GetProperty("game_mode").GetInt32();
                                 currentMatch.RadiantScore = aux.Value.GetProperty("radiant_score").GetInt32();
                                 currentMatch.DireScore = aux.Value.GetProperty("dire_score").GetInt32();
+
+                                JsonElement.ArrayEnumerator ae = aux.Value.GetProperty("players").EnumerateArray();
+                                while (ae.MoveNext())
+                                {
+                                    MatchPlayer mp = currentMatch.Players.First(p => p.PlayerId == ae.Current.GetProperty("account_id").GetInt64() &&
+                                                                                    p.PlayerSlot == ae.Current.GetProperty("player_slot").GetInt32());
+                                    mp.Kills = ae.Current.GetProperty("kills").GetInt32();
+                                    mp.Deaths = ae.Current.GetProperty("deaths").GetInt32();
+                                    mp.Assists = ae.Current.GetProperty("assists").GetInt32();
+                                    mp.LastHits = ae.Current.GetProperty("last_hits").GetInt32();
+                                    mp.Denies = ae.Current.GetProperty("denies").GetInt32();
+                                    mp.GPM = ae.Current.GetProperty("gold_per_min").GetInt32();
+                                    mp.XPM = ae.Current.GetProperty("xp_per_min").GetInt32();
+                                    mp.HeroDamage = ae.Current.GetProperty("hero_damage").GetInt32();
+                                    mp.TowerDamage = ae.Current.GetProperty("tower_damage").GetInt32();
+                                    mp.HeroHealing = ae.Current.GetProperty("hero_healing").GetInt32();
+                                    mp.Gold = ae.Current.GetProperty("gold").GetInt32();
+                                    mp.Level = ae.Current.GetProperty("level").GetInt32();
+                                }
                             }
                         }
                     }

@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace dota2WebApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MatchController : ControllerBase
@@ -30,7 +30,7 @@ namespace dota2WebApi.Controllers
             {
                 //User.FindFirst(ClaimTypes.NameIdentifier).Value
                 //string c = User.FindFirst(ClaimTypes.Email).Value;
-                MatchResponseModel mr = await _matchService.getMatches();
+                MatchResponseModel mr = await _matchService.GetMatches();
                 foreach (Match m in mr.Matches)
                 {
                     foreach (MatchPlayer mp in m.Players)
@@ -63,6 +63,27 @@ namespace dota2WebApi.Controllers
                 //};
 
                 //return Ok(ret);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Error getting Heroes");
+            }
+        }
+
+        // GET: api/Match/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] long id)
+        {
+            try
+            {
+                Match m = await _matchService.GetMatch(id);
+                foreach (MatchPlayer mp in m.Players)
+                {
+                    mp.Hero.Matches = null;
+                    mp.Player.Matches = null;
+                    mp.Match = null;
+                }
+                return Ok(m);
             }
             catch (Exception e)
             {
