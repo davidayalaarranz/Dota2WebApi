@@ -8,10 +8,15 @@ namespace DataModel.Model
 {
     public class HeroAbility
     {
+        [Key]
+        public long HeroAbilityId { get; set; }
         public long HeroId { get; set; }
         public Hero Hero { get; set; }
         public long AbilityId { get; set; }
         public Ability Ability { get; set; }
+
+        public bool IsTalent { get; set; }
+        public int Order { get; set; }
     }
 
     public class HeroAbilityUpgrade
@@ -27,12 +32,11 @@ namespace DataModel.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long AbilityId { get; set; }
-        public int Order { get; set; }
+        //public int Order { get; set; }
 
         public bool IsHidden { get; set; }
-        public bool IsTalent { get; set; }
+        //public bool IsTalent { get; set; }
 
-        public string ShortName { get { return Name.Remove(0, 5); } }
         public string Name { get; set; }
         public string LocalizedName { get; set; }
         public string Affects { get; set; }
@@ -70,6 +74,6 @@ namespace DataModel.Model
         /// otros
         /// 
         public bool HasScepterUpgrade { get; set; }
-
+        public bool IsGrantedByScepter { get; set; }
     }
 }

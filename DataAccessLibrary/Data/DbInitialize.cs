@@ -118,146 +118,71 @@ namespace DataAccessLibrary.Data
                 List<string> lines = File.ReadLines(pathNPCHeroes).ToList();
                 ParseNPCHeroes(lines, context);
             }
-            //JsonDocumentOptions jsonOptions = new JsonDocumentOptions
-            //{
-            //    CommentHandling = JsonCommentHandling.Skip
-            //};
-            //string pathJsonHeroes = String.Concat(pathJson, "\\GetHeroes en_US.json");
-            //GetHeroesResponseModel o;
-            //if (File.Exists(pathJsonHeroes))
-            //{
-            //    string jsonString = File.ReadAllText(pathJsonHeroes);
-            //    var serializeOptions = new JsonSerializerOptions
-            //    {
-            //        ReadCommentHandling = JsonCommentHandling.Skip
-            //    };
-            //    serializeOptions.Converters.Add(new GetHeroesJsonConverter());
-            //    o = JsonSerializer.Deserialize<GetHeroesResponseModel>(jsonString, serializeOptions);
+            JsonDocumentOptions jsonOptions = new JsonDocumentOptions
+            {
+                CommentHandling = JsonCommentHandling.Skip
+            };
 
-            //    string pathJsonHeroes2 = String.Concat(pathJson, "\\heroes.json");
-            //    if (File.Exists(pathJsonHeroes2))
-            //    {
-            //        jsonString = File.ReadAllText(pathJsonHeroes2);
-            //        JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString, jsonOptions).RootElement.GetProperty("herodata");
-            //        JsonElement.ObjectEnumerator ae = root.EnumerateObject();//.EnumerateArray();
-            //        NumberFormatInfo fp = new NumberFormatInfo();
-            //        fp.NumberDecimalSeparator = ".";
+            string pathJsonHeroes = String.Concat(pathJson, "\\GetHeroes en_US.json");
+            GetHeroesResponseModel o;
+            if (File.Exists(pathJsonHeroes))
+            {
+                string jsonString = File.ReadAllText(pathJsonHeroes);
+                var serializeOptions = new JsonSerializerOptions
+                {
+                    ReadCommentHandling = JsonCommentHandling.Skip
+                };
+                serializeOptions.Converters.Add(new GetHeroesJsonConverter());
+                o = JsonSerializer.Deserialize<GetHeroesResponseModel>(jsonString, serializeOptions);
 
-            //        while (ae.MoveNext())
-            //        {
-            //            System.Text.Json.JsonProperty aux = ae.Current;
-            //            string name = aux.Name;
-            //            if (o != null)
-            //            {
-            //                Hero currentHero = o.result.heroes.Find(h => h.ShortName == name);
-            //                if (currentHero != null)
-            //                {
-            //                    currentHero.Strength.Initial = aux.Value.GetProperty("attribs").GetProperty("str").GetProperty("b").GetDecimal();
-            //                    currentHero.Strength.Gain = decimal.Parse(aux.Value.GetProperty("attribs").GetProperty("str").GetProperty("g").GetString(), fp);
-            //                    currentHero.Inteligence.Initial = aux.Value.GetProperty("attribs").GetProperty("int").GetProperty("b").GetDecimal();
-            //                    currentHero.Inteligence.Gain = decimal.Parse(aux.Value.GetProperty("attribs").GetProperty("int").GetProperty("g").GetString(), fp);
-            //                    currentHero.Agility.Initial = aux.Value.GetProperty("attribs").GetProperty("agi").GetProperty("b").GetDecimal();
-            //                    currentHero.Agility.Gain = decimal.Parse(aux.Value.GetProperty("attribs").GetProperty("agi").GetProperty("g").GetString(), fp);
-            //                    currentHero.MovementSpeed = aux.Value.GetProperty("attribs").GetProperty("ms").GetInt32();
-            //                    currentHero.MinDamage = aux.Value.GetProperty("attribs").GetProperty("dmg").GetProperty("min").GetInt32();
-            //                    currentHero.MaxDamage = aux.Value.GetProperty("attribs").GetProperty("dmg").GetProperty("max").GetInt32();
-            //                    currentHero.Armor = aux.Value.GetProperty("attribs").GetProperty("armor").GetDecimal();
+                foreach (Hero h in context.Heroes)
+                {
+                    List<Hero> lh = o.result.heroes.Where(haux => haux.HeroId == h.HeroId).ToList();
+                    if (lh.Count > 0)
+                        h.LocalizedName = lh[0].LocalizedName;
+                }
+            }
+            string pathJsonHeroes2 = String.Concat(pathJson, "\\heroes.json");
+            if (File.Exists(pathJsonHeroes2))
+            {
+                string jsonString = File.ReadAllText(pathJsonHeroes2);
+                JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString, jsonOptions).RootElement.GetProperty("herodata");
+                JsonElement.ObjectEnumerator ae = root.EnumerateObject();//.EnumerateArray();
+                NumberFormatInfo fp = new NumberFormatInfo();
+                fp.NumberDecimalSeparator = ".";
 
-            //                    switch (aux.Value.GetProperty("pa").GetString())
-            //                    {
-            //                        case "str":
-            //                            currentHero.PrincipalAttribute = HeroPrincipalAttribute.Strength;
-            //                            break;
-            //                        case "agi":
-            //                            currentHero.PrincipalAttribute = HeroPrincipalAttribute.Agility;
-            //                            break;
-            //                        default:
-            //                            currentHero.PrincipalAttribute = HeroPrincipalAttribute.Inteligence;
-            //                            break;
-            //                    }
-            //                    currentHero.Roles = aux.Value.GetProperty("droles").GetString();
-            //                    currentHero.RightClickAttack = aux.Value.GetProperty("dac").GetString();
-            //                }
-            //            }
-            //        }
-            //    }
-            //    GetHeropickerdataResponseModel hprm = null;
-            //    string pathJsonHeroPickerData = String.Concat(pathJson, "\\heropickerdata.json");
-            //    if (File.Exists(pathJsonHeroPickerData))
-            //    {
-            //        jsonString = File.ReadAllText(pathJsonHeroPickerData);
-            //        JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString).RootElement;
-            //        JsonElement.ObjectEnumerator oe = root.EnumerateObject();
+                while (ae.MoveNext())
+                {
+                    System.Text.Json.JsonProperty aux = ae.Current;
+                    string name = aux.Name;
+                    List<Hero> lh = (from h in context.Heroes select h).Where(h => h.Name.IndexOf(name) > -1).ToList();
+                    if (lh.Count > 0)
+                    {
+                        lh[0].Roles = aux.Value.GetProperty("droles").GetString();
+                        lh[0].RightClickAttack = aux.Value.GetProperty("dac").GetString();
+                    }
+                }
+            }
 
-            //        while (oe.MoveNext())
-            //        {
-            //            System.Text.Json.JsonProperty aux = oe.Current;
-            //            string name = aux.Name;
-            //            if (o != null)
-            //            {
-            //                Hero currentHero = o.result.heroes.Find(h => h.ShortName == name);
-            //                if (currentHero != null)
-            //                {
-            //                    currentHero.Biography = aux.Value.GetProperty("bio").GetString();
-            //                }
-            //            }
-            //        }
-            //    }
+            string pathJsonHeroPickerData = String.Concat(pathJson, "\\heropickerdata.json");
+            if (File.Exists(pathJsonHeroPickerData))
+            {
+                string jsonString = File.ReadAllText(pathJsonHeroPickerData);
+                JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString).RootElement;
+                JsonElement.ObjectEnumerator oe = root.EnumerateObject();
 
-            //    string pathJsonMyHeroesData = String.Concat(pathJson, "\\MyHeroes.json");
-            //    if (File.Exists(pathJsonMyHeroesData))
-            //    {
-            //        jsonString = File.ReadAllText(pathJsonMyHeroesData);
-            //        JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString).RootElement;
-            //        JsonElement.ObjectEnumerator oe = root.EnumerateObject();
-
-            //        while (oe.MoveNext())
-            //        {
-            //            System.Text.Json.JsonProperty aux = oe.Current;
-            //            string name = aux.Name;
-            //            if (o != null)
-            //            {
-            //                Hero currentHero = o.result.heroes.Find(h => h.ShortName == name);
-            //                if (currentHero != null)
-            //                {
-            //                    currentHero.BaseArmor = aux.Value.GetProperty("baseArmor").GetDecimal();
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //    GetHeroAbilitiesResponseModel harm = null;
-            //    string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
-            //    if (File.Exists(pathJsonHeroAbilities))
-            //    {
-            //        jsonString = File.ReadAllText(pathJsonHeroAbilities);
-            //        var serializeOptions2 = new JsonSerializerOptions
-            //        {
-            //            ReadCommentHandling = JsonCommentHandling.Skip
-            //        };
-            //        serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
-            //        harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
-            //    }
-
-            //    List<Ability> hal = context.Abilities.ToList();
-            //    foreach (Hero h in o.result.heroes)
-            //    {
-            //        List<Ability> alCurrentHero = hal.Where(ha => ha.Name.IndexOf(h.ShortName) != -1).ToList();
-            //        List<HeroAbility> halCurrentHero = new List<HeroAbility>();
-            //        for (var i = 0; i < alCurrentHero.Count; i++)
-            //        {
-            //            alCurrentHero[i].Order = (i + 1);
-            //            HeroAbility ha = new HeroAbility();
-            //            ha.Hero = h;
-            //            ha.Ability = alCurrentHero[i];
-            //            halCurrentHero.Add(ha);
-            //        }
-            //        h.Abilities.AddRange(halCurrentHero);
-
-            //        context.Heroes.Add(h);
-            //    }
-            //    context.SaveChanges();
-            //}
+                while (oe.MoveNext())
+                {
+                    System.Text.Json.JsonProperty aux = oe.Current;
+                    string name = aux.Name;
+                    List<Hero> lh = (from h in context.Heroes select h).Where(h => h.Name.IndexOf(name) > -1).ToList();
+                    if (lh.Count > 0)
+                    {
+                        lh[0].Biography = aux.Value.GetProperty("bio").GetString();
+                    }
+                }
+            }
+            context.SaveChanges();
         }
 
         private static bool compara (string key, string heroName)
@@ -314,6 +239,9 @@ namespace DataAccessLibrary.Data
             Regex reAttackAnimationPoint = new Regex(@"^\t\t""AttackAnimationPoint""");
             Regex reAttackAcquisitionRange = new Regex(@"^\t\t""AttackAcquisitionRange""");
 
+            Regex reAbilityNumber = new Regex(@"^\t\t""Ability\d+""");
+            Regex reAbilityTalentStart = new Regex(@"^\t\t""AbilityTalentStart""");
+
             Hero hAux = null;
             Hero hBase = null;
             CultureInfo provider = new CultureInfo("en-GB");
@@ -327,6 +255,11 @@ namespace DataAccessLibrary.Data
                     {
                         if (hAux.HeroId != 0)
                         {
+                            // Indicamos las habilidades que son talentos
+                            foreach (HeroAbility ha in hAux.Abilities)
+                            {
+                                ha.IsTalent = ha.Order >= hAux.AbilityTalentStart;
+                            }
                             context.Heroes.Add(hAux);
                         } else if (hAux.Name == "npc_dota_hero_base")
                         {
@@ -354,7 +287,8 @@ namespace DataAccessLibrary.Data
                         hAux.BaseAttackSpeed = hBase.BaseAttackSpeed;
                         hAux.AttackAnimationPoint = hBase.AttackAnimationPoint;
                         hAux.AttackAcquisitionRange = hBase.AttackAcquisitionRange;
-        
+
+                        hAux.AbilityTalentStart = hBase.AbilityTalentStart;
                     }
 
 
@@ -427,6 +361,26 @@ namespace DataAccessLibrary.Data
                 match = reAttackAcquisitionRange.Match(lines[i]);
                 if (match.Success) { hAux.AttackAcquisitionRange = int.Parse(getNPCValue(lines[i])); continue; }
 
+                
+                match = reAbilityTalentStart.Match(lines[i]);
+                if (match.Success) { hAux.AbilityTalentStart = int.Parse(getNPCValue(lines[i])); continue; }
+
+                match = reAbilityNumber.Match(lines[i]);
+                if (match.Success)
+                {
+                    // Tenemos que asociar la habilidad al héroe
+                    List<Ability> la = context.Abilities.Where(a => a.Name.Equals(getNPCValue(lines[i]))).ToList();
+                    string abString = getNPCProperty(lines[i]);
+                    int intTalent = int.Parse(abString.Substring(abString.IndexOf("Ability") + 7));
+                    if (la.Count > 0)
+                    {
+                        HeroAbility ha = new HeroAbility();
+                        ha.Hero = hAux;
+                        ha.Ability = la[0];
+                        ha.Order = intTalent;
+                        hAux.Abilities.Add(ha);
+                    }
+                }
             }
             context.SaveChanges();
         }
@@ -445,6 +399,11 @@ namespace DataAccessLibrary.Data
             Regex reAbilityDamage = new Regex(@"^\t\t""AbilityDamage""");
             Regex reAbilityManaCost = new Regex(@"^\t\t""AbilityManaCost""");
             Regex reHasScepterUpgrade = new Regex(@"^\t\t""HasScepterUpgrade""");
+            Regex reIsGrantedByScepter = new Regex(@"^\t\t""IsGrantedByScepter""");
+
+            Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_HIDDEN = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_HIDDEN");
+            Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE");
+            
 
             Ability aAux = null;
             Ability aBase = null;
@@ -504,6 +463,14 @@ namespace DataAccessLibrary.Data
 
                 match = reHasScepterUpgrade.Match(lines[i]);
                 if (match.Success) { aAux.HasScepterUpgrade = getNPCValue(lines[i]).Equals("1"); continue; }
+                match = reIsGrantedByScepter.Match(lines[i]);
+                if (match.Success) { aAux.IsGrantedByScepter = getNPCValue(lines[i]).Equals("1"); continue; }
+
+                match = reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_HIDDEN.Match(lines[i]);
+                if (match.Success) { aAux.IsHidden = true; }
+
+                match = reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE.Match(lines[i]);
+                if (match.Success) { aAux.IsHidden = true; }
             }   
             context.SaveChanges();
         }
@@ -518,38 +485,36 @@ namespace DataAccessLibrary.Data
                     List<string> lines = File.ReadLines(pathNPCAbilities).ToList();
                     ParseNPCAbilities(lines, context);
 
-                    //GetHeroAbilitiesResponseModel harm = null;
-                    //string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
-                    //if (File.Exists(pathJsonHeroAbilities))
-                    //{
-                    //    string jsonString = File.ReadAllText(pathJsonHeroAbilities);
-                    //    var serializeOptions2 = new JsonSerializerOptions
-                    //    {
-                    //        ReadCommentHandling = JsonCommentHandling.Skip
-                    //    };
-                    //    serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
-                    //    harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
+                    GetHeroAbilitiesResponseModel harm = null;
+                    string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
+                    if (File.Exists(pathJsonHeroAbilities))
+                    {
+                        string jsonString = File.ReadAllText(pathJsonHeroAbilities);
+                        var serializeOptions2 = new JsonSerializerOptions
+                        {
+                            ReadCommentHandling = JsonCommentHandling.Skip
+                        };
+                        serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
+                        harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
 
-                    //    foreach (Ability ha in context.Abilities)
-                    //    {
-                    //        List<KeyValuePair<string, Ability>> keys = harm.abilitydata.Where(
-                    //            hi => compara(hi.Key, ha.Name)
-                    //        ).ToList();
+                        foreach (Ability ha in context.Abilities)
+                        {
+                            List<KeyValuePair<string, Ability>> keys = harm.abilitydata.Where(hi => hi.Key == ha.Name).ToList();
 
-                    //        if (keys.Count > 0) { 
-                    //            KeyValuePair<string, Ability> kvp = keys[0];
-                    //            ha.LocalizedName = kvp.Value.LocalizedName;
-                    //            ha.Affects = kvp.Value.Affects;
-                    //            ha.Description = kvp.Value.Description;
-                    //            ha.Notes = kvp.Value.Notes;
-                    //           // ha.Damage = kvp.Value.Damage;
-                    //            ha.Attrib = kvp.Value.Attrib;
-                    //            ha.Cmb = kvp.Value.Cmb;
-                    //            ha.Lore = kvp.Value.Lore;
-                    //            ha.Hurl = kvp.Value.Hurl;
-                    //        }
-                    //    }
-                    //}
+                            if (keys.Count > 0)
+                            {
+                                KeyValuePair<string, Ability> kvp = keys[0];
+                                ha.LocalizedName = kvp.Value.LocalizedName;
+                                ha.Affects = kvp.Value.Affects;
+                                ha.Description = kvp.Value.Description;
+                                ha.Notes = kvp.Value.Notes;
+                                ha.Attrib = kvp.Value.Attrib;
+                                ha.Cmb = kvp.Value.Cmb;
+                                ha.Lore = kvp.Value.Lore;
+                                ha.Hurl = kvp.Value.Hurl;
+                            }
+                        }
+                    }
                 }
                 context.SaveChanges();
             }

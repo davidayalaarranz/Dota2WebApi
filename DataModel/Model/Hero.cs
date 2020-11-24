@@ -79,5 +79,7 @@ namespace DataModel.Model
 
         public decimal AttackAnimationPoint { get; set; }
         public int AttackAcquisitionRange { get; set; }
+
+        public int AbilityTalentStart { get; set; }
     }
 }

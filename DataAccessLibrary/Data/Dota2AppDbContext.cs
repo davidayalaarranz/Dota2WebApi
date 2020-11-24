@@ -18,6 +18,7 @@ namespace DataAccessLibrary.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<Ability> Abilities { get; set; }
+        public DbSet<HeroAbility> HeroAbilities { get; set; }
         public DbSet<HeroItem> HeroItems { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<HeroAbilityUpgrade> HeroAbilityUpgrades { get; set; }
@@ -54,8 +55,8 @@ namespace DataAccessLibrary.Data
             builder.Entity<HeroAbilityUpgrade>()
                 .HasOne(hau => hau.Ability);
 
-            builder.Entity<HeroAbility>()
-                .HasKey(t => new { t.HeroId, t.AbilityId });
+            //builder.Entity<HeroAbility>()
+            //    .HasKey(t => new { t.HeroId, t.AbilityId });
             builder.Entity<HeroAbility>()
                 .HasOne(ha => ha.Hero)
                 .WithMany(h => h.Abilities);
