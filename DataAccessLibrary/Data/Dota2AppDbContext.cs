@@ -17,8 +17,10 @@ namespace DataAccessLibrary.Data
         public DbSet<LogEntity> Log { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Hero> Heroes { get; set; }
+        public DbSet<Ability> Abilities { get; set; }
         public DbSet<HeroItem> HeroItems { get; set; }
         public DbSet<Match> Matches { get; set; }
+        public DbSet<HeroAbilityUpgrade> HeroAbilityUpgrades { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,6 +36,7 @@ namespace DataAccessLibrary.Data
             builder.Entity<LogEntity>().ToTable("Log");
             builder.Entity<ApplicationUser>().ToTable("ApplicationUsers");
             builder.Entity<Hero>().ToTable("Heroes");
+            builder.Entity<Ability>().ToTable("Abilities");
             builder.Entity<HeroItem>().ToTable("HeroItems");
             builder.Entity<HeroItemComponent>().ToTable("HeroItemComponents");
             builder.Entity<Match>().ToTable("Matches");
@@ -45,6 +48,20 @@ namespace DataAccessLibrary.Data
                 .HasKey(k => new { k.MatchId, k.Order });
             builder.Entity<Ban>()
                 .HasKey(k => new { k.MatchId, k.Order });
+
+            builder.Entity<HeroAbilityUpgrade>()
+                .HasKey(k => new { k.AbilityId, k.Level });
+            builder.Entity<HeroAbilityUpgrade>()
+                .HasOne(hau => hau.Ability);
+
+            builder.Entity<HeroAbility>()
+                .HasKey(t => new { t.HeroId, t.AbilityId });
+            builder.Entity<HeroAbility>()
+                .HasOne(ha => ha.Hero)
+                .WithMany(h => h.Abilities);
+            builder.Entity<HeroAbility>()
+                .HasOne(ha => ha.Ability)
+                .WithMany(a => a.Heroes);
 
             builder.Entity<MatchPlayer>()
                 .HasKey(k => new { k.MatchId, k.PlayerId, k.PlayerSlot });

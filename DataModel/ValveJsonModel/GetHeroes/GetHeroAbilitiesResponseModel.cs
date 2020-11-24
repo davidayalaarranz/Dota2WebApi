@@ -5,6 +5,6 @@ namespace DataModel.ValveJsonModel.GetHeroes
 {
     public class GetHeroAbilitiesResponseModel
     {
-        public Dictionary<string, HeroAbility> abilitydata { get; set; }
+        public Dictionary<string, Ability> abilitydata { get; set; }
     }
 }

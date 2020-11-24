@@ -20,23 +20,7 @@ namespace DataModel.Model
         public decimal Initial { get; set; }
         public decimal Gain { get; set; }
     }
-    public class HeroAbility
-    {
-        public long Id { get; set; }
-        public int Order { get; set; }
-        public string ShortName { get { return Name.Remove(0, 5); } }
-        public string Name { get; set; }
-        public string LocalizedName { get; set; }
-        public string Affects { get; set; }
-        public string Description { get; set; }
-        public string Notes { get; set; }
-        public string Damage { get; set; }
-        public string Attrib { get; set; }
-        public string Cmb { get; set; }
-        public string Lore { get; set; }
-        public string Hurl { get; set; }
-        public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/abilities/", Name, "_lg.png"); } }
-    }
+    
 
     public class Hero
     {

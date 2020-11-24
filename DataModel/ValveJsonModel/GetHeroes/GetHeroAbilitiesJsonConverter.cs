@@ -5,16 +5,16 @@ using System.Text.Json.Serialization;
 
 namespace DataModel.ValveJsonModel.GetHeroes
 {
-    public class GetHeroAbilitiesJsonConverter : JsonConverter<HeroAbility>
+    public class GetHeroAbilitiesJsonConverter : JsonConverter<Ability>
     {
-        public override HeroAbility Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Ability Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
                 throw new JsonException();
             }
 
-            HeroAbility ha = new HeroAbility();
+            Ability ha = new Ability();
             while (reader.Read())
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
@@ -29,7 +29,7 @@ namespace DataModel.ValveJsonModel.GetHeroes
                     switch (propertyName)
                     {
                         case "id":
-                            ha.Id = reader.GetInt64();
+                            ha.HeroAbilityId = reader.GetInt64();
                             break;
                         case "dname":
                             ha.LocalizedName = reader.GetString();
@@ -66,7 +66,7 @@ namespace DataModel.ValveJsonModel.GetHeroes
             return ha;
         }
 
-        public override void Write(Utf8JsonWriter writer, HeroAbility value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, Ability value, JsonSerializerOptions options)
         {
             throw new NotImplementedException(); //This will never be called since CanWrite is false
         }

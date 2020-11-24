@@ -15,22 +15,40 @@ namespace BusinessLibrary.Service
         {
             using (Dota2AppDbContext db = new Dota2AppDbContext())
             {
-                List<Hero> lh = await (from a in db.Heroes.AsNoTracking()
-                                       select a)
-                    .Where(x => x.HeroId == id)
-                    .Include(h => h.Strength)
-                    .Include(h => h.Agility)
-                    .Include(h => h.Inteligence)
-                    .Include(h => h.Abilities)
-                    .ToListAsync();
-                if (lh.Count > 0)
-                {
-                    lh[0].Abilities = lh[0].Abilities.OrderBy(h => h.Order).ToList();
-                    return lh[0];
+                try { 
+                    var lh1 = await (from a in db.Heroes
+                              select a)
+                        .Where(x => x.HeroId == id)
+                        .Include(h => h.Strength)
+                        .Include(h => h.Agility)
+                        .Include(h => h.Inteligence)
+                        //.Include(h => h.Abilities)    
+                        .ToListAsync()
+                        ;
+
+                    foreach (Hero h in lh1)
+                    {
+                        h.Abilities = db.Entry(h)
+                            .Collection(h => h.Abilities)
+                            .Query()
+                            .Where(ha => !ha.Ability.IsHidden && !ha.Ability.IsTalent)
+                            .ToList();
+                            //;
+                    }
+                    List<Hero> lh = lh1;
+                    if (lh.Count > 0)
+                    {
+                        lh[0].Abilities = lh[0].Abilities.OrderBy(h => h.Ability.Order).ToList();
+                        return lh[0];
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    return null;
+                    throw e;
                 }
             }
         }
@@ -64,7 +82,7 @@ namespace BusinessLibrary.Service
                               .Include(h => h.Inteligence)
                               .Include(h => h.Abilities)
                               .ToListAsync();
-                crm.Heroes.ToList().ForEach(h => h.Abilities = h.Abilities.OrderBy(h => h.Order).ToList());
+                crm.Heroes.ToList().ForEach(h => h.Abilities = h.Abilities.OrderBy(h => h.Ability.Order).ToList());
                 return crm;
             }
         }

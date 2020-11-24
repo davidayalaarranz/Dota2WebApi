@@ -10,6 +10,7 @@ using System.Globalization;
 using DataModel.ValveJsonModel.GetItems;
 using DataModel.Model;
 using DataModel.ValveJsonModel.GetMatchHistory;
+using System.Text.RegularExpressions;
 
 namespace DataAccessLibrary.Data
 {
@@ -50,7 +51,7 @@ namespace DataAccessLibrary.Data
                         if (o != null)
                         {
                             long currentMatchId = aux.Value.GetProperty("match_id").GetInt64();
-                            Match currentMatch = o.result.matches.Find(m => m.MatchId == currentMatchId);
+                            DataModel.Model.Match currentMatch = o.result.matches.Find(m => m.MatchId == currentMatchId);
                             if (currentMatch != null)
                             { 
                                 currentMatch.RadiantWin = aux.Value.GetProperty("radiant_win").GetBoolean();
@@ -82,13 +83,22 @@ namespace DataAccessLibrary.Data
                                     mp.HeroHealing = ae.Current.GetProperty("hero_healing").GetInt32();
                                     mp.Gold = ae.Current.GetProperty("gold").GetInt32();
                                     mp.Level = ae.Current.GetProperty("level").GetInt32();
+                                    JsonElement.ArrayEnumerator aeUpgrades = ae.Current.GetProperty("ability_upgrades").EnumerateArray();
+                                    while (aeUpgrades.MoveNext())
+                                    {
+                                        HeroAbilityUpgrade hau = new HeroAbilityUpgrade();
+                                        hau.AbilityId = aeUpgrades.Current.GetProperty("ability").GetInt32();
+                                        hau.Time = new TimeSpan(0, 0, aeUpgrades.Current.GetProperty("time").GetInt32());
+                                        hau.Level = aeUpgrades.Current.GetProperty("level").GetInt32();
+                                        mp.HeroUpgrades.Add(hau);
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                foreach (Match m in o.result.matches)
+                foreach (DataModel.Model.Match m in o.result.matches)
                 {
                     foreach (MatchPlayer mp in m.Players)
                     {
@@ -222,21 +232,21 @@ namespace DataAccessLibrary.Data
                     serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
                     harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
                 }
-                
 
+                List<Ability> hal = context.Abilities.ToList();
                 foreach (Hero h in o.result.heroes)
                 {
-                    List<KeyValuePair<string, HeroAbility>> keys = harm.abilitydata.Where(
-                        hi => compara(hi.Key, h.ShortName)
-                    ).ToList();
-                    for (int i = 0; i < keys.Count(); i++)
+                    List<Ability> alCurrentHero = hal.Where(ha => ha.Name.IndexOf(h.ShortName) != -1).ToList();
+                    List<HeroAbility> halCurrentHero = new List<HeroAbility>();
+                    for (var i = 0; i < alCurrentHero.Count; i++)
                     {
-                        KeyValuePair<string, HeroAbility> kvp = keys[i];
-                        kvp.Value.Order = (i + 1);
-                        kvp.Value.Name = kvp.Key;
+                        alCurrentHero[i].Order = (i + 1);
+                        HeroAbility ha = new HeroAbility();
+                        ha.Hero = h;
+                        ha.Ability = alCurrentHero[i];
+                        halCurrentHero.Add(ha);
                     }
-
-                    h.Abilities.AddRange(keys.Select(k => k.Value));
+                    h.Abilities.AddRange(halCurrentHero);
 
                     context.Heroes.Add(h);
                 }
@@ -249,6 +259,106 @@ namespace DataAccessLibrary.Data
             return (key.IndexOf(heroName) == 0);
         }
 
+        private static void ParseNPCAbilities(List<string> lines, Dota2AppDbContext context)
+        {
+            Regex reAbilityName = new Regex(@"^\t""[a-zA-Z0-9_]*""$");
+            Regex reId = new Regex(@"^\t\t""ID""");
+            Regex reHiddenAbility = new Regex(@"^\t\t""AbilityBehavior""[a-zA-Z0-9_|"" \t]*DOTA_ABILITY_BEHAVIOR_HIDDEN");
+            Regex reTalent = new Regex(@"^\t\t""AbilityType""[a-zA-Z0-9_|"" \t]*DOTA_ABILITY_TYPE_ATTRIBUTES");
+            int abId = 0;
+            string abName = string.Empty;
+            Ability haAux = null;
+            for (var i = 0; i < lines.Count; i++)
+            //foreach (string line in lines)
+            {
+                System.Text.RegularExpressions.Match reAbilityNameMatch = reAbilityName.Match(lines[i]);
+                if (reAbilityNameMatch.Success)
+                {
+                    int firstQuote = lines[i].IndexOf("\"");
+                    int lastQuote = lines[i].LastIndexOf("\"");
+                    abName = lines[i].Substring(firstQuote + 1, lastQuote - firstQuote - 1);
+                }
+                System.Text.RegularExpressions.Match reIdMatch = reId.Match(lines[i]);
+                if (reIdMatch.Success)
+                {
+                    var aux = lines[i].Substring(lines[i].IndexOf("\"") + 4);
+                    int firstQuote = aux.IndexOf("\"");
+                    int lastQuote = aux.LastIndexOf("\"");
+                    aux = aux.Substring(firstQuote + 1, lastQuote - firstQuote - 1);
+                    abId = int.Parse(aux);
+                    if (abId != 0)
+                    {
+                        haAux = new Ability();
+                        haAux.HeroAbilityId = abId;
+                        haAux.Name = abName;
+                        context.Abilities.Add(haAux);
+                        abId = 0;
+                    }
+                }
+                System.Text.RegularExpressions.Match reHiddenAbilityMatch = reHiddenAbility.Match(lines[i]);
+                if (reHiddenAbilityMatch.Success)
+                {
+                    haAux.IsHidden = true;
+                }
+                System.Text.RegularExpressions.Match reTalentMatch = reTalent.Match(lines[i]);
+                if (reTalentMatch.Success)
+                {
+                    haAux.IsTalent = true;
+                }
+            }
+            context.SaveChanges();
+        }
+
+        public static void InitializeAbilities(string pathJson, Dota2AppDbContext context)
+        {
+            try
+            {
+                string pathNPCAbilities = String.Concat(pathJson, "\\npc_abilities.txt");
+                if (File.Exists(pathNPCAbilities))
+                {
+                    List<string> lines = File.ReadLines(pathNPCAbilities).ToList();
+                    ParseNPCAbilities(lines, context);
+
+                    GetHeroAbilitiesResponseModel harm = null;
+                    string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
+                    if (File.Exists(pathJsonHeroAbilities))
+                    {
+                        string jsonString = File.ReadAllText(pathJsonHeroAbilities);
+                        var serializeOptions2 = new JsonSerializerOptions
+                        {
+                            ReadCommentHandling = JsonCommentHandling.Skip
+                        };
+                        serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
+                        harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
+
+                        foreach (Ability ha in context.Abilities)
+                        {
+                            List<KeyValuePair<string, Ability>> keys = harm.abilitydata.Where(
+                                hi => compara(hi.Key, ha.Name)
+                            ).ToList();
+
+                            if (keys.Count > 0) { 
+                                KeyValuePair<string, Ability> kvp = keys[0];
+                                ha.LocalizedName = kvp.Value.LocalizedName;
+                                ha.Affects = kvp.Value.Affects;
+                                ha.Description = kvp.Value.Description;
+                                ha.Notes = kvp.Value.Notes;
+                                ha.Damage = kvp.Value.Damage;
+                                ha.Attrib = kvp.Value.Attrib;
+                                ha.Cmb = kvp.Value.Cmb;
+                                ha.Lore = kvp.Value.Lore;
+                                ha.Hurl = kvp.Value.Hurl;
+                            }
+                        }
+                    }
+                }
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
         public static void InitializeItems(string pathJson, Dota2AppDbContext context)
         {
             try { 
@@ -366,6 +476,7 @@ namespace DataAccessLibrary.Data
                 if (context.Heroes.Any())
                     return;
                 string pathJson = Path.GetFullPath("..\\DataModel\\json");
+                InitializeAbilities(pathJson, context);
                 InitializeHeroes(pathJson, context);
                 InitializeItems(pathJson, context);
                 InitializeMatches(pathJson, context);

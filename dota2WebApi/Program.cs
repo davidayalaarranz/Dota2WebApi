@@ -30,7 +30,7 @@ namespace dota2WebApi
             //CreateHostBuilder(args).Build().Run();
             var host = CreateHostBuilder(args).Build();
             // El siguiente servicio solo lo añadimos cuando la base de datos no existe.
-            //CreateDbIfNotExists(host);
+            CreateDbIfNotExists(host);
             host.Run();
         }
 
