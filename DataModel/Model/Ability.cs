@@ -26,7 +26,7 @@ namespace DataModel.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long HeroAbilityId { get; set; }
+        public long AbilityId { get; set; }
         public int Order { get; set; }
 
         public bool IsHidden { get; set; }
@@ -38,7 +38,6 @@ namespace DataModel.Model
         public string Affects { get; set; }
         public string Description { get; set; }
         public string Notes { get; set; }
-        public string Damage { get; set; }
         public string Attrib { get; set; }
         public string Cmb { get; set; }
         public string Lore { get; set; }
@@ -46,5 +45,31 @@ namespace DataModel.Model
         public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/abilities/", Name, "_lg.png"); } }
 
         public List<HeroAbility> Heroes { get; set; }
+
+
+        /// de NPC_abilities
+        /// base
+        
+        public int CastRangeBuffer { get; set; }
+
+        //public int[] CastRange { get; set; }
+        //public decimal[] CastPoints { get; set; }
+        //public decimal[] ChannelTime { get; set; }
+        //public decimal[] Cooldown { get; set; }
+        //public decimal[] Duration { get; set; }
+        //public int[] Damage { get; set; }
+        //public int[] ManaCost { get; set; }
+        public string CastRange { get; set; }
+        public string CastPoint { get; set; }
+        public string ChannelTime { get; set; }
+        public string Cooldown { get; set; }
+        public string Duration { get; set; }
+        public string Damage { get; set; }
+        public string ManaCost { get; set; }
+
+        /// otros
+        /// 
+        public bool HasScepterUpgrade { get; set; }
+
     }
 }

@@ -29,7 +29,7 @@ namespace DataModel.ValveJsonModel.GetHeroes
                     switch (propertyName)
                     {
                         case "id":
-                            ha.HeroAbilityId = reader.GetInt64();
+                            ha.AbilityId = reader.GetInt64();
                             break;
                         case "dname":
                             ha.LocalizedName = reader.GetString();

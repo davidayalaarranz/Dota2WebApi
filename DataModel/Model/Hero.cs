@@ -55,12 +55,29 @@ namespace DataModel.Model
 
         public List<MatchPlayer> Matches { get; set; }
 
-        public decimal BaseHpRegen { get; set; }
-        public decimal BaseManaRegen { get; set; }
+        
         public int MinDamage { get; set; }
         public int MaxDamage { get; set; }
-        public int MovementSpeed { get; set; }
+        public int AttackRange { get; set; }        
         public decimal Armor { get; set; }
         public decimal BaseArmor { get; set; }
+
+        public decimal AttackRate { get; set; }
+        public int MovementSpeed { get; set; }
+        public decimal TurnRate { get; set; }
+
+        public decimal BaseHpRegen { get; set; }
+        public decimal BaseManaRegen { get; set; }
+        public decimal BaseHp { get; set; }
+        public decimal BaseMana { get; set; }
+
+        public int VisionDaytimeRange { get; set; }
+        public int VisionNighttimeRange { get; set; }
+        
+        public decimal MagicalResistance { get; set; }
+        public int BaseAttackSpeed { get; set; }
+
+        public decimal AttackAnimationPoint { get; set; }
+        public int AttackAcquisitionRange { get; set; }
     }
 }
