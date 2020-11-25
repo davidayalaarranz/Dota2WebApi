@@ -14,36 +14,53 @@ namespace BusinessLibrary.Service
     {
         public async Task<Match> GetMatch(long id)
         {
-            using (Dota2AppDbContext db = new Dota2AppDbContext())
+            try
+            { 
+                using (Dota2AppDbContext db = new Dota2AppDbContext())
+                {
+                    List<Match> lm = await (from a in db.Matches.AsNoTracking()
+                                           select a)
+                        .Where(x => x.MatchId == id)
+                        .Include(m => m.MatchPlayers)
+                            .ThenInclude(mp => mp.Hero)
+                        .Include(m => m.MatchPlayers)
+                            .ThenInclude(mp => mp.Hero)
+                            .ThenInclude(h => h.Strength)
+                        .Include(m => m.MatchPlayers)
+                            .ThenInclude(mp => mp.Hero)
+                            .ThenInclude(h => h.Agility)
+                        .Include(m => m.MatchPlayers)
+                            .ThenInclude(mp => mp.Hero)
+                            .ThenInclude(h => h.Inteligence)
+                        .Include(m => m.MatchPlayers)
+                            .ThenInclude(mp => mp.Player)
+                        .ToListAsync();
+
+                    foreach (Match m in lm)
+                    {
+                        foreach (MatchPlayer mp in m.MatchPlayers)
+                        {
+                            mp.Hero.Abilities = (from a in db.HeroAbilities
+                                                 select a)
+                                       .Where(ha => ha.HeroId == mp.Hero.HeroId && !ha.IsTalent & !ha.Ability.IsHidden)
+                                       .Include(ha => ha.Ability)
+                                       .ToList();
+                        }
+                    }
+
+                    if (lm.Count > 0)
+                    {
+                        return lm[0];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch(Exception e)
             {
-                List<Match> lh = await (from a in db.Matches.AsNoTracking()
-                                       select a)
-                    .Where(x => x.MatchId == id)
-                    .Include(m => m.Players)
-                        .ThenInclude(mp => mp.Hero)
-                    .Include(m => m.Players)
-                        .ThenInclude(mp => mp.Hero)
-                        .ThenInclude(h => h.Strength)
-                    .Include(m => m.Players)
-                        .ThenInclude(mp => mp.Hero)
-                        .ThenInclude(h => h.Agility)
-                    .Include(m => m.Players)
-                        .ThenInclude(mp => mp.Hero)
-                        .ThenInclude(h => h.Inteligence)
-                    .Include(m => m.Players)
-                        .ThenInclude(mp => mp.Player)
-                    .Include(m => m.Players)
-                        .ThenInclude(mp => mp.Hero)
-                        .ThenInclude(h => h.Abilities)
-                    .ToListAsync();
-                if (lh.Count > 0)
-                {
-                    return lh[0];
-                }
-                else
-                {
-                    return null;
-                }
+                throw e;
             }
         }
 
@@ -61,9 +78,9 @@ namespace BusinessLibrary.Service
                 mrm.nMatches = query.Count();
 
                 mrm.Matches = await query
-                                .Include(m => m.Players)
+                                .Include(m => m.MatchPlayers)
                                     .ThenInclude(mp => mp.Hero)
-                                .Include(m => m.Players)
+                                .Include(m => m.MatchPlayers)
                                     .ThenInclude(mp => mp.Player)
                                 .ToListAsync();
             }

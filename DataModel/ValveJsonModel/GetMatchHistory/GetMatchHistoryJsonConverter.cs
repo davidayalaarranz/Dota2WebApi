@@ -43,7 +43,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                             // Leemos el array de players
                             if (reader.TokenType == JsonTokenType.StartArray)
                             {
-                                m.Players = new List<MatchPlayer>();
+                                m.MatchPlayers = new List<MatchPlayer>();
                                 while (reader.Read())
                                 {
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
@@ -55,7 +55,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                                         mp.MatchId = m.MatchId;
                                         mp.Player = new Player();
                                         mp.Hero = new Hero();
-                                        m.Players.Add(mp);
+                                        m.MatchPlayers.Add(mp);
                                         while (reader.Read())
                                         {
                                             if (reader.TokenType == JsonTokenType.EndObject) break;

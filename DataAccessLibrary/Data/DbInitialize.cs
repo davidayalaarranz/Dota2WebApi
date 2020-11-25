@@ -69,7 +69,7 @@ namespace DataAccessLibrary.Data
                                 JsonElement.ArrayEnumerator ae = aux.Value.GetProperty("players").EnumerateArray();
                                 while (ae.MoveNext())
                                 {
-                                    MatchPlayer mp = currentMatch.Players.First(p => p.PlayerId == ae.Current.GetProperty("account_id").GetInt64() &&
+                                    MatchPlayer mp = currentMatch.MatchPlayers.First(p => p.PlayerId == ae.Current.GetProperty("account_id").GetInt64() &&
                                                                                     p.PlayerSlot == ae.Current.GetProperty("player_slot").GetInt32());
                                     mp.Kills = ae.Current.GetProperty("kills").GetInt32();
                                     mp.Deaths = ae.Current.GetProperty("deaths").GetInt32();
@@ -100,10 +100,10 @@ namespace DataAccessLibrary.Data
 
                 foreach (DataModel.Model.Match m in o.result.matches)
                 {
-                    foreach (MatchPlayer mp in m.Players)
+                    foreach (MatchPlayer mp in m.MatchPlayers)
                     {
                         mp.Hero = context.Heroes.First(h => h.HeroId == mp.Hero.HeroId);
-                        mp.Player = m.Players.First(p => p.PlayerId == mp.Player.PlayerId).Player;
+                        mp.Player = m.MatchPlayers.First(p => p.PlayerId == mp.Player.PlayerId).Player;
                     }
                     context.Matches.Add(m);
                 }
@@ -642,8 +642,8 @@ namespace DataAccessLibrary.Data
                 string pathJson = Path.GetFullPath("..\\DataModel\\json");
                 InitializeAbilities(pathJson, context);
                 InitializeHeroes(pathJson, context);
-                //InitializeItems(pathJson, context);
-                //InitializeMatches(pathJson, context);
+                InitializeItems(pathJson, context);
+                InitializeMatches(pathJson, context);
 
                 //context.SaveChanges();
             }

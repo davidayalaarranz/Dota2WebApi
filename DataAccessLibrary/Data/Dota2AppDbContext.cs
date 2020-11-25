@@ -68,7 +68,7 @@ namespace DataAccessLibrary.Data
                 .HasKey(k => new { k.MatchId, k.PlayerId, k.PlayerSlot });
             builder.Entity<MatchPlayer>()
                 .HasOne(mp => mp.Match)
-                .WithMany(m => m.Players)
+                .WithMany(m => m.MatchPlayers)
                 .HasForeignKey(mp => mp.MatchId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<MatchPlayer>()

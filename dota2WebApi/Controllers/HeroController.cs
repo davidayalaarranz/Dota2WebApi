@@ -7,6 +7,7 @@ using BusinessLibrary.Model;
 using BusinessLibrary.Service;
 using DataModel.Model;
 using DataModel.Model.JsonConverters;
+using dota2WebApi.Common;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -46,7 +47,7 @@ namespace dota2WebApi.Controllers
                 List<Object> lh = new List<object>();
                 foreach (Hero h in hrm.Heroes)
                 {
-                    lh.Add(TransformHero(h));
+                    lh.Add(Transformers.TransformHero(h));
                 }
 
                 var ret = new
@@ -62,68 +63,7 @@ namespace dota2WebApi.Controllers
             }
         }
 
-        private static Object TransformHero(Hero h)
-        {
-            foreach (HeroAbility ha in h.Abilities)
-            {
-                ha.Hero = null;
-                ha.Ability.Heroes = null;
-            }
-            var ret = new
-            {
-                HeroId = h.HeroId,
-                Name = h.Name,
-                ShortName = h.ShortName,
-                ImageUrl = h.ImageUrl,
-                VerticalImageUrl = h.VerticalImageUrl,
-                LocalizedName = h.LocalizedName,
-                PrincipalAttribute = h.PrincipalAttribute,
-                Roles = h.Roles,
-                RightClickAttack = h.RightClickAttack,
-                Biography = h.Biography,
-                Strength = new
-                {
-                    Id = h.Strength.Id,
-                    Initial = h.Strength.Initial,
-                    Gain = h.Strength.Gain
-                },
-                Agility = new
-                {
-                    Id = h.Agility.Id,
-                    Initial = h.Agility.Initial,
-                    Gain = h.Agility.Gain
-                },
-                Inteligence = new
-                {
-                    Id = h.Inteligence.Id,
-                    Initial = h.Inteligence.Initial,
-                    Gain = h.Inteligence.Gain,
-                },
-                MinDamage = h.MinDamage,
-                MaxDamage = h.MaxDamage,
-                AttackRange = h.AttackRange,
-                Armor = h.Armor,
-                BaseArmor = h.BaseArmor,
-                AttackRate = h.AttackRate,
-                MovementSpeed = h.MovementSpeed,
-                TurnRate = h.TurnRate,
-                BaseHpRegen = h.BaseHpRegen,
-                BaseManaRegen = h.BaseManaRegen,
-                BaseHp = h.BaseHp,
-                BaseMana = h.BaseMana,
-                VisionDaytimeRange = h.VisionDaytimeRange,
-                VisionNighttimeRange = h.VisionNighttimeRange,
-                MagicalResistance = h.MagicalResistance,
-                BaseAttackSpeed = h.BaseAttackSpeed,
-                AttackAnimationPoint = h.AttackAnimationPoint,
-                AttackAcquisitionRange = h.AttackAcquisitionRange,
-                Abilities = (from a in h.Abilities
-                             select a.Ability)
-
-            };
-
-            return ret;
-        }
+        
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
@@ -132,7 +72,7 @@ namespace dota2WebApi.Controllers
             {
                 Hero h = await _heroService.GetHero(id);
                 // Eliminamos los ciclos antes de serializar.
-                var ret = TransformHero(h);
+                var ret = Transformers.TransformHero(h);
                 
                 return Ok(ret);
                 //return Ok(await _heroService.GetHero(id));

@@ -22,7 +22,7 @@ namespace DataModel.Model
         public long MatchId { get; set; }
         public long MatchSeqNum { get; set; }
         public DateTime StartTime { get; set; }
-        public List<MatchPlayer> Players { get; set; }
+        public List<MatchPlayer> MatchPlayers { get; set; }
 
         public bool RadiantWin { get; set; }
         public int Duration { get; set; } // duración de la partida medida en segundos

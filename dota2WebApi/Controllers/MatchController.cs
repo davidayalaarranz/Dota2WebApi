@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using dota2WebApi.Common;
 
 namespace dota2WebApi.Controllers
 {
@@ -28,41 +29,20 @@ namespace dota2WebApi.Controllers
         {
             try
             {
-                //User.FindFirst(ClaimTypes.NameIdentifier).Value
-                //string c = User.FindFirst(ClaimTypes.Email).Value;
                 MatchResponseModel mr = await _matchService.GetMatches();
-                foreach (Match m in mr.Matches)
+                List<Match> lm = mr.Matches.ToList();
+                Object[] mRet = new Object[lm.Count];
+                for (var i = 0; i < lm.Count; i++)
                 {
-                    foreach (MatchPlayer mp in m.Players)
-                    {
-                        mp.Hero.Matches = null;
-                        mp.Player.Matches = null;
-                        mp.Match = null;
-                    }
+                    mRet[i] = Transformers.TransformMatch(lm[i]);
                 }
+                var ret = new
+                {
+                    nMatches = mr.nMatches,
+                    Matches = mRet,
+                };
 
-                return Ok(mr);
-                //var result = mr.Matches.Select(m => new
-                //{
-                //    MatchId = m.MatchId,
-                //    MatchSeqNum = m.MatchSeqNum,
-                //    StartTime = m.StartTime,
-                //    Players = m.Players.Select(mp => new
-                //    {
-                //        Hero = mp.Hero,
-                //        Player = mp.Player,
-                //        PlayerSlot = mp.PlayerSlot
-                //    })
-
-                //}).ToList();
-
-                //var ret = new
-                //{
-                //    Matches = result,
-                //    nMatches = mr.nMatches
-                //};
-
-                //return Ok(ret);
+                return Ok(ret);
             }
             catch (Exception e)
             {
@@ -77,13 +57,7 @@ namespace dota2WebApi.Controllers
             try
             {
                 Match m = await _matchService.GetMatch(id);
-                foreach (MatchPlayer mp in m.Players)
-                {
-                    mp.Hero.Matches = null;
-                    mp.Player.Matches = null;
-                    mp.Match = null;
-                }
-                return Ok(m);
+                return Ok(Transformers.TransformMatch(m));
             }
             catch (Exception e)
             {
