@@ -18,7 +18,7 @@ namespace BusinessLibrary.Service
             { 
                 using (Dota2AppDbContext db = new Dota2AppDbContext())
                 {
-                    List<Match> lm = await (from a in db.Matches.AsNoTracking()
+                    List<Match> lm = await (from a in db.Matches
                                            select a)
                         .Where(x => x.MatchId == id)
                         .Include(m => m.MatchPlayers)
@@ -40,11 +40,22 @@ namespace BusinessLibrary.Service
                     {
                         foreach (MatchPlayer mp in m.MatchPlayers)
                         {
-                            mp.Hero.Abilities = (from a in db.HeroAbilities
-                                                 select a)
-                                       .Where(ha => ha.HeroId == mp.Hero.HeroId && !ha.IsTalent & !ha.Ability.IsHidden)
-                                       .Include(ha => ha.Ability)
-                                       .ToList();
+                            db.Entry(mp.Hero)
+                                .Collection(h => h.HeroAbilities)
+                                .Query()
+                                .Where(ha => !ha.Ability.IsHidden)
+                                .Load();
+                            foreach (HeroAbility ha in mp.Hero.HeroAbilities)
+                            {
+                                db.Entry(ha)
+                                    .Reference(ha => ha.Ability)
+                                    .Load();
+                            }
+                            db.Entry(mp)
+                                .Collection(mp => mp.HeroUpgrades)
+                                .Query()
+                                .OrderBy(hu => hu.Level)
+                                .Load();
                         }
                     }
 
@@ -65,7 +76,6 @@ namespace BusinessLibrary.Service
         }
 
         public async Task<MatchResponseModel> GetMatches()
-        //public MatchResponseModel getMatches()
         {
             MatchResponseModel mrm = new MatchResponseModel();
             using (Dota2AppDbContext db = new Dota2AppDbContext())
@@ -86,41 +96,5 @@ namespace BusinessLibrary.Service
             }
             return mrm;
         }
-
-        //public async Task<MatchResponseModel GetHeroes(DataTableParameters param)
-        //{
-        //    HeroResponseModel crm = new HeroResponseModel();
-        //    using (Dota2AppDbContext db = new Dota2AppDbContext())
-        //    {
-        //        crm.nHeroes = (from a in db.Heroes.AsNoTracking() select a).Count();
-        //        param.length = param.length < 1 ? crm.nHeroes : param.length;
-
-        //        var query = from a in db.Heroes.AsNoTracking()
-        //                    select a;
-        //        if (!String.IsNullOrWhiteSpace(param.filter))
-        //            query = query.Where(x => x.Name.Contains(param.filter) || x.LocalizedName.Contains(param.filter));
-        //        crm.nHeroes = query.Count();
-        //        if (!String.IsNullOrEmpty(param.orderBy))
-        //        {
-        //            param.orderBy = string.Concat(param.orderBy.Substring(0, 1).ToUpper(), param.orderBy[1..]);
-        //            if (param.order.Equals("asc"))
-        //                query = query.OrderBy(p => EF.Property<object>(p, param.orderBy));
-        //            else
-        //                query = query.OrderByDescending(p => EF.Property<object>(p, param.orderBy));
-        //        }
-
-        //        crm.Heroes = await query.Skip(param.start)
-        //                      .Take(param.length)
-        //                      .Include(h => h.Strength)
-        //                      .Include(h => h.Agility)
-        //                      .Include(h => h.Inteligence)
-        //                      .Include(h => h.Abilities)
-        //                      .ToListAsync();
-        //        crm.Heroes.ToList().ForEach(h => h.Abilities = h.Abilities.OrderBy(h => h.Order).ToList());
-        //        return crm;
-        //    }
-        //}
-
-        
     }
 }

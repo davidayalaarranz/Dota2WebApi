@@ -41,9 +41,26 @@ namespace dota2WebApi.Common
             return ret;
         }
 
+        public static Object TransformHeroAbilityUpgrade(HeroAbilityUpgrade hau)
+        {
+            if (hau == null) return null;
+            var ret = new
+            {
+                AbilityId = hau.AbilityId,
+                Level = hau.Level,
+                Time = hau.Time.TotalSeconds,
+            };
+            return ret;
+        }
+
         public static Object TransformMatchPlayer(MatchPlayer mp)
         {
             if (mp == null) return null;
+            Object[] hauRet = new Object[mp.HeroUpgrades.Count];
+            for (var i = 0; i < mp.HeroUpgrades.Count; i++)
+            {
+                hauRet[i] = TransformHeroAbilityUpgrade(mp.HeroUpgrades[i]);
+            }
             var ret = new
             {
                 PlayerId = mp.PlayerId,
@@ -53,6 +70,8 @@ namespace dota2WebApi.Common
 
                 Player = TransformPlayer(mp.Player),
                 Hero = TransformHero(mp.Hero),
+
+                HeroUpgrades = hauRet,
 
                 Level = mp.Level,
                 Kills = mp.Kills,
@@ -80,34 +99,35 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        public static Object TransformAbility(Ability a)
+        public static Object TransformHeroAbility(HeroAbility ha)
         {
-            if (a == null) return null;
+            if (ha == null) return null;
 
             var ret = new
             {
-                AbilityId = a.AbilityId,
-                IsHidden = a.IsHidden,
-                Name = a.Name,
-                LocalizedName = a.LocalizedName,
-                Affects = a.Affects,
-                Description = a.Description,
-                Notes = a.Notes,
-                Attrib = a.Attrib,
-                Cmb = a.Cmb,
-                Lore = a.Lore,
-                Hurl = a.Hurl,
-                ImageUrl = a.ImageUrl,
-                CastRangeBuffer = a.CastRangeBuffer,
-                CastRange = a.CastRange,
-                CastPoint = a.CastPoint,
-                ChannelTime = a.ChannelTime,
-                Cooldown = a.Cooldown,
-                Duration = a.Duration,
-                Damage = a.Damage,
-                ManaCost = a.ManaCost,
-                HasScepterUpgrade = a.HasScepterUpgrade,
-                IsGrantedByScepter = a.IsGrantedByScepter,
+                AbilityId = ha.AbilityId,
+                IsHidden = ha.Ability.IsHidden,
+                IsTalent = ha.IsTalent,
+                Name = ha.Ability.Name,
+                LocalizedName = ha.Ability.LocalizedName,
+                Affects = ha.Ability.Affects,
+                Description = ha.Ability.Description,
+                Notes = ha.Ability.Notes,
+                Attrib = ha.Ability.Attrib,
+                Cmb = ha.Ability.Cmb,
+                Lore = ha.Ability.Lore,
+                Hurl = ha.Ability.Hurl,
+                ImageUrl = ha.IsTalent ? "/images/dota_2_talent_tree.png" : ha.Ability.ImageUrl,
+                CastRangeBuffer = ha.Ability.CastRangeBuffer,
+                CastRange = ha.Ability.CastRange,
+                CastPoint = ha.Ability.CastPoint,
+                ChannelTime = ha.Ability.ChannelTime,
+                Cooldown = ha.Ability.Cooldown,
+                Duration = ha.Ability.Duration,
+                Damage = ha.Ability.Damage,
+                ManaCost = ha.Ability.ManaCost,
+                HasScepterUpgrade = ha.Ability.HasScepterUpgrade,
+                IsGrantedByScepter = ha.Ability.IsGrantedByScepter,
             };
             return ret;
         }
@@ -116,10 +136,10 @@ namespace dota2WebApi.Common
         {
             if (h == null) return null;
             
-            Object[] abilitiesRet = new Object[h.Abilities.Count];
-            for (var i = 0; i < h.Abilities.Count; i++)
+            Object[] abilitiesRet = new Object[h.HeroAbilities.Count];
+            for (var i = 0; i < h.HeroAbilities.Count; i++)
             {
-                abilitiesRet[i] = TransformAbility(h.Abilities[i].Ability);
+                abilitiesRet[i] = TransformHeroAbility(h.HeroAbilities[i]);
             }
             var ret = new
             {

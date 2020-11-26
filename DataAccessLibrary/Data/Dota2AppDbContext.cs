@@ -59,10 +59,11 @@ namespace DataAccessLibrary.Data
             //    .HasKey(t => new { t.HeroId, t.AbilityId });
             builder.Entity<HeroAbility>()
                 .HasOne(ha => ha.Hero)
-                .WithMany(h => h.Abilities);
+                .WithMany(h => h.HeroAbilities);
             builder.Entity<HeroAbility>()
                 .HasOne(ha => ha.Ability)
                 .WithMany(a => a.Heroes);
+
 
             builder.Entity<MatchPlayer>()
                 .HasKey(k => new { k.MatchId, k.PlayerId, k.PlayerSlot });

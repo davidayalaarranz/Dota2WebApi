@@ -256,7 +256,7 @@ namespace DataAccessLibrary.Data
                         if (hAux.HeroId != 0)
                         {
                             // Indicamos las habilidades que son talentos
-                            foreach (HeroAbility ha in hAux.Abilities)
+                            foreach (HeroAbility ha in hAux.HeroAbilities)
                             {
                                 ha.IsTalent = ha.Order >= hAux.AbilityTalentStart;
                             }
@@ -378,7 +378,7 @@ namespace DataAccessLibrary.Data
                         ha.Hero = hAux;
                         ha.Ability = la[0];
                         ha.Order = intTalent;
-                        hAux.Abilities.Add(ha);
+                        hAux.HeroAbilities.Add(ha);
                     }
                 }
             }

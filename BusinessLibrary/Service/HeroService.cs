@@ -28,7 +28,7 @@ namespace BusinessLibrary.Service
 
                     foreach (Hero h in lh1)
                     {
-                        h.Abilities = (from a in db.HeroAbilities
+                        h.HeroAbilities = (from a in db.HeroAbilities
                                        select a)
                                        .Where(ha => ha.HeroId == h.HeroId && !ha.IsTalent & !ha.Ability.IsHidden)
                                        .Include(ha => ha.Ability)
@@ -38,7 +38,7 @@ namespace BusinessLibrary.Service
                     List<Hero> lh = lh1;
                     if (lh.Count > 0)
                     {
-                        lh[0].Abilities = lh[0].Abilities.OrderBy(ha => ha.Order).ToList();
+                        lh[0].HeroAbilities = lh[0].HeroAbilities.OrderBy(ha => ha.Order).ToList();
                         return lh[0];
                     }
                     else
@@ -84,7 +84,7 @@ namespace BusinessLibrary.Service
                               .ToListAsync();
                 foreach (Hero h in crm.Heroes)
                 {
-                    h.Abilities = (from a in db.HeroAbilities
+                    h.HeroAbilities = (from a in db.HeroAbilities
                                    select a)
                                    .Where(ha => ha.HeroId == h.HeroId && !ha.IsTalent & !ha.Ability.IsHidden)
                                    .Include(ha => ha.Ability)
@@ -92,7 +92,7 @@ namespace BusinessLibrary.Service
                                    .ToList();
 
                 }
-                crm.Heroes.ToList().ForEach(h => h.Abilities = h.Abilities.OrderBy(h => h.Order).ToList());
+                crm.Heroes.ToList().ForEach(h => h.HeroAbilities = h.HeroAbilities.OrderBy(h => h.Order).ToList());
 
                 return crm;
             }

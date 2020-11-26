@@ -29,7 +29,7 @@ namespace DataModel.Model
             Strength = new HeroAttribute();
             Agility = new HeroAttribute();
             Inteligence = new HeroAttribute();
-            Abilities = new List<HeroAbility>();
+            HeroAbilities = new List<HeroAbility>();
         }
 
         [Key]
@@ -51,7 +51,7 @@ namespace DataModel.Model
         public HeroAttribute Agility { get; set; }
         public HeroAttribute Inteligence { get; set; }
 
-        public List<HeroAbility> Abilities { get; set; }
+        public List<HeroAbility> HeroAbilities { get; set; }
 
         public List<MatchPlayer> Matches { get; set; }
 

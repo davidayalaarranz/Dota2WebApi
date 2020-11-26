@@ -26,6 +26,12 @@ namespace DataModel.Model
         public Ability Ability { get; set; }
         public int Level { get; set; }
         public TimeSpan Time { get; set; }
+
+
+        //public long MatchId { get; set; }
+        //public long PlayerId { get; set; }
+        //public long PlayerSlot { get; set; }
+        //public MatchPlayer MatchPlayer { get; set; }
     }
     public class Ability
     {
@@ -46,7 +52,11 @@ namespace DataModel.Model
         public string Cmb { get; set; }
         public string Lore { get; set; }
         public string Hurl { get; set; }
-        public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/abilities/", Name, "_lg.png"); } }
+        public string ImageUrl { get 
+            { 
+                return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/abilities/", Name, "_lg.png"); 
+            } 
+        }
 
         public List<HeroAbility> Heroes { get; set; }
 
