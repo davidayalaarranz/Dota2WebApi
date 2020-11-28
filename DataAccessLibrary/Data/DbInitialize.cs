@@ -403,6 +403,8 @@ namespace DataAccessLibrary.Data
 
             Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_HIDDEN = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_HIDDEN");
             Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE");
+
+            Regex reValue = new Regex(@"^\t\t\t\t""value""");
             
 
             Ability aAux = null;
@@ -471,6 +473,9 @@ namespace DataAccessLibrary.Data
 
                 match = reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE.Match(lines[i]);
                 if (match.Success) { aAux.IsHidden = true; }
+
+                match = reValue.Match(lines[i]);
+                if (match.Success) { aAux.Value = getNPCValue(lines[i]); continue; }
             }   
             context.SaveChanges();
         }

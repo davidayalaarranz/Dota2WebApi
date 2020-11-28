@@ -28,12 +28,18 @@ namespace BusinessLibrary.Service
 
                     foreach (Hero h in lh1)
                     {
-                        h.HeroAbilities = (from a in db.HeroAbilities
-                                       select a)
-                                       .Where(ha => ha.HeroId == h.HeroId && !ha.IsTalent & !ha.Ability.IsHidden)
-                                       .Include(ha => ha.Ability)
-                                       .ToList();
-                        
+                        db.Entry(h)
+                                .Collection(h => h.HeroAbilities)
+                                .Query()
+                                .Where(ha => !ha.Ability.IsHidden)
+                                .Load();
+                        foreach (HeroAbility ha in h.HeroAbilities)
+                        {
+                            db.Entry(ha)
+                                .Reference(ha => ha.Ability)
+                                .Load();
+                        }
+
                     }
                     List<Hero> lh = lh1;
                     if (lh.Count > 0)

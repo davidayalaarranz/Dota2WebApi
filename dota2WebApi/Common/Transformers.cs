@@ -109,7 +109,7 @@ namespace dota2WebApi.Common
                 IsHidden = ha.Ability.IsHidden,
                 IsTalent = ha.IsTalent,
                 Name = ha.Ability.Name,
-                LocalizedName = ha.Ability.LocalizedName,
+                LocalizedName = ha.IsTalent ? ha.Ability.LocalizedName.Replace("{s:value}", ha.Ability.Value) : ha.Ability.LocalizedName,
                 Affects = ha.Ability.Affects,
                 Description = ha.Ability.Description,
                 Notes = ha.Ability.Notes,

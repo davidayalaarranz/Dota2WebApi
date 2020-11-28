@@ -85,5 +85,7 @@ namespace DataModel.Model
         /// 
         public bool HasScepterUpgrade { get; set; }
         public bool IsGrantedByScepter { get; set; }
+        // Esta propiedad Value almacena el {s:value} de los LocalizedName de los talentos
+        public string Value { get; set; }
     }
 }
