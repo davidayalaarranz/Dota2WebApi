@@ -44,6 +44,7 @@ namespace BusinessLibrary.Service
                                 .Collection(h => h.HeroAbilities)
                                 .Query()
                                 .Where(ha => !ha.Ability.IsHidden)
+                                .OrderBy(ha => ha.Order)
                                 .Load();
                             foreach (HeroAbility ha in mp.Hero.HeroAbilities)
                             {
