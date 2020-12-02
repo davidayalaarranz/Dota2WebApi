@@ -19,20 +19,24 @@ namespace DataModel.Model
         public int Order { get; set; }
     }
 
-    public class HeroAbilityUpgrade
+    public class AbilityUpgrade
     {
-        //public long HeroAbilityUpgradeId { get; set; }
         public long AbilityId { get; set; }
         public Ability Ability { get; set; }
         public int Level { get; set; }
         public TimeSpan Time { get; set; }
-
-
-        //public long MatchId { get; set; }
-        //public long PlayerId { get; set; }
-        //public long PlayerSlot { get; set; }
-        //public MatchPlayer MatchPlayer { get; set; }
     }
+    public class MatchPlayerAbilityUpgrade : AbilityUpgrade
+    {
+        public long MatchPlayerMatchId { get; set; }
+        public long MatchPlayerPlayerId { get; set; }
+        public int MatchPlayerPlayerSlot { get; set; }
+    }
+    public class BuildAbilityUpgrade : AbilityUpgrade
+    {
+        public long BuildId { get; set; }
+    }
+
     public class Ability
     {
         [Key]

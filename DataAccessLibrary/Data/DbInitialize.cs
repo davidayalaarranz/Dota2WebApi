@@ -86,7 +86,7 @@ namespace DataAccessLibrary.Data
                                     JsonElement.ArrayEnumerator aeUpgrades = ae.Current.GetProperty("ability_upgrades").EnumerateArray();
                                     while (aeUpgrades.MoveNext())
                                     {
-                                        HeroAbilityUpgrade hau = new HeroAbilityUpgrade();
+                                        MatchPlayerAbilityUpgrade hau = new MatchPlayerAbilityUpgrade();
                                         hau.AbilityId = aeUpgrades.Current.GetProperty("ability").GetInt32();
                                         hau.Time = new TimeSpan(0, 0, aeUpgrades.Current.GetProperty("time").GetInt32());
                                         hau.Level = aeUpgrades.Current.GetProperty("level").GetInt32();

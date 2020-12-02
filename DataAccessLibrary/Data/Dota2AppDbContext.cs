@@ -21,7 +21,9 @@ namespace DataAccessLibrary.Data
         public DbSet<HeroAbility> HeroAbilities { get; set; }
         public DbSet<HeroItem> HeroItems { get; set; }
         public DbSet<Match> Matches { get; set; }
-        public DbSet<HeroAbilityUpgrade> HeroAbilityUpgrades { get; set; }
+        public DbSet<MatchPlayerAbilityUpgrade> MatchPlayerAbilityUpgrades { get; set; }
+        public DbSet<BuildAbilityUpgrade> BuildAbilityUpgrades { get; set; }
+        public DbSet<Build> Builds { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -44,19 +46,28 @@ namespace DataAccessLibrary.Data
             builder.Entity<MatchPlayer>().ToTable("MatchPlayers");
             builder.Entity<Pick>().ToTable("Picks");
             builder.Entity<Ban>().ToTable("Bans");
+            builder.Entity<Build>().ToTable("Builds");
 
+            /// PickBan
             builder.Entity<Pick>()
                 .HasKey(k => new { k.MatchId, k.Order });
             builder.Entity<Ban>()
                 .HasKey(k => new { k.MatchId, k.Order });
 
-            builder.Entity<HeroAbilityUpgrade>()
-                .HasKey(k => new { k.AbilityId, k.Level });
-            builder.Entity<HeroAbilityUpgrade>()
+            /// AbilityUpgrade
+            builder.Entity<MatchPlayerAbilityUpgrade>()
+                .HasKey(k => new { k.MatchPlayerMatchId, k.MatchPlayerPlayerId, k.MatchPlayerPlayerSlot, k.Level });
+            builder.Entity<BuildAbilityUpgrade>()
+               .HasOne(hau => hau.Ability);
+
+            builder.Entity<BuildAbilityUpgrade>()
+                .HasKey(k => new { k.BuildId, k.Level });
+            builder.Entity<MatchPlayerAbilityUpgrade>()
                 .HasOne(hau => hau.Ability);
 
-            //builder.Entity<HeroAbility>()
-            //    .HasKey(t => new { t.HeroId, t.AbilityId });
+            /// HeroAbility
+            builder.Entity<HeroAbility>()
+                .HasKey(t => new { t.HeroAbilityId });
             builder.Entity<HeroAbility>()
                 .HasOne(ha => ha.Hero)
                 .WithMany(h => h.HeroAbilities);
@@ -64,7 +75,7 @@ namespace DataAccessLibrary.Data
                 .HasOne(ha => ha.Ability)
                 .WithMany(a => a.Heroes);
 
-
+            /// MatchPlayer
             builder.Entity<MatchPlayer>()
                 .HasKey(k => new { k.MatchId, k.PlayerId, k.PlayerSlot });
             builder.Entity<MatchPlayer>()
@@ -82,7 +93,8 @@ namespace DataAccessLibrary.Data
                 .WithMany(h => h.Matches)
                 .HasForeignKey(mp => mp.HeroId)
                 .OnDelete(DeleteBehavior.Cascade);
-
+            
+            /// HeroItem
             builder.Entity<HeroItemComponent>()
                 .HasKey(t => new { t.ComponentId, t.HeroItemId });
             builder.Entity<HeroItemComponent>()
@@ -95,8 +107,6 @@ namespace DataAccessLibrary.Data
                 .WithMany(c => c.Components)
                 .HasForeignKey(t => t.HeroItemId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-
         }
     }
 }

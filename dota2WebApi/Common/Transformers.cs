@@ -41,7 +41,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        public static Object TransformHeroAbilityUpgrade(HeroAbilityUpgrade hau)
+        public static Object TransformHeroAbilityUpgrade(AbilityUpgrade hau)
         {
             if (hau == null) return null;
             var ret = new
