@@ -15,6 +15,7 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DataModel.Model.JsonConverters;
 
 namespace dota2WebApi
 {
@@ -36,6 +37,7 @@ namespace dota2WebApi
             services.AddTransient<IHeroItemService, HeroItemService>();
             services.AddTransient<IUrlService, UrlService>();
             services.AddTransient<IMatchService, MatchService>();
+            services.AddTransient<IBuildService, BuildService>();
 
             // El siguiente servicio solo lo añadimos cuando la base de datos no existe.
             services.AddDbContext<Dota2AppDbContext>(options =>
@@ -107,7 +109,8 @@ namespace dota2WebApi
                 });
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new TimeSpanJsonConverter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,16 @@
+﻿using DataModel.Model;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BusinessLibrary.Service
+{
+    public interface IBuildService
+    {
+        Task<Build> GetBuild(long id);
+        Task<Build> CreateBuild(Build build);
+        Task<Build> UpdateBuild(Build build);
+        Task<bool> DeleteBuild(Build build);
+    }
+}

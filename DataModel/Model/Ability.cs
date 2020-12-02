@@ -42,10 +42,8 @@ namespace DataModel.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long AbilityId { get; set; }
-        //public int Order { get; set; }
 
         public bool IsHidden { get; set; }
-        //public bool IsTalent { get; set; }
 
         public string Name { get; set; }
         public string LocalizedName { get; set; }
