@@ -405,7 +405,12 @@ namespace DataAccessLibrary.Data
             Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE");
 
             Regex reValue = new Regex(@"^\t\t\t\t""value""");
-            
+            Regex reAbilityType_DOTA_ABILITY_TYPE_ULTIMATE = new Regex(@"^\t\t""AbilityType"".+DOTA_ABILITY_TYPE_ULTIMATE");
+            Regex reAbilityType_DOTA_ABILITY_TYPE_BASIC = new Regex(@"^\t\t""AbilityType"".+DOTA_ABILITY_TYPE_BASIC");
+            Regex reAbilityType_DOTA_ABILITY_TYPE_ATTRIBUTES = new Regex(@"^\t\t""AbilityType"".+DOTA_ABILITY_TYPE_ATTRIBUTES");
+
+            Regex reMaxLevel = new Regex(@"^\t\t""MaxLevel""");
+
 
             Ability aAux = null;
             Ability aBase = null;
@@ -439,6 +444,7 @@ namespace DataAccessLibrary.Data
                         aAux.Duration = aBase.Duration;
                         aAux.Damage = aBase.Damage;
                         aAux.ManaCost = aBase.ManaCost;
+                        aAux.MaxLevel = aBase.MaxLevel;
                     }
                 }
                 // HeroId
@@ -476,6 +482,19 @@ namespace DataAccessLibrary.Data
 
                 match = reValue.Match(lines[i]);
                 if (match.Success) { aAux.Value = getNPCValue(lines[i]); continue; }
+
+                // Si la habilidad es de tipo ULTIMATE, el máximo nivel es 3
+                match = reAbilityType_DOTA_ABILITY_TYPE_ULTIMATE.Match(lines[i]);
+                if (match.Success) { aAux.MaxLevel = 3; continue; }
+                // Si la habilidad es de tipo BASIC, el máximo nivel es 4
+                match = reAbilityType_DOTA_ABILITY_TYPE_BASIC.Match(lines[i]);
+                if (match.Success) { aAux.MaxLevel = 4; continue; }
+                // Si la habilidad es de tipo ATTRIBUTES, el máximo nivel es 1 (talentos)
+                match = reAbilityType_DOTA_ABILITY_TYPE_ATTRIBUTES.Match(lines[i]);
+                if (match.Success) { aAux.MaxLevel = 1; continue; }
+                
+                match = reMaxLevel.Match(lines[i]);
+                if (match.Success) { aAux.MaxLevel = int.Parse(getNPCValue(lines[i])); continue; }
             }   
             context.SaveChanges();
         }

@@ -128,6 +128,7 @@ namespace dota2WebApi.Common
                 ManaCost = ha.Ability.ManaCost,
                 HasScepterUpgrade = ha.Ability.HasScepterUpgrade,
                 IsGrantedByScepter = ha.Ability.IsGrantedByScepter,
+                MaxLevel = ha.Ability.MaxLevel,
             };
             return ret;
         }

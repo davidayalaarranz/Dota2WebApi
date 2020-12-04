@@ -67,8 +67,8 @@ namespace BusinessLibrary.Service
                 crm.nHeroes = (from a in db.Heroes.AsNoTracking() select a).Count();
                 param.length = param.length < 1 ? crm.nHeroes : param.length;
 
-                var query = from a in db.Heroes.AsNoTracking()
-                            select a;
+                var query = (from a in db.Heroes.AsNoTracking()
+                            select a).Where(a => a.RightClickAttack != null);
                 if (!String.IsNullOrWhiteSpace(param.filter))
                     query = query.Where(x => x.Name.Contains(param.filter) || x.LocalizedName.Contains(param.filter));
                 crm.nHeroes = query.Count();
