@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataModel.Model;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,7 @@ namespace DataModel
         public long SteamId64 { get; set; }
         public string SteamIdCode { get; set; }
         public long SteamPlayerId { get; set; }
+
+        public IEnumerable<Build> Builds { get; set; }
     }
 }

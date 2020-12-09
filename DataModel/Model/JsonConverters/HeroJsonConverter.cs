@@ -25,7 +25,10 @@ namespace DataModel.Model.JsonConverters
                     writer.WriteStringValue("Inteligence");
                     break;
             }
-            
+        }
+        public override bool CanConvert(Type typeToConvert)
+        {
+            return base.CanConvert(typeToConvert);
         }
     }
 }

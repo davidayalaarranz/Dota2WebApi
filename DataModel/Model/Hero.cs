@@ -41,7 +41,7 @@ namespace DataModel.Model
         public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 14), "_lg.png"); } }
         public string VerticalImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 14), "_vert.jpg"); } }
         public string LocalizedName { get; set; }
-        [JsonConverter(typeof(HeroPrincipalAttributeJsonConverter))]
+        //[JsonConverter(typeof(HeroPrincipalAttributeJsonConverter))]
         public HeroPrincipalAttribute PrincipalAttribute { get; set; }
         public string Roles { get; set; }
         public string RightClickAttack { get; set; }

@@ -1,9 +1,11 @@
 ﻿using BusinessLibrary.Service;
+using DataModel;
 using DataModel.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,21 +17,30 @@ namespace dota2WebApi.Controllers
     public class BuildController : ControllerBase
     {
         private readonly IBuildService _buildService;
-        public BuildController(IBuildService buildService)
+        private readonly IAccountService _accountService;
+
+        public BuildController(IBuildService buildService, IAccountService accountService)
         {
             _buildService = buildService;
+            _accountService = accountService;
         }
 
         // GET: api/<BuildController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<Build>> Get()
         {
-            return new string[] { "value1", "value2" };
+            Claim idUser = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (idUser != null)
+            {
+                ApplicationUser user = await _accountService.GetUser(idUser.Value);
+                
+            }
+            return Unauthorized();
         }
 
         // GET api/<BuildController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string Get(int applicationUserId)
         {
             return "value";
         }
@@ -40,8 +51,15 @@ namespace dota2WebApi.Controllers
         {
             try
             {
-                Build bNew = await _buildService.CreateBuild(build);
-                return CreatedAtAction("Create Build", new { id = bNew.BuildId }, bNew);
+                Claim idUser = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (idUser != null)
+                {
+                    ApplicationUser user = await _accountService.GetUser(idUser.Value);
+                    Build bNew = await _buildService.CreateBuild(build, user);
+
+                    return CreatedAtAction("Create Build", new { id = bNew.BuildId }, bNew);
+                }
+                return Unauthorized();
             }
             catch (Exception e)
             {

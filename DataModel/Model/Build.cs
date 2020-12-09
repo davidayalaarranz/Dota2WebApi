@@ -8,11 +8,14 @@ namespace DataModel.Model
     {
         public Build()
         {
-            BuildAbilityUpgrades = new List<BuildAbilityUpgrade>(17);
+            HeroUpgrades = new List<BuildAbilityUpgrade>(17);
         }
         public long BuildId { get; set; }
         public long HeroId { get; set; }
         public Hero Hero { get; set; }
-        public List<BuildAbilityUpgrade> BuildAbilityUpgrades { get; set; }
+        public List<BuildAbilityUpgrade> HeroUpgrades { get; set; }
+
+        public string UserId { get; set; } 
+        public ApplicationUser User { get; set; }
     }
 }

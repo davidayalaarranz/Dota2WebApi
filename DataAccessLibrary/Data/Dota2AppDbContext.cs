@@ -65,6 +65,11 @@ namespace DataAccessLibrary.Data
             builder.Entity<MatchPlayerAbilityUpgrade>()
                 .HasOne(hau => hau.Ability);
 
+            builder.Entity<Build>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.Builds)
+                .HasForeignKey(b => b.UserId);
+
             /// HeroAbility
             builder.Entity<HeroAbility>()
                 .HasKey(t => new { t.HeroAbilityId });
