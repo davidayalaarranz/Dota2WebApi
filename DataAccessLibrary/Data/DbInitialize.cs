@@ -403,6 +403,7 @@ namespace DataAccessLibrary.Data
 
             Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_HIDDEN = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_HIDDEN");
             Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE");
+            Regex reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_PASSIVE = new Regex(@"^\t\t""AbilityBehavior"".+DOTA_ABILITY_BEHAVIOR_PASSIVE");
 
             Regex reValue = new Regex(@"^\t\t\t\t""value""");
             Regex reAbilityType_DOTA_ABILITY_TYPE_ULTIMATE = new Regex(@"^\t\t""AbilityType"".+DOTA_ABILITY_TYPE_ULTIMATE");
@@ -479,6 +480,8 @@ namespace DataAccessLibrary.Data
 
                 match = reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE.Match(lines[i]);
                 if (match.Success) { aAux.IsHidden = true; }
+                match = reAbilityBehavior_DOTA_ABILITY_BEHAVIOR_PASSIVE.Match(lines[i]);
+                if (match.Success) { aAux.IsPassive = true; }
 
                 match = reValue.Match(lines[i]);
                 if (match.Success) { aAux.Value = getNPCValue(lines[i]); continue; }
@@ -491,7 +494,7 @@ namespace DataAccessLibrary.Data
                 if (match.Success) { aAux.MaxLevel = 4; continue; }
                 // Si la habilidad es de tipo ATTRIBUTES, el máximo nivel es 1 (talentos)
                 match = reAbilityType_DOTA_ABILITY_TYPE_ATTRIBUTES.Match(lines[i]);
-                if (match.Success) { aAux.MaxLevel = 1; continue; }
+                if (match.Success) { aAux.MaxLevel = 1; aAux.IsAttributte = true; continue; }
                 
                 match = reMaxLevel.Match(lines[i]);
                 if (match.Success) { aAux.MaxLevel = int.Parse(getNPCValue(lines[i])); continue; }

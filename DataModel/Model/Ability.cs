@@ -91,5 +91,7 @@ namespace DataModel.Model
         public string Value { get; set; }
 
         public int MaxLevel { get; set; }
+        public bool IsPassive { get; set; }
+        public bool IsAttributte { get; set; }
     }
 }

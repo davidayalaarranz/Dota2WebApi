@@ -65,6 +65,7 @@ namespace dota2WebApi.Common
             {
                 BuildId = build.BuildId,
                 Name = build.Name,
+                Color = build.Color,
                 Hero = TransformHero(build.Hero),
                 HeroUpgrades = buRet
             };
