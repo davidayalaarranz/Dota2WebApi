@@ -1,6 +1,8 @@
-﻿using BusinessLibrary.Service;
+﻿using BusinessLibrary.Model;
+using BusinessLibrary.Service;
 using DataModel;
 using DataModel.Model;
+using dota2WebApi.Common;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -27,22 +29,42 @@ namespace dota2WebApi.Controllers
 
         // GET: api/<BuildController>
         [HttpGet]
-        public async Task<ActionResult<Build>> Get()
+        public async Task<ActionResult<BuildResponseModel>> Get([FromQuery] DataTableParameters parameters)
         {
             Claim idUser = User.FindFirst(ClaimTypes.NameIdentifier);
             if (idUser != null)
             {
                 ApplicationUser user = await _accountService.GetUser(idUser.Value);
-                
+                BuildResponseModel brm = await _buildService.GetBuilds(user, parameters);
+                List<Build> lb = brm.Builds.ToList();
+                Object[] mRet = new Object[lb.Count];
+                for (var i = 0; i < lb.Count; i++)
+                {
+                    mRet[i] = Transformers.TransformBuild(lb[i]);
+                }
+                var ret = new
+                {
+                    nBuilds = brm.nBuilds,
+                    Builds = mRet,
+                };
+
+                return Ok(ret);
             }
             return Unauthorized();
         }
 
         // GET api/<BuildController>/5
         [HttpGet("{id}")]
-        public string Get(int applicationUserId)
+        public async Task<ActionResult<Build>> Get(int id)
         {
-            return "value";
+            Claim idUser = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (idUser != null)
+            {
+                //ApplicationUser user = await _accountService.GetUser(idUser.Value);
+                Build b = await _buildService.GetBuild(id);
+                return Ok(Transformers.TransformBuild(b));
+            }
+            return Unauthorized();
         }
 
         // POST api/<BuildController>
@@ -57,7 +79,7 @@ namespace dota2WebApi.Controllers
                     ApplicationUser user = await _accountService.GetUser(idUser.Value);
                     Build bNew = await _buildService.CreateBuild(build, user);
 
-                    return CreatedAtAction("Create Build", new { id = bNew.BuildId }, bNew);
+                    return CreatedAtAction("Get", new { id = bNew.BuildId }, Transformers.TransformBuild(bNew));
                 }
                 return Unauthorized();
             }
@@ -68,9 +90,25 @@ namespace dota2WebApi.Controllers
         }
 
         // PUT api/<BuildController>/5
-        [HttpPut("{id}")]
-        public void Update(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<Build>> Update(Build build)
         {
+            try
+            {
+                Claim idUser = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (idUser != null)
+                {
+                    ApplicationUser user = await _accountService.GetUser(idUser.Value);
+                    Build bNew = await _buildService.UpdateBuild(build);
+
+                    return Ok(Transformers.TransformBuild(bNew));
+                }
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Error creating build");
+            }
         }
 
         // DELETE api/<BuildController>/5

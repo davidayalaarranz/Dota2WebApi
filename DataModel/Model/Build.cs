@@ -11,6 +11,10 @@ namespace DataModel.Model
             HeroUpgrades = new List<BuildAbilityUpgrade>(17);
         }
         public long BuildId { get; set; }
+
+        public string Name { get; set; }
+        public string Color { get; set; }
+
         public long HeroId { get; set; }
         public Hero Hero { get; set; }
         public List<BuildAbilityUpgrade> HeroUpgrades { get; set; }

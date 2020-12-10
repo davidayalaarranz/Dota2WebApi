@@ -53,6 +53,24 @@ namespace dota2WebApi.Common
             return ret;
         }
 
+        internal static object TransformBuild(Build build)
+        {
+            if (build == null) return null;
+            Object[] buRet = new Object[build.HeroUpgrades.Count];
+            for (var i = 0; i < build.HeroUpgrades.Count; i++)
+            {
+                buRet[i] = TransformHeroAbilityUpgrade(build.HeroUpgrades[i]);
+            }
+            var ret = new
+            {
+                BuildId = build.BuildId,
+                Name = build.Name,
+                Hero = TransformHero(build.Hero),
+                HeroUpgrades = buRet
+            };
+            return ret;
+        }
+
         public static Object TransformMatchPlayer(MatchPlayer mp)
         {
             if (mp == null) return null;

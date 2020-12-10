@@ -8,6 +8,6 @@ namespace BusinessLibrary.Model
     public class BuildResponseModel
     {
         public int nBuilds { get; set; }
-        public IEnumerable<Build> Heroes { get; set; }
+        public IEnumerable<Build> Builds { get; set; }
     }
 }

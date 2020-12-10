@@ -13,6 +13,43 @@ namespace BusinessLibrary.Service
 {
     public class BuildService : IBuildService
     {
+        public async Task<BuildResponseModel> GetBuilds(ApplicationUser user, DataTableParameters param)
+        {
+            try
+            {
+                using (Dota2AppDbContext db = new Dota2AppDbContext())
+                {
+                    BuildResponseModel brm = new BuildResponseModel();
+                    brm.nBuilds = (from a in db.Builds.Where(b => b.UserId == user.Id).AsNoTracking() select a).Count();
+                    param.length = param.length < 1 ? brm.nBuilds : param.length;
+
+                    var query = db.Builds.Where(b => b.UserId == user.Id).Where(b => b.UserId == user.Id);
+                    if (!String.IsNullOrWhiteSpace(param.filter))
+                        query = query.Where(b => b.Name.Contains(param.filter) || b.Hero.LocalizedName.Contains(param.filter));
+                    brm.nBuilds = query.Count();
+
+                    if (!String.IsNullOrEmpty(param.orderBy))
+                    {
+                        param.orderBy = string.Concat(param.orderBy.Substring(0, 1).ToUpper(), param.orderBy[1..]);
+                        if (param.order.Equals("asc"))
+                            query = query.OrderBy(p => EF.Property<object>(p, param.orderBy));
+                        else
+                            query = query.OrderByDescending(p => EF.Property<object>(p, param.orderBy));
+                    }
+
+                    brm.Builds = await query
+                        .Include(b => b.Hero)
+                        .Include(b => b.HeroUpgrades)
+                        .ToListAsync();
+                    
+                    return brm;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
         public async Task<Build> CreateBuild(Build build, ApplicationUser user)
         {
             try 
@@ -33,7 +70,10 @@ namespace BusinessLibrary.Service
                     // Save build in db
                     db.Builds.Add(build);
                     await db.SaveChangesAsync();
-                    return build;
+
+
+
+                    return await GetBuild(build.BuildId);
                 }
             }
             catch(Exception e)
@@ -59,24 +99,69 @@ namespace BusinessLibrary.Service
             using (Dota2AppDbContext db = new Dota2AppDbContext())
             {
                 // Get build from db
-                var dbBuild = await db.Builds.Where(b => b.BuildId == id).SingleAsync();
+                var dbBuild = await db.Builds.Where(b => b.BuildId == id)
+                    .Include(b => b.Hero)
+                        .ThenInclude(h => h.Strength)
+                    .Include(b => b.Hero)
+                        .ThenInclude(h => h.Agility)
+                    .Include(b => b.Hero)
+                        .ThenInclude(h => h.Inteligence)
+                    .Include(b => b.HeroUpgrades)
+                    .SingleAsync();
+                
+                db.Entry(dbBuild.Hero)
+                    .Collection(h => h.HeroAbilities)
+                    .Query()
+                    .Where(ha => !ha.Ability.IsHidden)
+                    .OrderBy(h => h.Order)
+                    .Load();
+
+                foreach (HeroAbility ha in dbBuild.Hero.HeroAbilities)
+                {
+                    db.Entry(ha)
+                        .Reference(ha => ha.Ability)
+                        .Load();
+                }
+
                 return dbBuild;
             }
         }
 
         public async Task<Build> UpdateBuild(Build build)
         {
-            using (Dota2AppDbContext db = new Dota2AppDbContext())
+            try
+            { 
+                using (Dota2AppDbContext db = new Dota2AppDbContext())
+                {
+                    // Check if build is well constructed
+                    //
+
+
+                    //¿Tenemos que recuperar primero la build de base de datos o podemos hacer el update directamente? Parece que sí
+                    Build b = await db.Builds.Where(b => b.BuildId == build.BuildId)
+                        .Include(b => b.HeroUpgrades)
+                        .Include(b => b.User)
+                        .FirstAsync();
+
+                    b.Name = build.Name;
+                    b.HeroUpgrades = build.HeroUpgrades;
+
+                    // Save build in db
+                    //var heroUpgrades = db.BuildAbilityUpgrades.Where(bau => bau.BuildId == build.BuildId);
+                    //if (heroUpgrades.Any())
+                    //{
+                    //    db.BuildAbilityUpgrades.RemoveRange(heroUpgrades);
+                    //    await db.SaveChangesAsync();
+                    //}
+
+                    db.Builds.Update(b);
+                    await db.SaveChangesAsync();
+                    return await GetBuild(build.BuildId);
+                }
+            }
+            catch(Exception e)
             {
-                // Check if build is well constructed
-                //
-
-
-                //¿Tenemos que recuperar primero la build de base de datos o podemos hacer el update directamente?
-                // Save build in db
-                db.Builds.Update(build);
-                await db.SaveChangesAsync();
-                return build;
+                throw e;
             }
         }
 
@@ -88,8 +173,8 @@ namespace BusinessLibrary.Service
                 {
                     BuildResponseModel brm = new BuildResponseModel();
                     // Get build from db
-                    brm.Heroes = await db.Builds.Where(b => b.UserId == user.Id).ToListAsync();
-                    brm.nBuilds = brm.Heroes.Count();
+                    brm.Builds = await db.Builds.Where(b => b.UserId == user.Id).ToListAsync();
+                    brm.nBuilds = brm.Builds.Count();
                     return brm;
                 }
             }
@@ -98,5 +183,7 @@ namespace BusinessLibrary.Service
                 throw e;
             }
         }
+
+        
     }
 }
