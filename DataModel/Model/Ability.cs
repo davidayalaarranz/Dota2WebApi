@@ -93,5 +93,31 @@ namespace DataModel.Model
         public int MaxLevel { get; set; }
         public bool IsPassive { get; set; }
         public bool IsAttributte { get; set; }
+        public bool IsStrengthBonus { get; set; }
+        public bool IsAgilityBonus { get; set; }
+        public bool IsIntelligenceBonus { get; set; }
+
+        public int BonusStrength
+        {
+            get
+            {
+                if (IsStrengthBonus) return int.Parse(Value);
+                return 0;
+            }
+        }
+        public int BonusAgility { get
+            {
+                if (IsAgilityBonus) return int.Parse(Value);
+                return 0;
+            } 
+        }
+        public int BonusIntelligence
+        {
+            get
+            {
+                if (IsIntelligenceBonus) return int.Parse(Value);
+                return 0;
+            }
+        }
     }
 }

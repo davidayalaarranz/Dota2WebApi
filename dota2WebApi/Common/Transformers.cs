@@ -148,6 +148,9 @@ namespace dota2WebApi.Common
                 HasScepterUpgrade = ha.Ability.HasScepterUpgrade,
                 IsGrantedByScepter = ha.Ability.IsGrantedByScepter,
                 MaxLevel = ha.Ability.MaxLevel,
+                BonusStrength = ha.Ability.BonusStrength,
+                BonusAgility = ha.Ability.BonusAgility,
+                BonusIntelligence = ha.Ability.BonusIntelligence
             };
             return ret;
         }
@@ -185,11 +188,11 @@ namespace dota2WebApi.Common
                     Initial = h.Agility.Initial,
                     Gain = h.Agility.Gain
                 },
-                Inteligence = new
+                Intelligence = new
                 {
-                    Id = h.Inteligence.Id,
-                    Initial = h.Inteligence.Initial,
-                    Gain = h.Inteligence.Gain,
+                    Id = h.Intelligence.Id,
+                    Initial = h.Intelligence.Initial,
+                    Gain = h.Intelligence.Gain,
                 },
                 MinDamage = h.MinDamage,
                 MaxDamage = h.MaxDamage,

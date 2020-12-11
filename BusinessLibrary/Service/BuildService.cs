@@ -105,7 +105,7 @@ namespace BusinessLibrary.Service
                     .Include(b => b.Hero)
                         .ThenInclude(h => h.Agility)
                     .Include(b => b.Hero)
-                        .ThenInclude(h => h.Inteligence)
+                        .ThenInclude(h => h.Intelligence)
                     .Include(b => b.HeroUpgrades)
                     .SingleAsync();
                 

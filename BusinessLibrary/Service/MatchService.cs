@@ -31,7 +31,7 @@ namespace BusinessLibrary.Service
                             .ThenInclude(h => h.Agility)
                         .Include(m => m.MatchPlayers)
                             .ThenInclude(mp => mp.Hero)
-                            .ThenInclude(h => h.Inteligence)
+                            .ThenInclude(h => h.Intelligence)
                         .Include(m => m.MatchPlayers)
                             .ThenInclude(mp => mp.Player)
                         .ToListAsync();

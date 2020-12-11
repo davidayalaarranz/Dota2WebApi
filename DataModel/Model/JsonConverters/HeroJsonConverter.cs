@@ -22,7 +22,7 @@ namespace DataModel.Model.JsonConverters
                     writer.WriteStringValue("Agility");
                     break;
                 default:
-                    writer.WriteStringValue("Inteligence");
+                    writer.WriteStringValue("Intelligence");
                     break;
             }
         }

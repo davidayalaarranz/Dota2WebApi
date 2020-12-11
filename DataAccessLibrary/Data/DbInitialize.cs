@@ -317,10 +317,10 @@ namespace DataAccessLibrary.Data
                 if (match.Success) { hAux.Strength.Gain = decimal.Parse(getNPCValue(lines[i]), provider); continue; }
 
                 match = reAttributeBaseIntelligence.Match(lines[i]);
-                if (match.Success) { hAux.Inteligence.Initial = decimal.Parse(getNPCValue(lines[i]), provider); continue; }
+                if (match.Success) { hAux.Intelligence.Initial = decimal.Parse(getNPCValue(lines[i]), provider); continue; }
 
                 match = reAttributeIntelligenceGain.Match(lines[i]);
-                if (match.Success) { hAux.Inteligence.Gain = decimal.Parse(getNPCValue(lines[i]), provider); continue; }
+                if (match.Success) { hAux.Intelligence.Gain = decimal.Parse(getNPCValue(lines[i]), provider); continue; }
 
                 match = reAttributeBaseAgility.Match(lines[i]);
                 if (match.Success) { hAux.Agility.Initial = decimal.Parse(getNPCValue(lines[i]), provider); continue; }
@@ -410,6 +410,11 @@ namespace DataAccessLibrary.Data
             Regex reAbilityType_DOTA_ABILITY_TYPE_BASIC = new Regex(@"^\t\t""AbilityType"".+DOTA_ABILITY_TYPE_BASIC");
             Regex reAbilityType_DOTA_ABILITY_TYPE_ATTRIBUTES = new Regex(@"^\t\t""AbilityType"".+DOTA_ABILITY_TYPE_ATTRIBUTES");
 
+            Regex reAbilitySpecialBonusStrength = new Regex(@"^\t""special_bonus_strength");
+            Regex reAbilitySpecialBonusAgility = new Regex(@"^\t""special_bonus_agility");
+            Regex reAbilitySpecialBonusIntelligence = new Regex(@"^\t""special_bonus_intelligence");
+            Regex reAbilitySpecialBonusAllStats = new Regex(@"^\t""special_bonus_all_stats");
+
             Regex reMaxLevel = new Regex(@"^\t\t""MaxLevel""");
 
 
@@ -448,6 +453,16 @@ namespace DataAccessLibrary.Data
                         aAux.MaxLevel = aBase.MaxLevel;
                     }
                 }
+                // SpecialBonus
+                match = reAbilitySpecialBonusAllStats.Match(lines[i]);
+                if (match.Success) { aAux.IsAgilityBonus = true; aAux.IsStrengthBonus = true; aAux.IsIntelligenceBonus = true; continue; }
+                match = reAbilitySpecialBonusStrength.Match(lines[i]);
+                if (match.Success) { aAux.IsStrengthBonus = true; continue; }
+                match = reAbilitySpecialBonusAgility.Match(lines[i]);
+                if (match.Success) { aAux.IsAgilityBonus = true; continue; }
+                match = reAbilitySpecialBonusIntelligence.Match(lines[i]);
+                if (match.Success) { aAux.IsIntelligenceBonus = true; continue; }
+
                 // HeroId
                 match = reAbilityId.Match(lines[i]);
                 if (match.Success) { aAux.AbilityId = long.Parse(getNPCValue(lines[i])); continue; }

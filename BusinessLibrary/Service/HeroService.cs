@@ -21,7 +21,7 @@ namespace BusinessLibrary.Service
                         .Where(x => x.HeroId == id)
                         .Include(h => h.Strength)
                         .Include(h => h.Agility)
-                        .Include(h => h.Inteligence)
+                        .Include(h => h.Intelligence)
                         //.Include(h => h.Abilities)    
                         .ToListAsync()
                         ;
@@ -85,7 +85,7 @@ namespace BusinessLibrary.Service
                               .Take(param.length)
                               .Include(h => h.Strength)
                               .Include(h => h.Agility)
-                              .Include(h => h.Inteligence)
+                              .Include(h => h.Intelligence)
                               //.Include(h => h.Abilities)
                               .ToListAsync();
                 foreach (Hero h in crm.Heroes)

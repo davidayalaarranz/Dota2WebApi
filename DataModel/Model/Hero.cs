@@ -11,7 +11,7 @@ namespace DataModel.Model
     {
         Strength = 1,
         Agility = 2,
-        Inteligence = 3
+        Intelligence = 3
     }
 
     public class HeroAttribute
@@ -28,7 +28,7 @@ namespace DataModel.Model
         {
             Strength = new HeroAttribute();
             Agility = new HeroAttribute();
-            Inteligence = new HeroAttribute();
+            Intelligence = new HeroAttribute();
             HeroAbilities = new List<HeroAbility>();
         }
 
@@ -49,7 +49,7 @@ namespace DataModel.Model
 
         public HeroAttribute Strength { get; set; }
         public HeroAttribute Agility { get; set; }
-        public HeroAttribute Inteligence { get; set; }
+        public HeroAttribute Intelligence { get; set; }
 
         public List<HeroAbility> HeroAbilities { get; set; }
 
