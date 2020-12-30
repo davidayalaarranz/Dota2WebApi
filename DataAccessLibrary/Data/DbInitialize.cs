@@ -158,6 +158,7 @@ namespace DataAccessLibrary.Data
                     List<Hero> lh = (from h in context.Heroes select h).Where(h => h.Name.IndexOf(name) > -1).ToList();
                     if (lh.Count > 0)
                     {
+                        lh[0].LocalizedName = aux.Value.GetProperty("dname").GetString();
                         lh[0].Roles = aux.Value.GetProperty("droles").GetString();
                         lh[0].RightClickAttack = aux.Value.GetProperty("dac").GetString();
                     }
@@ -207,7 +208,7 @@ namespace DataAccessLibrary.Data
 
         private static void ParseNPCHeroes(List<string> lines, Dota2AppDbContext context)
         {
-            Regex reHeroName = new Regex(@"^\t""npc_dota_hero[a-zA-Z0-9_]*""$");
+            Regex reHeroName = new Regex(@"^\t""npc_dota_hero_[a-zA-Z0-9_]*""$");
             Regex reHeroId = new Regex(@"^\t\t""HeroID""");
             Regex reArmorPhysical = new Regex(@"^\t\t""ArmorPhysical""");
             Regex reAttackDamageMin = new Regex(@"^\t\t""AttackDamageMin""");
@@ -248,7 +249,10 @@ namespace DataAccessLibrary.Data
             System.Text.RegularExpressions.Match match;
             for (var i = 0; i < lines.Count; i++)
             {
-                match = reHeroName.Match(lines[i]);
+                if (i == 142)
+                    match = reHeroName.Match(lines[i]);
+                else
+                    match = reHeroName.Match(lines[i]);
                 if (match.Success)
                 {
                     if (hAux != null)
@@ -380,8 +384,20 @@ namespace DataAccessLibrary.Data
                         ha.Order = intTalent;
                         hAux.HeroAbilities.Add(ha);
                     }
+                    else
+                    {
+                        HeroAbility ha = new HeroAbility();
+                        ha.Hero = hAux;
+                    }
                 }
             }
+            // Indicamos las habilidades que son talentos
+            foreach (HeroAbility ha in hAux.HeroAbilities)
+            {
+                ha.IsTalent = ha.Order >= hAux.AbilityTalentStart;
+            }
+            context.Heroes.Add(hAux);
+
             context.SaveChanges();
         }
 
@@ -424,7 +440,10 @@ namespace DataAccessLibrary.Data
             System.Text.RegularExpressions.Match match;
             for (var i = 0; i < lines.Count; i++)
             {
-                match = reAbilityName.Match(lines[i]);
+                if (i == 187)
+                    match = reAbilityName.Match(lines[i]);
+                else
+                    match = reAbilityName.Match(lines[i]);
                 if (match.Success)
                 {
                     if (aAux != null)
@@ -681,7 +700,7 @@ namespace DataAccessLibrary.Data
                 context.Database.EnsureCreated();
                 if (context.Heroes.Any())
                     return;
-                string pathJson = Path.GetFullPath("..\\DataModel\\json");
+                string pathJson = Path.GetFullPath("..\\DataModel\\json\\7.28a");
                 InitializeAbilities(pathJson, context);
                 InitializeHeroes(pathJson, context);
                 InitializeItems(pathJson, context);
