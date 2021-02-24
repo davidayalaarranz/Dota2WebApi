@@ -92,6 +92,64 @@ namespace DataAccessLibrary.Data
                                         hau.Level = aeUpgrades.Current.GetProperty("level").GetInt32();
                                         mp.HeroUpgrades.Add(hau);
                                     }
+                                    if (ae.Current.GetProperty("item_0").GetInt32() != 0)
+                                    {
+                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
+                                        hiu.StartLevel = 1;
+                                        hiu.HeroItemId = ae.Current.GetProperty("item_0").GetInt32();
+                                        hiu.IsSold = false;
+                                        mp.HeroItemUpgrades.Add(hiu);
+                                    }
+                                    if (ae.Current.GetProperty("item_1").GetInt32() != 0)
+                                    {
+                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
+                                        hiu.StartLevel = 1;
+                                        hiu.HeroItemId = ae.Current.GetProperty("item_1").GetInt32();
+                                        hiu.IsSold = false;
+                                        mp.HeroItemUpgrades.Add(hiu);
+                                    }
+                                    if (ae.Current.GetProperty("item_2").GetInt32() != 0)
+                                    {
+                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
+                                        hiu.StartLevel = 1;
+                                        hiu.HeroItemId = ae.Current.GetProperty("item_2").GetInt32();
+                                        hiu.IsSold = false;
+                                        mp.HeroItemUpgrades.Add(hiu);
+                                    }
+                                    if (ae.Current.GetProperty("item_3").GetInt32() != 0)
+                                    {
+                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
+                                        hiu.StartLevel = 1;
+                                        hiu.HeroItemId = ae.Current.GetProperty("item_3").GetInt32();
+                                        hiu.IsSold = false;
+                                        mp.HeroItemUpgrades.Add(hiu);
+                                    }
+                                    if (ae.Current.GetProperty("item_4").GetInt32() != 0)
+                                    {
+                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
+                                        hiu.StartLevel = 1;
+                                        hiu.HeroItemId = ae.Current.GetProperty("item_4").GetInt32();
+                                        hiu.IsSold = false;
+                                        mp.HeroItemUpgrades.Add(hiu);
+                                    }
+                                    if (ae.Current.GetProperty("item_5").GetInt32() != 0)
+                                    {
+                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
+                                        hiu.StartLevel = 1;
+                                        hiu.HeroItemId = ae.Current.GetProperty("item_5").GetInt32();
+                                        hiu.IsSold = false;
+                                        mp.HeroItemUpgrades.Add(hiu);
+                                    }
+                                    
+                                    //                            "item_0": 145,
+                                    //"item_1": 135,
+                                    //"item_2": 147,
+                                    //"item_3": 133,
+                                    //"item_4": 208,
+                                    //"item_5": 139,
+                                    //"backpack_0": 0,
+                                    //"backpack_1": 0,
+                                    //"backpack_2": 0,
                                 }
                             }
                         }
@@ -587,8 +645,9 @@ namespace DataAccessLibrary.Data
         public static void InitializeItems(string pathJson, Dota2AppDbContext context)
         {
             try { 
-                string pathJsonItems = String.Concat(pathJson, "\\GetItems en_US.json");
-                GetItemsResponseModel o;
+                string pathJsonItems = String.Concat(pathJson, "\\items.json");
+                JsItemsResponseModel o;
+                GetItemsResponseModel girmr;
                 if (File.Exists(pathJsonItems))
                 {
                     string jsonString = File.ReadAllText(pathJsonItems);
@@ -596,95 +655,34 @@ namespace DataAccessLibrary.Data
                     {
                         ReadCommentHandling = JsonCommentHandling.Skip
                     };
-                    serializeOptions.Converters.Add(new GetItemsJsonConverter());
-                    o = JsonSerializer.Deserialize<GetItemsResponseModel>(jsonString, serializeOptions);
-                    string pathJsonItems2 = String.Concat(pathJson, "\\items.json");
+                    serializeOptions.Converters.Add(new JsItemsJsonConverter());
+                    o = JsonSerializer.Deserialize<JsItemsResponseModel>(jsonString, serializeOptions);
+                    string pathJsonItems2 = String.Concat(pathJson, "\\GetItems en_US.json");
                     if (File.Exists(pathJsonItems2))
                     {
                         jsonString = File.ReadAllText(pathJsonItems2);
-                        JsonDocumentOptions jsonOptions = new JsonDocumentOptions
+                        serializeOptions = new JsonSerializerOptions
                         {
-                            CommentHandling = JsonCommentHandling.Skip
+                            ReadCommentHandling = JsonCommentHandling.Skip
                         };
-                        JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString, jsonOptions).RootElement.GetProperty("itemdata");
-                        JsonElement.ObjectEnumerator ae = root.EnumerateObject();
-                        NumberFormatInfo fp = new NumberFormatInfo();
-                        fp.NumberDecimalSeparator = ".";
+                        serializeOptions.Converters.Add(new GetItemsJsonConverter());
+                        girmr = JsonSerializer.Deserialize<GetItemsResponseModel>(jsonString, serializeOptions);
 
-                        while (ae.MoveNext())
+                        foreach (HeroItem hi in o.itemdata.Values.ToList())
                         {
-                            System.Text.Json.JsonProperty aux = ae.Current;
-                            string name = aux.Name;
-                            if (o != null)
+                            HeroItem hiGetItem = girmr.result.items.Find(item => item.HeroItemId == hi.HeroItemId);
+                            if (hiGetItem != null)
                             {
-                                HeroItem currentHeroItem = o.result.items.Find(h => h.ShortName == name);
-                                if (currentHeroItem != null)
-                                {
-                                    currentHeroItem.HeroItemId = aux.Value.GetProperty("id").GetInt32();
-                                    currentHeroItem.Description = aux.Value.GetProperty("desc").ValueKind != JsonValueKind.Null ? aux.Value.GetProperty("desc").GetString() : "";
-                                    if (aux.Value.GetProperty("cd").ValueKind == JsonValueKind.Number)
-                                        currentHeroItem.Cooldown = aux.Value.GetProperty("cd").GetInt32();
-                                    if (aux.Value.GetProperty("mc").ValueKind == JsonValueKind.Number)
-                                        currentHeroItem.ManaCost = aux.Value.GetProperty("mc").GetInt32();
-                                    currentHeroItem.Notes = aux.Value.GetProperty("notes").GetString();
-                                    currentHeroItem.Lore = aux.Value.GetProperty("lore").GetString();
-                                    currentHeroItem.Attrib = aux.Value.GetProperty("attrib").GetString();
-                                    currentHeroItem.Created = aux.Value.GetProperty("created").GetBoolean();
-
-                                    if (aux.Value.GetProperty("components").ValueKind != JsonValueKind.Null && aux.Value.GetProperty("components").GetArrayLength() > 0)
-                                    {
-                                        HeroItem recipe = o.result.items.Find(h => h.Name == string.Concat("item_recipe_", currentHeroItem.Name.Substring(5)));
-                                        if (recipe != null)
-                                        {
-                                            HeroItemComponent hicRecipe = new HeroItemComponent();
-                                            hicRecipe.HeroItem = currentHeroItem;
-                                            hicRecipe.HeroItemId = currentHeroItem.HeroItemId;
-                                            hicRecipe.Component = recipe;
-                                            hicRecipe.ComponentId = recipe.HeroItemId;
-                                            hicRecipe.Quantity = 1;
-                                            currentHeroItem.Components.Add(hicRecipe);
-                                            recipe.IsComponentOf.Add(hicRecipe);
-                                        }
-                                        JsonElement.ArrayEnumerator aeComponents = aux.Value.GetProperty("components").EnumerateArray();
-                                        while (aeComponents.MoveNext())
-                                        {
-                                            if (aeComponents.Current.ValueKind == JsonValueKind.String)
-                                            {
-                                                string componentName = aeComponents.Current.GetString();
-                                                // Aquí tenemos que buscar el HeroItem que tenga el nombre del componente
-                                                HeroItem componentHeroItem = o.result.items.Find(h => h.ShortName.Replace("_","") == componentName.Replace("_",""));
-                                                if (componentHeroItem != null)
-                                                {
-                                                    HeroItemComponent currentHic = currentHeroItem.Components.Find(hi => hi.ComponentId == componentHeroItem.HeroItemId);
-                                                    if (currentHic != null) 
-                                                    {
-                                                        currentHic.Quantity++;
-                                                    }
-                                                    else 
-                                                    {
-                                                        HeroItemComponent hic = new HeroItemComponent();
-                                                        hic.HeroItem = currentHeroItem;
-                                                        hic.HeroItemId = currentHeroItem.HeroItemId;
-                                                        hic.Component = componentHeroItem;
-                                                        hic.ComponentId = componentHeroItem.HeroItemId;
-                                                        hic.Quantity = 1;
-
-                                                        currentHeroItem.Components.Add(hic);
-                                                        componentHeroItem.IsComponentOf.Add(hic);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                hi.Name = hiGetItem.Name;
+                                hi.Cost = hiGetItem.Cost;
+                                hi.IsSecretShop = hiGetItem.IsSecretShop;
+                                hi.IsSideShop = hiGetItem.IsSideShop;
+                                hi.IsRecipe = hiGetItem.IsRecipe;
                             }
+                            context.HeroItems.Add(hi);
                         }
+                        context.SaveChanges();
                     }
-                    foreach (HeroItem hi in o.result.items)
-                    {
-                        context.HeroItems.Add(hi);
-                    }
-                    context.SaveChanges();
                 }
             }catch(Exception e)
             {
