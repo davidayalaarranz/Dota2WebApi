@@ -9,6 +9,7 @@ namespace DataModel.Model
         public MatchPlayer()
         {
             this.HeroUpgrades = new List<MatchPlayerAbilityUpgrade>();
+            this.HeroItemUpgrades = new List<MatchPlayerHeroItemUpgrade>();
         }
         public long PlayerId { get; set; }
         public Player Player { get; set; }
@@ -19,6 +20,7 @@ namespace DataModel.Model
         public Hero Hero { get; set; }
 
         public List<MatchPlayerAbilityUpgrade> HeroUpgrades { get; set; }
+        public List<MatchPlayerHeroItemUpgrade> HeroItemUpgrades { get; set; }
         
         public int Level { get; set; }
         public int Kills { get; set; }

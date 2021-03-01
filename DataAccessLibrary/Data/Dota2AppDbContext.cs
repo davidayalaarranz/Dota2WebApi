@@ -47,12 +47,17 @@ namespace DataAccessLibrary.Data
             builder.Entity<Pick>().ToTable("Picks");
             builder.Entity<Ban>().ToTable("Bans");
             builder.Entity<Build>().ToTable("Builds");
+            builder.Entity<MatchPlayerHeroItemUpgrade>().ToTable("MatchPlayerHeroItemUpgrades");
 
             /// PickBan
             builder.Entity<Pick>()
                 .HasKey(k => new { k.MatchId, k.Order });
             builder.Entity<Ban>()
                 .HasKey(k => new { k.MatchId, k.Order });
+
+            /// HeroItemUpgrade
+            builder.Entity<MatchPlayerHeroItemUpgrade>()
+                .HasOne(hiu => hiu.HeroItem);
 
             /// AbilityUpgrade
             builder.Entity<MatchPlayerAbilityUpgrade>()

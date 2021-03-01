@@ -1,4 +1,5 @@
-﻿using DataModel.Model;
+﻿using DataModel.Common;
+using DataModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -37,7 +38,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                             m.MatchSeqNum = reader.GetInt64();
                             break;
                         case "start_time":
-                            m.StartTime = UnixTimeStampToDateTime(reader.GetInt64());
+                            m.StartTime = DataImportationMethods.UnixTimeStampToDateTime(reader.GetInt64());
                             break;
                         case "players":
                             // Leemos el array de players
@@ -87,14 +88,6 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                 }
             }
             return m;
-        }
-
-        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-        {
-            // Unix timestamp is seconds past epoch
-            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dtDateTime;
         }
 
         public override void Write(Utf8JsonWriter writer, Match value, JsonSerializerOptions options)

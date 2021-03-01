@@ -24,6 +24,7 @@ namespace DataAccessLibrary.Data
             };
             string pathJsonMatchHistory = String.Concat(pathJson, "\\GetMatchHistory.json");
             GetMatchHistoryResponseModel o;
+            GetMatchDetailsResponseModel md = null;
             if (File.Exists(pathJsonMatchHistory))
             {
                 string jsonString = File.ReadAllText(pathJsonMatchHistory);
@@ -33,138 +34,26 @@ namespace DataAccessLibrary.Data
                 };
                 serializeOptions.Converters.Add(new GetMatchHistoryJsonConverter());
                 o = JsonSerializer.Deserialize<GetMatchHistoryResponseModel>(jsonString, serializeOptions);
-
-
-                GetMatchDetailsResponseModel md = null;
+                
                 string pathJsonMatchDetails = String.Concat(pathJson, "\\GetMatchDetails.json");
                 if (File.Exists(pathJsonMatchDetails))
                 {
                     jsonString = File.ReadAllText(pathJsonMatchDetails);
 
-                    JsonElement root = System.Text.Json.JsonDocument.Parse(jsonString).RootElement;
-                    JsonElement.ObjectEnumerator oe = root.EnumerateObject();
-
-                    while (oe.MoveNext())
+                    serializeOptions = new JsonSerializerOptions
                     {
-                        System.Text.Json.JsonProperty aux = oe.Current;
-                        string name = aux.Name;
-                        if (o != null)
-                        {
-                            long currentMatchId = aux.Value.GetProperty("match_id").GetInt64();
-                            DataModel.Model.Match currentMatch = o.result.matches.Find(m => m.MatchId == currentMatchId);
-                            if (currentMatch != null)
-                            { 
-                                currentMatch.RadiantWin = aux.Value.GetProperty("radiant_win").GetBoolean();
-                                currentMatch.Duration = aux.Value.GetProperty("duration").GetInt32();
-                                currentMatch.PreGameDuration = aux.Value.GetProperty("pre_game_duration").GetInt32();
-                                currentMatch.TowerStatusRadiant = aux.Value.GetProperty("tower_status_radiant").GetInt32();
-                                currentMatch.TowerStatusDire = aux.Value.GetProperty("tower_status_dire").GetInt32();
-                                currentMatch.BarracksStatusRadiant = aux.Value.GetProperty("barracks_status_radiant").GetInt32();
-                                currentMatch.BarracksStatusDire = aux.Value.GetProperty("barracks_status_dire").GetInt32();
-                                currentMatch.FirstBloodTime = aux.Value.GetProperty("first_blood_time").GetInt32();
-                                currentMatch.GameMode = aux.Value.GetProperty("game_mode").GetInt32();
-                                currentMatch.RadiantScore = aux.Value.GetProperty("radiant_score").GetInt32();
-                                currentMatch.DireScore = aux.Value.GetProperty("dire_score").GetInt32();
-
-                                JsonElement.ArrayEnumerator ae = aux.Value.GetProperty("players").EnumerateArray();
-                                while (ae.MoveNext())
-                                {
-                                    MatchPlayer mp = currentMatch.MatchPlayers.First(p => p.PlayerId == ae.Current.GetProperty("account_id").GetInt64() &&
-                                                                                    p.PlayerSlot == ae.Current.GetProperty("player_slot").GetInt32());
-                                    mp.Kills = ae.Current.GetProperty("kills").GetInt32();
-                                    mp.Deaths = ae.Current.GetProperty("deaths").GetInt32();
-                                    mp.Assists = ae.Current.GetProperty("assists").GetInt32();
-                                    mp.LastHits = ae.Current.GetProperty("last_hits").GetInt32();
-                                    mp.Denies = ae.Current.GetProperty("denies").GetInt32();
-                                    mp.GPM = ae.Current.GetProperty("gold_per_min").GetInt32();
-                                    mp.XPM = ae.Current.GetProperty("xp_per_min").GetInt32();
-                                    mp.HeroDamage = ae.Current.GetProperty("hero_damage").GetInt32();
-                                    mp.TowerDamage = ae.Current.GetProperty("tower_damage").GetInt32();
-                                    mp.HeroHealing = ae.Current.GetProperty("hero_healing").GetInt32();
-                                    mp.Gold = ae.Current.GetProperty("gold").GetInt32();
-                                    mp.Level = ae.Current.GetProperty("level").GetInt32();
-                                    JsonElement.ArrayEnumerator aeUpgrades = ae.Current.GetProperty("ability_upgrades").EnumerateArray();
-                                    while (aeUpgrades.MoveNext())
-                                    {
-                                        MatchPlayerAbilityUpgrade hau = new MatchPlayerAbilityUpgrade();
-                                        hau.AbilityId = aeUpgrades.Current.GetProperty("ability").GetInt32();
-                                        hau.Time = new TimeSpan(0, 0, aeUpgrades.Current.GetProperty("time").GetInt32());
-                                        hau.Level = aeUpgrades.Current.GetProperty("level").GetInt32();
-                                        mp.HeroUpgrades.Add(hau);
-                                    }
-                                    if (ae.Current.GetProperty("item_0").GetInt32() != 0)
-                                    {
-                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
-                                        hiu.StartLevel = 1;
-                                        hiu.HeroItemId = ae.Current.GetProperty("item_0").GetInt32();
-                                        hiu.IsSold = false;
-                                        mp.HeroItemUpgrades.Add(hiu);
-                                    }
-                                    if (ae.Current.GetProperty("item_1").GetInt32() != 0)
-                                    {
-                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
-                                        hiu.StartLevel = 1;
-                                        hiu.HeroItemId = ae.Current.GetProperty("item_1").GetInt32();
-                                        hiu.IsSold = false;
-                                        mp.HeroItemUpgrades.Add(hiu);
-                                    }
-                                    if (ae.Current.GetProperty("item_2").GetInt32() != 0)
-                                    {
-                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
-                                        hiu.StartLevel = 1;
-                                        hiu.HeroItemId = ae.Current.GetProperty("item_2").GetInt32();
-                                        hiu.IsSold = false;
-                                        mp.HeroItemUpgrades.Add(hiu);
-                                    }
-                                    if (ae.Current.GetProperty("item_3").GetInt32() != 0)
-                                    {
-                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
-                                        hiu.StartLevel = 1;
-                                        hiu.HeroItemId = ae.Current.GetProperty("item_3").GetInt32();
-                                        hiu.IsSold = false;
-                                        mp.HeroItemUpgrades.Add(hiu);
-                                    }
-                                    if (ae.Current.GetProperty("item_4").GetInt32() != 0)
-                                    {
-                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
-                                        hiu.StartLevel = 1;
-                                        hiu.HeroItemId = ae.Current.GetProperty("item_4").GetInt32();
-                                        hiu.IsSold = false;
-                                        mp.HeroItemUpgrades.Add(hiu);
-                                    }
-                                    if (ae.Current.GetProperty("item_5").GetInt32() != 0)
-                                    {
-                                        MatchPlayerHeroItemUpgrade hiu = new MatchPlayerHeroItemUpgrade();
-                                        hiu.StartLevel = 1;
-                                        hiu.HeroItemId = ae.Current.GetProperty("item_5").GetInt32();
-                                        hiu.IsSold = false;
-                                        mp.HeroItemUpgrades.Add(hiu);
-                                    }
-                                    
-                                    //                            "item_0": 145,
-                                    //"item_1": 135,
-                                    //"item_2": 147,
-                                    //"item_3": 133,
-                                    //"item_4": 208,
-                                    //"item_5": 139,
-                                    //"backpack_0": 0,
-                                    //"backpack_1": 0,
-                                    //"backpack_2": 0,
-                                }
-                            }
-                        }
-                    }
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    };
+                    serializeOptions.Converters.Add(new GetMatchDetailsJsonConverter());
+                    md = JsonSerializer.Deserialize<GetMatchDetailsResponseModel>(jsonString, serializeOptions);
                 }
 
-                foreach (DataModel.Model.Match m in o.result.matches)
+                foreach (MatchPlayer mp in md.result.MatchPlayers)
                 {
-                    foreach (MatchPlayer mp in m.MatchPlayers)
-                    {
-                        mp.Hero = context.Heroes.First(h => h.HeroId == mp.Hero.HeroId);
-                        mp.Player = m.MatchPlayers.First(p => p.PlayerId == mp.Player.PlayerId).Player;
-                    }
-                    context.Matches.Add(m);
+                    mp.Hero = context.Heroes.First(h => h.HeroId == mp.Hero.HeroId);
+                    mp.Player = md.result.MatchPlayers.First(p => p.PlayerId == mp.Player.PlayerId).Player;
                 }
+                context.Matches.Add(md.result);
                 context.SaveChanges();
             }
         }

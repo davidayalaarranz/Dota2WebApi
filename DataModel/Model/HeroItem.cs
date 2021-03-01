@@ -18,12 +18,34 @@ namespace DataModel.Model
             set;
         }
     }
+    public class ItemUpgrade
+    {
+        public ItemUpgrade() { }
+
+        public long HeroItemId { get; set; }
+        public HeroItem HeroItem { get; set; }
+        public int StartLevel { get; set; }
+        public int EndLevel { get; set; }
+        public bool IsSold { get; set; }
+        public int HeroItemSlot { get; set; }
+    }
+    public class MatchPlayerHeroItemUpgrade : ItemUpgrade
+    {
+        public MatchPlayerHeroItemUpgrade() { }
+
+        [Key]
+        public long MatchPlayerHeroItemUpgradeId { get; set; }
+        public long MatchPlayerMatchId { get; set; }
+        public long MatchPlayerPlayerId { get; set; }
+        public int MatchPlayerPlayerSlot { get; set; }
+    }
     public class HeroItem
     {
         public HeroItem()
         {
             Components = new List<HeroItemComponent>();
             IsComponentOf = new List<HeroItemComponent>();
+            ComponentsName = new List<string>();
             Description = string.Empty;
             Notes = string.Empty;
             Lore = string.Empty;
@@ -55,5 +77,8 @@ namespace DataModel.Model
         public List<HeroItemComponent> IsComponentOf { get; set; }
         public bool Created { get; set; }
         public string Attrib { get; set; }
+
+        [NotMapped]
+        public List<string> ComponentsName { get; set; }
     }
 }
