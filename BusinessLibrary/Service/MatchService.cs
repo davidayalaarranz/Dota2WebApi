@@ -57,6 +57,17 @@ namespace BusinessLibrary.Service
                                 .Query()
                                 .OrderBy(hu => hu.Level)
                                 .Load();
+                            db.Entry(mp)
+                                .Collection(mp => mp.HeroItemUpgrades)
+                                .Query()
+                                .OrderBy(hiu => hiu.HeroItemSlot)
+                                .Load();
+                            foreach (MatchPlayerHeroItemUpgrade mphiu in mp.HeroItemUpgrades)
+                            {
+                                db.Entry(mphiu)
+                                    .Reference(mphiu => mphiu.HeroItem)
+                                    .Load();
+                            }
                         }
                     }
 

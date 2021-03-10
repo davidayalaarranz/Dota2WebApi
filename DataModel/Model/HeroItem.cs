@@ -56,7 +56,7 @@ namespace DataModel.Model
         public long HeroItemId { get; set; }
 
         public string Name { get; set; }
-        public string ShortName { get { return Name.Remove(0, 5); } }
+        public string ShortName { get { if (Name != null) return Name.Remove(0, 5); else return string.Empty; } }
         public int Cost { get; set; }
         public bool IsSecretShop { get; set; }
         public bool IsSideShop { get; set; }
@@ -77,6 +77,24 @@ namespace DataModel.Model
         public List<HeroItemComponent> IsComponentOf { get; set; }
         public bool Created { get; set; }
         public string Attrib { get; set; }
+
+
+        public bool IsStrengthBonus { get; set; }
+        public bool IsAgilityBonus { get; set; }
+        public bool IsIntelligenceBonus { get; set; }
+
+        public int BonusStrength { get; set; }
+        public int BonusAgility { get; set; }
+        public int BonusIntelligence { get; set; }
+
+        public int BonusAttackSpeed { get; set; }
+        public int BonusMovementSpeed { get; set; }
+        public int BonusDamage { get; set; }
+        public int BonusManaRegeneration { get; set; }
+        public int BonusHPRegeneration { get; set; }
+        public int BonusMana { get; set; }
+        public int BonusHealth { get; set; }
+
 
         [NotMapped]
         public List<string> ComponentsName { get; set; }

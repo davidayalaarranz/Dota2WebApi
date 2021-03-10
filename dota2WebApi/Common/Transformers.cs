@@ -41,6 +41,45 @@ namespace dota2WebApi.Common
             return ret;
         }
 
+        public static object TransformMatchPlayerHeroItemUpgrade(MatchPlayerHeroItemUpgrade mphiu)
+        {
+            if (mphiu == null) return null;
+            var ret = new
+            {
+                StartLevel = mphiu.StartLevel,
+                EndLevel = mphiu.EndLevel,
+                HeroItem = TransformHeroItem(mphiu.HeroItem),
+                HeroItemId = mphiu.HeroItemId,
+                HeroItemSlot = mphiu.HeroItemSlot,
+                IsSold = mphiu.IsSold
+            };
+            return ret;
+        }
+        public static object TransformHeroItem(HeroItem hi)
+        {
+            if (hi == null) return null;
+            var ret = new
+            {
+                HeroItemId = hi.HeroItemId,
+                Name = hi.Name,
+                LocalizedName = hi.LocalizedName,
+                ShortName = hi.ShortName,
+                ImageUrl = hi.ImageUrl,
+                IsRecipe = hi.IsRecipe,
+                IsSecretShop = hi.IsSecretShop,
+                IsSideShip = hi.IsSideShop,
+                Description = hi.Description,
+                Notes = hi.Notes,
+                Lore = hi.Lore,
+                Attrib = hi.Attrib,
+                Cost = hi.Cost,
+                Cooldown = hi.Cooldown,
+                ManaCost = hi.ManaCost,
+                Created = hi.Created,
+            };
+            return ret;
+        }
+
         public static Object TransformHeroAbilityUpgrade(AbilityUpgrade hau)
         {
             if (hau == null) return null;
@@ -76,9 +115,14 @@ namespace dota2WebApi.Common
         {
             if (mp == null) return null;
             Object[] hauRet = new Object[mp.HeroUpgrades.Count];
+            Object[] mphiuRet = new object[mp.HeroItemUpgrades.Count];
             for (var i = 0; i < mp.HeroUpgrades.Count; i++)
             {
                 hauRet[i] = TransformHeroAbilityUpgrade(mp.HeroUpgrades[i]);
+            }
+            for (var i = 0; i < mp.HeroItemUpgrades.Count; i++)
+            {
+                mphiuRet[i] = TransformMatchPlayerHeroItemUpgrade(mp.HeroItemUpgrades[i]);
             }
             var ret = new
             {
@@ -91,6 +135,7 @@ namespace dota2WebApi.Common
                 Hero = TransformHero(mp.Hero),
 
                 HeroUpgrades = hauRet,
+                HeroItemUpgrades = mphiuRet,
 
                 Level = mp.Level,
                 Kills = mp.Kills,
@@ -107,6 +152,8 @@ namespace dota2WebApi.Common
             };
             return ret;
         }
+
+        
 
         public static Object TransformPlayer(Player p)
         {
