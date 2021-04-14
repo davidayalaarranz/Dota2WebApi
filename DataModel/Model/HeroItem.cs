@@ -58,15 +58,17 @@ namespace DataModel.Model
         public string Name { get; set; }
         public string ShortName { get { if (Name != null) return Name.Remove(0, 5); else return string.Empty; } }
         public int Cost { get; set; }
+        public string Qual { get; set; }
         public bool IsSecretShop { get; set; }
         public bool IsSideShop { get; set; }
         public bool IsRecipe { get; set; }
         public string LocalizedName { get; set; }
+        public string ImagePath { get; set; }
         public string ImageUrl { get { 
                 if (IsRecipe)
                     return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/items/recipe_lg.png");
                 else
-                    return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/items/", ShortName, "_lg.png"); } 
+                    return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/items/", ImagePath); } 
         }
         public int Cooldown { get; set; }
         public int ManaCost { get; set; }

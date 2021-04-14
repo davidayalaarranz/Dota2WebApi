@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace TravelAgencyWebApi.Controllers
+namespace Dota2WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

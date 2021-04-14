@@ -64,7 +64,7 @@ namespace dota2WebApi.Common
                 Name = hi.Name,
                 LocalizedName = hi.LocalizedName,
                 ShortName = hi.ShortName,
-                ImageUrl = hi.ImageUrl,
+                ImageUrl = hi.ImagePath,
                 IsRecipe = hi.IsRecipe,
                 IsSecretShop = hi.IsSecretShop,
                 IsSideShip = hi.IsSideShop,
@@ -72,10 +72,30 @@ namespace dota2WebApi.Common
                 Notes = hi.Notes,
                 Lore = hi.Lore,
                 Attrib = hi.Attrib,
+                Qual = hi.Qual,
                 Cost = hi.Cost,
                 Cooldown = hi.Cooldown,
                 ManaCost = hi.ManaCost,
                 Created = hi.Created,
+                //Components = hi.Components,
+                Components = hi.Components.Select(hic => new
+                {
+                    Quantity = hic.Quantity,
+                    ComponentId = hic.Component.HeroItemId,
+                    Name = hic.Component.LocalizedName,
+                    ImageUrl = hic.Component.ImageUrl,
+                }).ToList(),
+
+                BonusStrength = hi.BonusStrength,
+                BonusAgility = hi.BonusAgility,
+                BonusIntelligence = hi.BonusIntelligence,
+                BonusAttackSpeed = hi.BonusAttackSpeed,
+                BonusMovementSpeed = hi.BonusMovementSpeed,
+                BonusDamage = hi.BonusDamage,
+                BonusManaRegeneration = hi.BonusManaRegeneration,
+                BonusHPRegeneration = hi.BonusHPRegeneration,
+                BonusMana = hi.BonusMana,
+                BonusHealth = hi.BonusHealth
             };
             return ret;
         }

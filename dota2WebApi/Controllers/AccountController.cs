@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TravelAgencyWebApi.Controllers
+namespace Dota2WebApi.Controllers
 {
     [Route("api/[controller]")]
     [AllowAnonymous]

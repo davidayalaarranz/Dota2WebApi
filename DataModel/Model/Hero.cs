@@ -38,8 +38,8 @@ namespace DataModel.Model
 
         public string Name { get; set; }
         public string ShortName { get { return Name.Remove(0,14); } }
-        public string ImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 14), "_lg.png"); } }
-        public string VerticalImageUrl { get { return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/heroes/", Name.Remove(0, 14), "_vert.jpg"); } }
+        public string ImageUrl { get { return string.Concat(Name.Remove(0, 14), "_lg.png"); } }
+        public string VerticalImageUrl { get { return string.Concat(Name.Remove(0, 14), "_vert.jpg"); } }
         public string LocalizedName { get; set; }
         //[JsonConverter(typeof(HeroPrincipalAttributeJsonConverter))]
         public HeroPrincipalAttribute PrincipalAttribute { get; set; }

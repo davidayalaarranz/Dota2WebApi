@@ -154,7 +154,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                                                     if (itemId != 0)
                                                     { 
                                                         mphiu = new MatchPlayerHeroItemUpgrade();
-                                                        mphiu.HeroItemId = reader.GetInt32();
+                                                        mphiu.HeroItemId = itemId;
                                                         mphiu.HeroItemSlot = 0;
                                                         mphiu.StartLevel = 1;
                                                         mphiu.IsSold = false;
@@ -166,7 +166,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                                                     if (itemId != 0)
                                                     {
                                                         mphiu = new MatchPlayerHeroItemUpgrade();
-                                                        mphiu.HeroItemId = reader.GetInt32();
+                                                        mphiu.HeroItemId = itemId;
                                                         mphiu.HeroItemSlot = 1;
                                                         mphiu.StartLevel = 1;
                                                         mphiu.IsSold = false;
@@ -178,7 +178,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                                                     if (itemId != 0)
                                                     {
                                                         mphiu = new MatchPlayerHeroItemUpgrade();
-                                                        mphiu.HeroItemId = reader.GetInt32();
+                                                        mphiu.HeroItemId = itemId;
                                                         mphiu.HeroItemSlot = 2;
                                                         mphiu.StartLevel = 1;
                                                         mphiu.IsSold = false;
@@ -190,7 +190,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                                                     if (itemId != 0)
                                                     {
                                                         mphiu = new MatchPlayerHeroItemUpgrade();
-                                                        mphiu.HeroItemId = reader.GetInt32();
+                                                        mphiu.HeroItemId = itemId;
                                                         mphiu.HeroItemSlot = 3;
                                                         mphiu.StartLevel = 1;
                                                         mphiu.IsSold = false;
@@ -202,7 +202,7 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                                                     if (itemId != 0)
                                                     {
                                                         mphiu = new MatchPlayerHeroItemUpgrade();
-                                                        mphiu.HeroItemId = reader.GetInt32();
+                                                        mphiu.HeroItemId = itemId;
                                                         mphiu.HeroItemSlot = 4;
                                                         mphiu.StartLevel = 1;
                                                         mphiu.IsSold = false;
@@ -214,12 +214,25 @@ namespace DataModel.ValveJsonModel.GetMatchHistory
                                                     if (itemId != 0)
                                                     {
                                                         mphiu = new MatchPlayerHeroItemUpgrade();
-                                                        mphiu.HeroItemId = reader.GetInt32();
+                                                        mphiu.HeroItemId = itemId;
                                                         mphiu.HeroItemSlot = 5;
                                                         mphiu.StartLevel = 1;
                                                         mphiu.IsSold = false;
                                                         mp.HeroItemUpgrades.Add(mphiu);
                                                     }
+                                                    break;
+                                                case "item_neutral":
+                                                    itemId = reader.GetInt32();
+                                                    if (itemId != 0)
+                                                    {
+                                                        mphiu = new MatchPlayerHeroItemUpgrade();
+                                                        mphiu.HeroItemId = itemId;
+                                                        mphiu.HeroItemSlot = 6;
+                                                        mphiu.StartLevel = 1;
+                                                        mphiu.IsSold = false;
+                                                        mp.HeroItemUpgrades.Add(mphiu);
+                                                    }
+                                                    //NeutralItem
                                                     break;
 
 

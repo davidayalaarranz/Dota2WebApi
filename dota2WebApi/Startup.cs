@@ -16,6 +16,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DataModel.Model.JsonConverters;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace dota2WebApi
 {
@@ -122,6 +124,12 @@ namespace dota2WebApi
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.ContentRootPath, "images")),
+                    RequestPath = "/images"
+                });
 
             app.UseRouting();
             app.UseCors(MyAllowSpecificOrigins);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BusinessLibrary.Model;
 using BusinessLibrary.Service;
 using DataModel.Model;
+using dota2WebApi.Common;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -28,7 +29,14 @@ namespace dota2WebApi.Controllers
         {
             try
             {
-                return Ok(await _heroItemService.GetHeroItems());
+                HeroItemResponseModel hirm = await _heroItemService.GetHeroItems();
+                var result = hirm.HeroItems.Select(hi => Transformers.TransformHeroItem(hi));
+                var ret = new
+                {
+                    HeroItems = result,
+                    nHeroItems = hirm.nHeroItems,
+                };
+                return Ok(ret);
             }
             catch (Exception)
             {
@@ -42,40 +50,13 @@ namespace dota2WebApi.Controllers
             try
             {
                 //Log.Information("Get customer executing");
-                HeroItemResponseModel hir = await _heroItemService.GetHeroItems(parameters);
-                var result = hir.HeroItems.Select(hi => new
-                {
-                    HeroItemId = hi.HeroItemId,
-                    Name = hi.Name,
-                    LocalizedName = hi.LocalizedName,
-                    ShortName = hi.ShortName,
-                    ImageUrl = hi.ImageUrl,
-                    IsRecipe = hi.IsRecipe,
-                    IsSecretShop = hi.IsSecretShop,
-                    IsSideShop = hi.IsSideShop,
-                    Description = hi.Description,
-                    Notes = hi.Notes,
-                    Lore = hi.Lore,
-                    Attrib = hi.Attrib,
-                    Cost = hi.Cost,
-                    Cooldown = hi.Cooldown,
-                    ManaCost = hi.ManaCost,
-                    Created = hi.Created,
-                    Components = hi.Components.Select(hic => new
-                    {
-                        Quantity = hic.Quantity,
-                        ComponentId = hic.Component.HeroItemId,
-                        Name = hic.Component.LocalizedName,
-                        ImageUrl = hic.Component.ImageUrl,
-                    }
-                    ).ToList()
-                });
+                HeroItemResponseModel hirm = await _heroItemService.GetHeroItems(parameters);
+                var result = hirm.HeroItems.Select(hi => Transformers.TransformHeroItem(hi));
                 var ret = new
                 {
                     HeroItems = result,
-                    nHeroItems = hir.nHeroItems,
+                    nHeroItems = hirm.nHeroItems,
                 };
-                
                 return Ok(ret);
                 //return Ok(await _heroItemService.GetHeroItems(parameters));
             }

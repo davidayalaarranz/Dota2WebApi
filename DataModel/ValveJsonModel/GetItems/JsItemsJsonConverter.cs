@@ -35,8 +35,25 @@ namespace DataModel.ValveJsonModel.GetItems
                         case "id":
                             hi.HeroItemId = reader.GetInt32();
                             break;
+                        case "img":
+                            hi.ImagePath = reader.GetString();
+                            if (hi.ImagePath.Contains("?"))
+                            {
+                                hi.ImagePath = hi.ImagePath.Substring(0, hi.ImagePath.IndexOf("?"));
+                            }
+                            break;
                         case "desc":
                             hi.Description = reader.GetString();
+                            break;
+                        case "qual":
+                            if (reader.TokenType == JsonTokenType.String)
+                            {
+                                hi.Qual = reader.GetString();
+                            }
+                            else if (reader.TokenType == JsonTokenType.False)
+                            {
+                                hi.Qual = "false";
+                            }
                             break;
                         case "cost":
                             hi.Cost = reader.GetInt32();

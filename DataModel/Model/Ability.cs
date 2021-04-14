@@ -56,7 +56,7 @@ namespace DataModel.Model
         public string Hurl { get; set; }
         public string ImageUrl { get 
             { 
-                return string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/abilities/", Name, "_lg.png"); 
+                return string.Concat(Name, "_lg.png"); 
             } 
         }
 

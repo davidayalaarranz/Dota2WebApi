@@ -67,6 +67,10 @@ namespace BusinessLibrary.Service
                                 db.Entry(mphiu)
                                     .Reference(mphiu => mphiu.HeroItem)
                                     .Load();
+                                //db.Entry(mphiu.HeroItem)
+                                //    .Collection(hi => hi.Components)
+                                //    .Query()
+                                //    .Load();
                             }
                         }
                     }
