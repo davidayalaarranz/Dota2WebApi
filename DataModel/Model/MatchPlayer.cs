@@ -11,12 +11,17 @@ namespace DataModel.Model
             this.HeroUpgrades = new List<MatchPlayerAbilityUpgrade>();
             this.HeroItemUpgrades = new List<MatchPlayerHeroItemUpgrade>();
         }
+
+        public int PlayerSlot { get; set; }
+        
         public long PlayerId { get; set; }
         public Player Player { get; set; }
+        
         public long MatchId { get; set; }
         public Match Match { get; set; }
-        public int PlayerSlot { get; set; }
+
         public long HeroId { get; set; }
+        public long PatchVersionId { get; set; }
         public Hero Hero { get; set; }
 
         public List<MatchPlayerAbilityUpgrade> HeroUpgrades { get; set; }

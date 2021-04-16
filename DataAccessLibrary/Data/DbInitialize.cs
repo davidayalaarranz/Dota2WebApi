@@ -11,12 +11,42 @@ using DataModel.ValveJsonModel.GetItems;
 using DataModel.Model;
 using DataModel.ValveJsonModel.GetMatchHistory;
 using System.Text.RegularExpressions;
+using DataModel;
+using Microsoft.Extensions.Configuration;
+using DataModel.Common;
+using static DataAccessLibrary.Data.AppConfiguration;
 
 namespace DataAccessLibrary.Data
 {
-    public static class DbInitialize
+    public class DbInitialize
     {
-        public static void InitializeMatches(string pathJson, Dota2AppDbContext context)
+        private void InitializeAppConfiguration(Dota2AppDbContext context)
+        {
+            var AppConfigurationItems = new AppConfigurationItem[]
+            {
+                new AppConfigurationItem { Key = "CurrentDotaPatchVersion", Value = "7.28a" }
+            };
+            foreach (AppConfigurationItem aci in AppConfigurationItems)
+            {
+                context.AppConfiguration.Add(aci);
+            }
+            context.SaveChanges();
+        }
+        private void InitializeDotaPatchVersion(Dota2AppDbContext context)
+        {
+            var PatchVersions = new PatchVersion[]
+            {
+                new PatchVersion { Name = "7.27d", Description = "Una versión de dota", Changes = "", ReleaseDate = new DateTime(2020,8,13) },
+                new PatchVersion { Name = "7.28a", Description = "Otra versión de dota", Changes = "", ReleaseDate = new DateTime(2020,12,22) }
+            };
+            foreach (PatchVersion pv in PatchVersions)
+            {
+                context.PatchVersions.Add(pv);
+            }
+            context.SaveChanges();
+        }
+
+        public void InitializeMatches(string pathJson, Dota2AppDbContext context, PatchVersion patchVersion)
         {
             JsonDocumentOptions jsonOptions = new JsonDocumentOptions
             {
@@ -52,18 +82,27 @@ namespace DataAccessLibrary.Data
                 {
                     mp.Hero = context.Heroes.First(h => h.HeroId == mp.Hero.HeroId);
                     mp.Player = md.result.MatchPlayers.First(p => p.PlayerId == mp.Player.PlayerId).Player;
+
+                    foreach (MatchPlayerAbilityUpgrade mpau in mp.HeroUpgrades)
+                    {
+                        mpau.PatchVersionId = patchVersion.PatchVersionId;
+                    }
+                    //foreach (MatchPlayerHeroItemUpgrade mphiu in mp.HeroItemUpgrades)
+                    //{
+                    //    mphiu.PatchVersionId = patchVersion.PatchVersionId;
+                    //}
                 }
                 context.Matches.Add(md.result);
                 context.SaveChanges();
             }
         }
-        public static void InitializeHeroes(string pathJson, Dota2AppDbContext context)
+        public void InitializeHeroes(string pathJson, Dota2AppDbContext context, PatchVersion version)
         {
             string pathNPCHeroes = String.Concat(pathJson, "\\npc_heroes.txt");
             if (File.Exists(pathNPCHeroes))
             {
                 List<string> lines = File.ReadLines(pathNPCHeroes).ToList();
-                ParseNPCHeroes(lines, context);
+                ParseNPCHeroes(lines, context, version);
             }
             JsonDocumentOptions jsonOptions = new JsonDocumentOptions
             {
@@ -133,12 +172,12 @@ namespace DataAccessLibrary.Data
             context.SaveChanges();
         }
 
-        private static bool compara (string key, string heroName)
+        private bool compara (string key, string heroName)
         {
             return (key.IndexOf(heroName) == 0);
         }
 
-        private static string getNPCProperty(string line)
+        private string getNPCProperty(string line)
         {
             int firstQuotePosition = line.IndexOf("\"");
             int secondQuotePosition = line.Substring(line.IndexOf("\"") + 1).IndexOf("\"") + firstQuotePosition + 1;
@@ -146,14 +185,14 @@ namespace DataAccessLibrary.Data
             return line.Substring(firstQuotePosition + 1, secondQuotePosition - firstQuotePosition - 1);
         }
 
-        private static string getNPCValue(string line)
+        private string getNPCValue(string line)
         {
             int lastQuotePosition = line.LastIndexOf("\"");
             int prelastQuotePosition = line.Substring(0, lastQuotePosition - 1).LastIndexOf("\"");
             return line.Substring(prelastQuotePosition + 1, lastQuotePosition - prelastQuotePosition - 1);
         }
 
-        private static void ParseNPCHeroes(List<string> lines, Dota2AppDbContext context)
+        private void ParseNPCHeroes(List<string> lines, Dota2AppDbContext context, PatchVersion patchVersion)
         {
             Regex reHeroName = new Regex(@"^\t""npc_dota_hero_[a-zA-Z0-9_]*""$");
             Regex reHeroId = new Regex(@"^\t\t""HeroID""");
@@ -211,6 +250,8 @@ namespace DataAccessLibrary.Data
                             {
                                 ha.IsTalent = ha.Order >= hAux.AbilityTalentStart;
                             }
+                            hAux.PatchVersion = patchVersion;
+                            hAux.PatchVersionId = patchVersion.PatchVersionId;
                             context.Heroes.Add(hAux);
                         } else if (hAux.Name == "npc_dota_hero_base")
                         {
@@ -343,12 +384,14 @@ namespace DataAccessLibrary.Data
             {
                 ha.IsTalent = ha.Order >= hAux.AbilityTalentStart;
             }
+            hAux.PatchVersion = patchVersion;
+            hAux.PatchVersionId = patchVersion.PatchVersionId;
             context.Heroes.Add(hAux);
 
             context.SaveChanges();
         }
 
-        private static void ParseNPCAbilities(List<string> lines, Dota2AppDbContext context)
+        private void ParseNPCAbilities(List<string> lines, Dota2AppDbContext context, PatchVersion patchVersion)
         {
             Regex reAbilityName = new Regex(@"^\t""[a-zA-Z0-9_]*""$");
             Regex reAbilityId = new Regex(@"^\t\t""ID""");
@@ -397,6 +440,8 @@ namespace DataAccessLibrary.Data
                     {
                         if (aAux.AbilityId != 0)
                         {
+                            aAux.PatchVersion = patchVersion;
+                            aAux.PatchVersionId = patchVersion.PatchVersionId;
                             context.Abilities.Add(aAux);
                         }
                         else if (aAux.Name == "ability_base")
@@ -483,7 +528,7 @@ namespace DataAccessLibrary.Data
             context.SaveChanges();
         }
 
-        public static void InitializeAbilities(string pathJson, Dota2AppDbContext context)
+        public void InitializeAbilities(string pathJson, Dota2AppDbContext context, PatchVersion patchVersion)
         {
             try
             {
@@ -491,7 +536,7 @@ namespace DataAccessLibrary.Data
                 if (File.Exists(pathNPCAbilities))
                 {
                     List<string> lines = File.ReadLines(pathNPCAbilities).ToList();
-                    ParseNPCAbilities(lines, context);
+                    ParseNPCAbilities(lines, context, patchVersion);
 
                     GetHeroAbilitiesResponseModel harm = null;
                     string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
@@ -531,7 +576,7 @@ namespace DataAccessLibrary.Data
 
             }
         }
-        public static void InitializeItems(string pathJson, Dota2AppDbContext context)
+        public void InitializeItems(string pathJson, Dota2AppDbContext context, PatchVersion patchVersion)
         {
             try { 
                 string pathJsonItems = String.Concat(pathJson, "\\items.json");
@@ -549,6 +594,7 @@ namespace DataAccessLibrary.Data
                     string pathJsonItems2 = String.Concat(pathJson, "\\GetItems en_US.json");
                     if (File.Exists(pathJsonItems2))
                     {
+                        List<HeroItemComponent> lhic = new List<HeroItemComponent>();
                         jsonString = File.ReadAllText(pathJsonItems2);
                         serializeOptions = new JsonSerializerOptions
                         {
@@ -568,7 +614,44 @@ namespace DataAccessLibrary.Data
                                 hi.IsSideShop = hiGetItem.IsSideShop;
                                 hi.IsRecipe = hiGetItem.IsRecipe;
                             }
+                            foreach (string cn in hi.ComponentsName)
+                            {
+                                hiGetItem = o.itemdata.Values.ToList().Find(item => item.ShortName == cn);
+                                if (hiGetItem != null && hiGetItem.HeroItemId > 0)
+                                {
+                                    HeroItemComponent hic = lhic.Find(comp => comp.ComponentId == hiGetItem.HeroItemId && comp.HeroItemId == hi.HeroItemId);
+                                    if (hic != null && hic.HeroItemId > 0)
+                                    {
+                                        hic.Quantity++;
+                                    }
+                                    else
+                                    {
+                                        hic = new HeroItemComponent();
+
+                                        hic.HeroItem = hi;
+                                        hic.HeroItemId = hi.HeroItemId;
+                                        hic.HeroItemPatchVersionId = patchVersion.PatchVersionId;
+
+                                        hic.Component = hiGetItem;
+                                        hic.ComponentId = hiGetItem.HeroItemId;
+                                        hic.ComponentPatchVersionId = patchVersion.PatchVersionId;
+
+                                        hic.Quantity = 1;
+                                        //hiGetItem.PatchVersionId = patchVersion.PatchVersionId;
+
+                                        lhic.Add(hic);
+                                    }
+                                }
+                            }
+                            hi.PatchVersion = patchVersion;
+                            hi.PatchVersionId = patchVersion.PatchVersionId;
                             context.HeroItems.Add(hi);
+                        }
+                        context.SaveChanges();
+
+                        foreach (HeroItemComponent hic in lhic)
+                        {
+                            context.HeroItemComponents.Add(hic);
                         }
                         context.SaveChanges();
                     }
@@ -579,7 +662,7 @@ namespace DataAccessLibrary.Data
             }
         }
 
-        public static void Initialize(Dota2AppDbContext context)
+        public void Initialize(Dota2AppDbContext context)
         {
             try
             {
@@ -587,11 +670,27 @@ namespace DataAccessLibrary.Data
                 context.Database.EnsureCreated();
                 if (context.Heroes.Any())
                     return;
-                string pathJson = Path.GetFullPath("..\\DataModel\\json\\7.28a");
-                InitializeAbilities(pathJson, context);
-                InitializeHeroes(pathJson, context);
-                InitializeItems(pathJson, context);
-                InitializeMatches(pathJson, context);
+
+                InitializeDotaPatchVersion(context);
+                InitializeAppConfiguration(context);
+
+                PatchVersion cpv = (from a in context.PatchVersions select a)
+                    .Where(x => x.Name == AppConfiguration.GetValue("CurrentDotaPatchVersion"))
+                    .First();
+
+                string pathJson = Path.GetFullPath(string.Concat("..\\DataModel\\json\\", AppConfiguration.GetValue("CurrentDotaPatchVersion")));
+                InitializeAbilities(pathJson, context, cpv);
+                InitializeHeroes(pathJson, context, cpv);
+                InitializeItems(pathJson, context, cpv);
+                //InitializeMatches(pathJson, context, cpv);
+
+                pathJson = Path.GetFullPath(string.Concat("..\\DataModel\\json\\", "7.27d"));
+                cpv = (from a in context.PatchVersions select a)
+                    .Where(x => x.Name == "7.27d")
+                    .First();
+                InitializeAbilities(pathJson, context, cpv);
+                InitializeHeroes(pathJson, context, cpv);
+                InitializeItems(pathJson, context, cpv);
 
                 //context.SaveChanges();
             }
@@ -600,5 +699,7 @@ namespace DataAccessLibrary.Data
 
             }
         }
+
+        
     }
 }

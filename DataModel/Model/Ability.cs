@@ -10,8 +10,12 @@ namespace DataModel.Model
     {
         [Key]
         public long HeroAbilityId { get; set; }
+        
+        public long HeroPatchVersionId { get; set; }
         public long HeroId { get; set; }
         public Hero Hero { get; set; }
+
+        public long AbilityPatchVersionId { get; set; }
         public long AbilityId { get; set; }
         public Ability Ability { get; set; }
 
@@ -21,8 +25,10 @@ namespace DataModel.Model
 
     public class AbilityUpgrade
     {
+        public long PatchVersionId { get; set; }
         public long AbilityId { get; set; }
         public Ability Ability { get; set; }
+
         public int Level { get; set; }
         public TimeSpan Time { get; set; }
     }
@@ -42,6 +48,8 @@ namespace DataModel.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long AbilityId { get; set; }
+        public long PatchVersionId { get; set; }
+        public PatchVersion PatchVersion { get; set; }
 
         public bool IsHidden { get; set; }
 
@@ -54,13 +62,15 @@ namespace DataModel.Model
         public string Cmb { get; set; }
         public string Lore { get; set; }
         public string Hurl { get; set; }
-        public string ImageUrl { get 
-            { 
-                return string.Concat(Name, "_lg.png"); 
-            } 
+        public string ImageUrl { get
+            {
+                return string.Concat(Name, "_lg.png");
+            }
         }
 
         public List<HeroAbility> Heroes { get; set; }
+        public List<BuildAbilityUpgrade> BuildUpgrades { get; set; }
+        public List<MatchPlayerAbilityUpgrade> MatchPlayerUpgrades { get; set; }
 
 
         /// de NPC_abilities
@@ -68,13 +78,6 @@ namespace DataModel.Model
         
         public int CastRangeBuffer { get; set; }
 
-        //public int[] CastRange { get; set; }
-        //public decimal[] CastPoints { get; set; }
-        //public decimal[] ChannelTime { get; set; }
-        //public decimal[] Cooldown { get; set; }
-        //public decimal[] Duration { get; set; }
-        //public int[] Damage { get; set; }
-        //public int[] ManaCost { get; set; }
         public string CastRange { get; set; }
         public string CastPoint { get; set; }
         public string ChannelTime { get; set; }

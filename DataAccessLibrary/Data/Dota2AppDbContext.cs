@@ -6,6 +6,7 @@ using DataModel.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using static DataAccessLibrary.Data.AppConfiguration;
 
 namespace DataAccessLibrary.Data
 {
@@ -13,13 +14,16 @@ namespace DataAccessLibrary.Data
     {
         public Dota2AppDbContext() : base() { }
         public Dota2AppDbContext(DbContextOptions<Dota2AppDbContext> options) : base(options) { }
-
+        
+        public DbSet<AppConfigurationItem> AppConfiguration { get; set; }
         public DbSet<LogEntity> Log { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<PatchVersion> PatchVersions { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<Ability> Abilities { get; set; }
         public DbSet<HeroAbility> HeroAbilities { get; set; }
         public DbSet<HeroItem> HeroItems { get; set; }
+        public DbSet<HeroItemComponent> HeroItemComponents { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<MatchPlayerAbilityUpgrade> MatchPlayerAbilityUpgrades { get; set; }
         public DbSet<BuildAbilityUpgrade> BuildAbilityUpgrades { get; set; }
@@ -36,8 +40,10 @@ namespace DataAccessLibrary.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<AppConfigurationItem>().ToTable("AppConfiguration");
             builder.Entity<LogEntity>().ToTable("Log");
             builder.Entity<ApplicationUser>().ToTable("ApplicationUsers");
+            builder.Entity<PatchVersion>().ToTable("PatchVersions");
             builder.Entity<Hero>().ToTable("Heroes");
             builder.Entity<Ability>().ToTable("Abilities");
             builder.Entity<HeroItem>().ToTable("HeroItems");
@@ -49,6 +55,22 @@ namespace DataAccessLibrary.Data
             builder.Entity<Build>().ToTable("Builds");
             builder.Entity<MatchPlayerHeroItemUpgrade>().ToTable("MatchPlayerHeroItemUpgrades");
 
+            ///Hero
+            builder.Entity<Hero>()
+                .HasKey(k => new { k.HeroId, k.PatchVersionId });
+
+            /// Ability
+            builder.Entity<Ability>()
+                .HasKey(k => new { k.AbilityId, k.PatchVersionId });
+
+            /// HeroItem
+            builder.Entity<HeroItem>()
+                .HasKey(k => new { k.HeroItemId, k.PatchVersionId });
+            builder.Entity<HeroItem>()
+                .HasOne(hi => hi.PatchVersion)
+                .WithMany(pv => pv.HeroItems)
+                .HasForeignKey(hi => hi.PatchVersionId);
+
             /// PickBan
             builder.Entity<Pick>()
                 .HasKey(k => new { k.MatchId, k.Order });
@@ -57,19 +79,33 @@ namespace DataAccessLibrary.Data
 
             /// HeroItemUpgrade
             builder.Entity<MatchPlayerHeroItemUpgrade>()
-                .HasOne(hiu => hiu.HeroItem);
+                .HasOne(hiu => hiu.HeroItem)
+                .WithMany(hi => hi.MatchPlayerUpgrades)
+                .HasForeignKey(hiu => new { hiu.HeroItemId, hiu.PatchVersionId })
+                .OnDelete(DeleteBehavior.NoAction);
 
-            /// AbilityUpgrade
+
+            /// MatchPlayerAbilityUpgrade
             builder.Entity<MatchPlayerAbilityUpgrade>()
                 .HasKey(k => new { k.MatchPlayerMatchId, k.MatchPlayerPlayerId, k.MatchPlayerPlayerSlot, k.Level });
-            builder.Entity<BuildAbilityUpgrade>()
-               .HasOne(hau => hau.Ability);
+            builder.Entity<MatchPlayerAbilityUpgrade>()
+                .HasOne(hau => hau.Ability)
+                .WithMany(a => a.MatchPlayerUpgrades)
+                .HasForeignKey(k => new { k.AbilityId, k.PatchVersionId })
+                .OnDelete(DeleteBehavior.NoAction);
 
+            /// BuildAbilityUpgrade
             builder.Entity<BuildAbilityUpgrade>()
                 .HasKey(k => new { k.BuildId, k.Level });
-            builder.Entity<MatchPlayerAbilityUpgrade>()
-                .HasOne(hau => hau.Ability);
+            builder.Entity<BuildAbilityUpgrade>()
+               .HasOne(hau => hau.Ability)
+               .WithMany(a => a.BuildUpgrades)
+               .HasForeignKey(k => new { k.AbilityId, k.PatchVersionId })
+               .OnDelete(DeleteBehavior.NoAction);
 
+
+
+            /// Build
             builder.Entity<Build>()
                 .HasOne(b => b.User)
                 .WithMany(u => u.Builds)
@@ -80,10 +116,14 @@ namespace DataAccessLibrary.Data
                 .HasKey(t => new { t.HeroAbilityId });
             builder.Entity<HeroAbility>()
                 .HasOne(ha => ha.Hero)
-                .WithMany(h => h.HeroAbilities);
+                .WithMany(h => h.HeroAbilities)
+                .HasForeignKey(k => new { k.HeroId, k.HeroPatchVersionId })
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<HeroAbility>()
                 .HasOne(ha => ha.Ability)
-                .WithMany(a => a.Heroes);
+                .WithMany(a => a.Heroes)
+                .HasForeignKey(k => new { k.AbilityId, k.AbilityPatchVersionId })
+                .OnDelete(DeleteBehavior.NoAction);
 
             /// MatchPlayer
             builder.Entity<MatchPlayer>()
@@ -101,21 +141,21 @@ namespace DataAccessLibrary.Data
             builder.Entity<MatchPlayer>()
                 .HasOne(mp => mp.Hero)
                 .WithMany(h => h.Matches)
-                .HasForeignKey(mp => mp.HeroId)
+                .HasForeignKey(mp => new { mp.HeroId, mp.PatchVersionId })
                 .OnDelete(DeleteBehavior.Cascade);
             
             /// HeroItem
             builder.Entity<HeroItemComponent>()
-                .HasKey(t => new { t.ComponentId, t.HeroItemId });
+                .HasKey(t => new { t.ComponentId, t.ComponentPatchVersionId, t.HeroItemId, t.HeroItemPatchVersionId });
             builder.Entity<HeroItemComponent>()
                 .HasOne(t => t.Component)
                 .WithMany(c => c.IsComponentOf)
-                .HasForeignKey(t => t.ComponentId)
+                .HasForeignKey(t => new { t.ComponentId, t.ComponentPatchVersionId })
                 .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<HeroItemComponent>()
                 .HasOne(t => t.HeroItem)
                 .WithMany(c => c.Components)
-                .HasForeignKey(t => t.HeroItemId)
+                .HasForeignKey(t => new { t.HeroItemId, t.HeroItemPatchVersionId })
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

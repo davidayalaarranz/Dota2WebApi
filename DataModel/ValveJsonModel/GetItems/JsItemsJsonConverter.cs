@@ -104,6 +104,9 @@ namespace DataModel.ValveJsonModel.GetItems
                                 while (reader.Read())
                                 {
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
+                                    // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
+                                    if (reader.TokenType == JsonTokenType.False) continue;
+                                    
                                     hi.ComponentsName.Add(reader.GetString());
                                 }
                             }

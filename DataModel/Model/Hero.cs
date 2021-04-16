@@ -35,6 +35,8 @@ namespace DataModel.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long HeroId { get; set; }
+        public long PatchVersionId { get; set; }
+        public PatchVersion PatchVersion { get; set; }
 
         public string Name { get; set; }
         public string ShortName { get { return Name.Remove(0,14); } }

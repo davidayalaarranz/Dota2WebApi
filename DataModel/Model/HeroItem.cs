@@ -8,22 +8,28 @@ namespace DataModel.Model
     {
         public HeroItemComponent() { }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long HeroItemPatchVersionId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long HeroItemId { get; set; }
         public HeroItem HeroItem { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long ComponentPatchVersionId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long ComponentId { get; set; }
         public HeroItem Component { get; set; }
-        public int Quantity
-        {
-            get;
-            set;
-        }
+
+        public int Quantity { get; set; }
     }
     public class ItemUpgrade
     {
         public ItemUpgrade() { }
 
+        public long PatchVersionId { get; set; }
         public long HeroItemId { get; set; }
         public HeroItem HeroItem { get; set; }
+
         public int StartLevel { get; set; }
         public int EndLevel { get; set; }
         public bool IsSold { get; set; }
@@ -51,9 +57,12 @@ namespace DataModel.Model
             Lore = string.Empty;
             Attrib = string.Empty;
         }
-        [Key]
+        
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long HeroItemId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long PatchVersionId { get; set; }
+        public PatchVersion PatchVersion { get; set; }
 
         public string Name { get; set; }
         public string ShortName { get { if (Name != null) return Name.Remove(0, 5); else return string.Empty; } }
@@ -77,6 +86,7 @@ namespace DataModel.Model
         public string Lore { get; set; }
         public List<HeroItemComponent> Components { get; set; }
         public List<HeroItemComponent> IsComponentOf { get; set; }
+        public List<MatchPlayerHeroItemUpgrade> MatchPlayerUpgrades { get; set; }
         public bool Created { get; set; }
         public string Attrib { get; set; }
 
