@@ -34,7 +34,7 @@ namespace dota2WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IHeroService, HeroService>();
             services.AddTransient<IHeroItemService, HeroItemService>();
             services.AddTransient<IUrlService, UrlService>();
@@ -46,9 +46,10 @@ namespace dota2WebApi
                     options.UseSqlServer(Configuration.GetConnectionString("Dota2WebApiDbContext"), b => b.MigrationsAssembly("Dota2WebApi")));
 
 
-            services.AddIdentityCore<ApplicationUser>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<Dota2AppDbContext>()
                 .AddDefaultTokenProviders();
+
 
             services.AddAuthentication(options =>
             {
