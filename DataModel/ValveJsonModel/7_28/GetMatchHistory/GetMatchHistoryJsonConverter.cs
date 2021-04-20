@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DataModel.ValveJsonModel.GetMatchHistory
+namespace DataModel.ValveJsonModel.v7_28.GetMatchHistory
 {
     public class GetMatchHistoryJsonConverter : JsonConverter<Match>
     {

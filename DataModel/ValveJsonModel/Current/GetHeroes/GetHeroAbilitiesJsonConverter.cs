@@ -3,7 +3,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DataModel.ValveJsonModel.GetHeroes
+namespace DataModel.ValveJsonModel.Current.GetHeroes
 {
     public class GetHeroAbilitiesJsonConverter : JsonConverter<Ability>
     {

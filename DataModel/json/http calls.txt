@@ -22,3 +22,16 @@ http://api.steampowered.com/IEconDOTA2_205790/GetRarities/v1
 
 205790 = test
 570 = production
+
+
+
+https://www.dota2.com/datafeed/herolist?language=english
+https://www.dota2.com/datafeed/herodata?language=english&hero_id=73
+
+https://www.dota2.com/datafeed/itemlist?language=english
+https://www.dota2.com/datafeed/itemdata?language=english&item_id=1
+
+https://www.dota2.com/datafeed/abilitylist?language=english
+https://www.dota2.com/datafeed/abilitydata?language=english&ability_id=5035
+
+https://www.dota2.com/datafeed/patchnoteslist?language=latam

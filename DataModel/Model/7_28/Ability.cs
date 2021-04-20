@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace DataModel.Model
+namespace DataModel.Model.v7_28
 {
     public class HeroAbility
     {
@@ -67,8 +67,6 @@ namespace DataModel.Model
                 return string.Concat(Name, "_lg.png");
             }
         }
-        // Añadido en 7.29
-        public int NeutralItemTier { get; set; }
 
         public List<HeroAbility> Heroes { get; set; }
         public List<BuildAbilityUpgrade> BuildUpgrades { get; set; }

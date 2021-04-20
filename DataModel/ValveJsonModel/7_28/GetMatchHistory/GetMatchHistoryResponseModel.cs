@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataModel.ValveJsonModel.GetMatchHistory
+namespace DataModel.ValveJsonModel.v7_28.GetMatchHistory
 {
     public class GetMatchHistoryResponseModel
     {

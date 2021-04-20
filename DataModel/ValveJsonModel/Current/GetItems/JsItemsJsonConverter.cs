@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace DataModel.ValveJsonModel.GetItems
+namespace DataModel.ValveJsonModel.Current.GetItems
 {
     public class JsItemsJsonConverter : JsonConverter<HeroItem>
     {

@@ -351,3 +351,4 @@ MigrationBackup/
 
 # ignore 'TempDir' subfolders
 dota2WebApi/images/*
+dota2WebApi/ValveFiles

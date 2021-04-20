@@ -5,16 +5,21 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Text.Json;
-using DataModel.ValveJsonModel.GetHeroes;
+using DataModel.ValveJsonModel.Current.GetHeroes;
 using System.Globalization;
-using DataModel.ValveJsonModel.GetItems;
+using DataModel.ValveJsonModel.Current.GetItems;
 using DataModel.Model;
-using DataModel.ValveJsonModel.GetMatchHistory;
+using DataModel.ValveJsonModel.Current.GetMatchHistory;
 using System.Text.RegularExpressions;
 using DataModel;
 using Microsoft.Extensions.Configuration;
 using DataModel.Common;
 using static DataAccessLibrary.Data.AppConfiguration;
+using DataModel.ValveJsonModel.v7_28.GetHeroes;
+using DataModel.ValveJsonModel.v7_28.GetItems;
+using System.Threading.Tasks;
+using DataModel.ValveJsonModel.Current.GetAbilities;
+using Serilog;
 
 namespace DataAccessLibrary.Data
 {
@@ -24,7 +29,7 @@ namespace DataAccessLibrary.Data
         {
             var AppConfigurationItems = new AppConfigurationItem[]
             {
-                new AppConfigurationItem { Key = "CurrentDotaPatchVersion", Value = "7.28a" }
+                new AppConfigurationItem { Key = "CurrentDotaPatchVersion", Value = "7.29b" }
             };
             foreach (AppConfigurationItem aci in AppConfigurationItems)
             {
@@ -37,7 +42,9 @@ namespace DataAccessLibrary.Data
             var PatchVersions = new PatchVersion[]
             {
                 new PatchVersion { Name = "7.27d", Description = "Una versión de dota", Changes = "", ReleaseDate = new DateTime(2020,8,13) },
-                new PatchVersion { Name = "7.28a", Description = "Otra versión de dota", Changes = "", ReleaseDate = new DateTime(2020,12,22) }
+                new PatchVersion { Name = "7.28a", Description = "Otra versión de dota", Changes = "", ReleaseDate = new DateTime(2020,12,22) },
+                new PatchVersion { Name = "7.29a", Description = "Una versión de dota", Changes = "", ReleaseDate = new DateTime(2021,3,28) },
+                new PatchVersion { Name = "7.29b", Description = "Una versión de dota", Changes = "", ReleaseDate = new DateTime(2021,3,28) }
             };
             foreach (PatchVersion pv in PatchVersions)
             {
@@ -64,7 +71,7 @@ namespace DataAccessLibrary.Data
                 };
                 serializeOptions.Converters.Add(new GetMatchHistoryJsonConverter());
                 o = JsonSerializer.Deserialize<GetMatchHistoryResponseModel>(jsonString, serializeOptions);
-                
+
                 string pathJsonMatchDetails = String.Concat(pathJson, "\\GetMatchDetails.json");
                 if (File.Exists(pathJsonMatchDetails))
                 {
@@ -172,7 +179,7 @@ namespace DataAccessLibrary.Data
             context.SaveChanges();
         }
 
-        private bool compara (string key, string heroName)
+        private bool compara(string key, string heroName)
         {
             return (key.IndexOf(heroName) == 0);
         }
@@ -253,14 +260,16 @@ namespace DataAccessLibrary.Data
                             hAux.PatchVersion = patchVersion;
                             hAux.PatchVersionId = patchVersion.PatchVersionId;
                             context.Heroes.Add(hAux);
-                        } else if (hAux.Name == "npc_dota_hero_base")
+                        }
+                        else if (hAux.Name == "npc_dota_hero_base")
                         {
                             hBase = hAux;
                         }
                     }
                     hAux = new Hero();
                     hAux.Name = getNPCProperty(lines[i]);
-                    if (hBase != null) { 
+                    if (hBase != null)
+                    {
                         hAux.MinDamage = hBase.MinDamage;
                         hAux.MaxDamage = hBase.MaxDamage;
                         hAux.AttackRange = hBase.AttackRange;
@@ -353,7 +362,7 @@ namespace DataAccessLibrary.Data
                 match = reAttackAcquisitionRange.Match(lines[i]);
                 if (match.Success) { hAux.AttackAcquisitionRange = int.Parse(getNPCValue(lines[i])); continue; }
 
-                
+
                 match = reAbilityTalentStart.Match(lines[i]);
                 if (match.Success) { hAux.AbilityTalentStart = int.Parse(getNPCValue(lines[i])); continue; }
 
@@ -521,10 +530,10 @@ namespace DataAccessLibrary.Data
                 // Si la habilidad es de tipo ATTRIBUTES, el máximo nivel es 1 (talentos)
                 match = reAbilityType_DOTA_ABILITY_TYPE_ATTRIBUTES.Match(lines[i]);
                 if (match.Success) { aAux.MaxLevel = 1; aAux.IsAttributte = true; continue; }
-                
+
                 match = reMaxLevel.Match(lines[i]);
                 if (match.Success) { aAux.MaxLevel = int.Parse(getNPCValue(lines[i])); continue; }
-            }   
+            }
             context.SaveChanges();
         }
 
@@ -538,7 +547,7 @@ namespace DataAccessLibrary.Data
                     List<string> lines = File.ReadLines(pathNPCAbilities).ToList();
                     ParseNPCAbilities(lines, context, patchVersion);
 
-                    GetHeroAbilitiesResponseModel harm = null;
+                    DataModel.ValveJsonModel.v7_28.GetHeroes.GetHeroAbilitiesResponseModel harm = null;
                     string pathJsonHeroAbilities = String.Concat(pathJson, "\\abilities.json");
                     if (File.Exists(pathJsonHeroAbilities))
                     {
@@ -547,8 +556,8 @@ namespace DataAccessLibrary.Data
                         {
                             ReadCommentHandling = JsonCommentHandling.Skip
                         };
-                        serializeOptions2.Converters.Add(new GetHeroAbilitiesJsonConverter());
-                        harm = JsonSerializer.Deserialize<GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
+                        serializeOptions2.Converters.Add(new DataModel.ValveJsonModel.v7_28.GetHeroes.GetHeroAbilitiesJsonConverter());
+                        harm = JsonSerializer.Deserialize<DataModel.ValveJsonModel.v7_28.GetHeroes.GetHeroAbilitiesResponseModel>(jsonString, serializeOptions2);
 
                         foreach (Ability ha in context.Abilities)
                         {
@@ -578,9 +587,10 @@ namespace DataAccessLibrary.Data
         }
         public void InitializeItems(string pathJson, Dota2AppDbContext context, PatchVersion patchVersion)
         {
-            try { 
+            try
+            {
                 string pathJsonItems = String.Concat(pathJson, "\\items.json");
-                JsItemsResponseModel o;
+                DataModel.ValveJsonModel.v7_28.GetItems.JsItemsResponseModel o;
                 GetItemsResponseModel girmr;
                 if (File.Exists(pathJsonItems))
                 {
@@ -589,8 +599,8 @@ namespace DataAccessLibrary.Data
                     {
                         ReadCommentHandling = JsonCommentHandling.Skip
                     };
-                    serializeOptions.Converters.Add(new JsItemsJsonConverter());
-                    o = JsonSerializer.Deserialize<JsItemsResponseModel>(jsonString, serializeOptions);
+                    serializeOptions.Converters.Add(new DataModel.ValveJsonModel.v7_28.GetItems.JsItemsJsonConverter());
+                    o = JsonSerializer.Deserialize<DataModel.ValveJsonModel.v7_28.GetItems.JsItemsResponseModel>(jsonString, serializeOptions);
                     string pathJsonItems2 = String.Concat(pathJson, "\\GetItems en_US.json");
                     if (File.Exists(pathJsonItems2))
                     {
@@ -600,7 +610,7 @@ namespace DataAccessLibrary.Data
                         {
                             ReadCommentHandling = JsonCommentHandling.Skip
                         };
-                        serializeOptions.Converters.Add(new GetItemsJsonConverter());
+                        serializeOptions.Converters.Add(new ItemlistJsonConverter());
                         girmr = JsonSerializer.Deserialize<GetItemsResponseModel>(jsonString, serializeOptions);
 
                         foreach (HeroItem hi in o.itemdata.Values.ToList())
@@ -656,10 +666,194 @@ namespace DataAccessLibrary.Data
                         context.SaveChanges();
                     }
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
 
             }
+        }
+
+        public async static Task<int> GetValveJsonFiles()
+        {
+            int ret = 0;
+            string valveFilesFolderPath = string.Concat("ValveFiles/", AppConfiguration.CurrentDotaPatchVersion.Name, "/");
+            if (!Directory.Exists(valveFilesFolderPath))
+            {
+                Directory.CreateDirectory(valveFilesFolderPath);
+            }
+
+            string valveFilePath = string.Concat(valveFilesFolderPath, "herolist.json");
+            await GetRemoteFile("https://www.dota2.com/datafeed/herolist?language=english", valveFilePath);
+            if (File.Exists(valveFilePath))
+            {
+                await GetHeroesFiles(valveFilePath, string.Concat(valveFilesFolderPath, "heroes/"));
+                ret++;
+            }
+
+            valveFilePath = string.Concat(valveFilesFolderPath, "itemlist.json");
+            await GetRemoteFile("https://www.dota2.com/datafeed/itemlist?language=english", valveFilePath);
+            if (File.Exists(valveFilePath))
+            {
+                await GetItemsFiles(valveFilePath, string.Concat(valveFilesFolderPath, "items/"));
+                ret++;
+            }
+
+            valveFilePath = string.Concat(valveFilesFolderPath, "abilitylist.json");
+            await GetRemoteFile("https://www.dota2.com/datafeed/abilitylist?language=english", valveFilePath);
+            if (File.Exists(valveFilePath))
+            {
+                await GetIAbilitiesFiles(valveFilePath, string.Concat(valveFilesFolderPath, "abilities/"));
+                ret++;
+            }
+            return ret;
+        }
+
+        public async static Task<int> GetIAbilitiesFiles(string valveFilePath, string targetFolder)
+        {
+            int ret = 0;
+            AbilitylistResponseModel o;
+            if (File.Exists(valveFilePath))
+            {
+                if (!Directory.Exists(targetFolder))
+                {
+                    Directory.CreateDirectory(targetFolder);
+                }
+
+                string jsonString = File.ReadAllText(valveFilePath);
+                var serializeOptions = new JsonSerializerOptions
+                {
+                    ReadCommentHandling = JsonCommentHandling.Skip
+                };
+                serializeOptions.Converters.Add(new AbilitylistJsonConverter());
+                o = JsonSerializer.Deserialize<AbilitylistResponseModel>(jsonString, serializeOptions);
+                using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+                {
+                    foreach (Ability hi in o.result.data.itemabilities)
+                    {
+                        try
+                        {
+                            //if (!File.Exists(string.Concat(targetFolder, hi.AbilityId.ToString(), " - ", hi.Name, ".json")))
+                            //{
+
+                            //    using (Stream s = await client.GetStreamAsync(string.Concat("https://www.dota2.com/datafeed/abilitydata?language=english&ability_id=", hi.AbilityId.ToString())))
+                            //    {
+
+                            //        FileStream fs = new FileStream(string.Concat(targetFolder, hi.AbilityId.ToString(), " - ", hi.Name, ".json"), FileMode.OpenOrCreate);
+                            //        s.CopyTo(fs);
+                            //        await fs.FlushAsync();
+                            //        fs.Close();
+                            //    }
+                            //}
+                            if (!File.Exists(string.Concat(targetFolder, hi.AbilityId.ToString(), " - ", hi.Name, ".json")))
+                            {
+                                await GetRemoteFile(string.Concat("https://www.dota2.com/datafeed/abilitydata?language=english&ability_id=", hi.AbilityId.ToString()), string.Concat(targetFolder, hi.AbilityId.ToString(), " - ", hi.Name, ".json"));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, string.Concat("Error obteniendo fichero json de ability: ", hi.AbilityId.ToString()));
+                        }
+                    }
+                    ret = 1;
+                }
+            }
+            return ret;
+        }
+
+        public async static Task<int> GetItemsFiles(string valveFilePath, string targetFolder)
+        {
+            int ret = 0;
+            ItemlistResponseModel o;
+            if (File.Exists(valveFilePath))
+            {
+                if (!Directory.Exists(targetFolder))
+                {
+                    Directory.CreateDirectory(targetFolder);
+                }
+
+                string jsonString = File.ReadAllText(valveFilePath);
+                var serializeOptions = new JsonSerializerOptions
+                {
+                    ReadCommentHandling = JsonCommentHandling.Skip
+                };
+                serializeOptions.Converters.Add(new ItemlistJsonConverter());
+                o = JsonSerializer.Deserialize<ItemlistResponseModel>(jsonString, serializeOptions);
+                using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+                {
+                    foreach (HeroItem hi in o.result.data.itemabilities)
+                    {
+                        try
+                        {
+
+                            if (!File.Exists(string.Concat(targetFolder, hi.HeroItemId.ToString(), " - ", hi.ShortName, ".json")))
+                            {
+                                await GetRemoteFile(string.Concat("https://www.dota2.com/datafeed/itemdata?language=english&item_id=", hi.HeroItemId.ToString()), string.Concat(targetFolder, hi.HeroItemId.ToString(), " - ", hi.ShortName, ".json"));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, string.Concat("Error obteniendo fichero json de item: ", hi.HeroItemId.ToString()));
+                        }
+                    }
+                    ret = 1;
+                }
+            }
+            return ret;
+        }
+
+        public async static Task<int> GetHeroesFiles(string valveFilePath, string targetFolder)
+        {
+            int ret = 0;
+            HerolistResponseModel o;
+            if (File.Exists(valveFilePath))
+            {
+                if (!Directory.Exists(targetFolder))
+                {
+                    Directory.CreateDirectory(targetFolder);
+                }
+
+                string jsonString = File.ReadAllText(valveFilePath);
+                var serializeOptions = new JsonSerializerOptions
+                {
+                    ReadCommentHandling = JsonCommentHandling.Skip
+                };
+                serializeOptions.Converters.Add(new HerolistJsonConverter());
+                o = JsonSerializer.Deserialize<HerolistResponseModel>(jsonString, serializeOptions);
+                foreach (Hero h in o.result.data.heroes)
+                {
+                    try
+                    {
+                        if (!File.Exists(string.Concat(targetFolder, h.HeroId.ToString(), " - ", h.ShortName, ".json")))
+                        {
+                            await GetRemoteFile(string.Concat("https://www.dota2.com/datafeed/herodata?language=english&hero_id=", h.HeroId.ToString()), string.Concat(targetFolder, h.HeroId.ToString(), " - ", h.ShortName, ".json"));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, string.Concat("Error obteniendo fichero json de héroe: ", h.HeroId.ToString()));
+                    }
+                }
+                ret = 1;
+            }
+            return ret;
+        }
+
+        public async static Task<int> GetRemoteFile(string url, string path)
+        {
+            int ret = 0;
+            using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+            {
+                using (Stream s = await client.GetStreamAsync(url))
+                {
+
+                    FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
+                    s.CopyTo(fs);
+                    await fs.FlushAsync();
+                    fs.Close();
+                    ret = 1;
+                }
+            }
+            return ret;
         }
 
         public void Initialize(Dota2AppDbContext context)
@@ -674,32 +868,44 @@ namespace DataAccessLibrary.Data
                 InitializeDotaPatchVersion(context);
                 InitializeAppConfiguration(context);
 
-                PatchVersion cpv = (from a in context.PatchVersions select a)
-                    .Where(x => x.Name == AppConfiguration.GetValue("CurrentDotaPatchVersion"))
-                    .First();
+                InitializeV7_29(context);
 
-                string pathJson = Path.GetFullPath(string.Concat("..\\DataModel\\json\\", AppConfiguration.GetValue("CurrentDotaPatchVersion")));
-                InitializeAbilities(pathJson, context, cpv);
-                InitializeHeroes(pathJson, context, cpv);
-                InitializeItems(pathJson, context, cpv);
-                //InitializeMatches(pathJson, context, cpv);
 
-                pathJson = Path.GetFullPath(string.Concat("..\\DataModel\\json\\", "7.27d"));
-                cpv = (from a in context.PatchVersions select a)
-                    .Where(x => x.Name == "7.27d")
-                    .First();
-                InitializeAbilities(pathJson, context, cpv);
-                InitializeHeroes(pathJson, context, cpv);
-                InitializeItems(pathJson, context, cpv);
-
-                //context.SaveChanges();
             }
             catch (Exception e)
             {
 
             }
         }
+        public void InitializeV7_29(Dota2AppDbContext context)
+        {
 
-        
+        }
+
+        public void InitializeV7_28(Dota2AppDbContext context)
+        {
+            PatchVersion cpv = (from a in context.PatchVersions select a)
+                    .Where(x => x.Name == "7.28a")
+                    .First();
+
+            string pathJson = Path.GetFullPath(string.Concat("..\\DataModel\\json\\7.28a"));
+            InitializeAbilities(pathJson, context, cpv);
+            InitializeHeroes(pathJson, context, cpv);
+            InitializeItems(pathJson, context, cpv);
+            //InitializeMatches(pathJson, context, cpv);
+        }
+
+        public void InitializeV7_27(Dota2AppDbContext context)
+        {
+            PatchVersion cpv = (from a in context.PatchVersions select a)
+                .Where(x => x.Name == "7.27d")
+                .First();
+            string pathJson = Path.GetFullPath(string.Concat("..\\DataModel\\json\\7.27d"));
+
+            InitializeAbilities(pathJson, context, cpv);
+            InitializeHeroes(pathJson, context, cpv);
+            InitializeItems(pathJson, context, cpv);
+            //InitializeMatches(pathJson, context, cpv);
+        }
     }
 }

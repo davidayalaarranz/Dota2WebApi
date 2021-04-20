@@ -3,9 +3,9 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DataModel.ValveJsonModel.GetItems
+namespace DataModel.ValveJsonModel.Current.GetItems
 {
-    public class GetItemsJsonConverter : JsonConverter<HeroItem>
+    public class ItemlistJsonConverter : JsonConverter<HeroItem>
     {
         public override HeroItem Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -34,7 +34,7 @@ namespace DataModel.ValveJsonModel.GetItems
                         case "name":
                             hi.Name = reader.GetString();
                             break;
-                        case "localized_name":
+                        case "name_loc":
                             hi.LocalizedName = reader.GetString();
                             break;
                         case "cost":

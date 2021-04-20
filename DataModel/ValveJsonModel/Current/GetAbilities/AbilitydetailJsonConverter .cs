@@ -3,23 +3,23 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DataModel.ValveJsonModel.GetHeroes
+namespace DataModel.ValveJsonModel.Current.GetAbilities
 {
-    public class GetHeroesJsonConverter : JsonConverter<Hero>
+    public class AbilitydetailJsonConverter : JsonConverter<Ability>
     {
-        public override Hero Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Ability Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
                 throw new JsonException();
             }
 
-            Hero h = new Hero();
+            Ability a = new Ability();
             while (reader.Read())
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
                 {
-                    return h;
+                    return a;
                 }
 
                 if (reader.TokenType == JsonTokenType.PropertyName)
@@ -29,23 +29,26 @@ namespace DataModel.ValveJsonModel.GetHeroes
                     switch (propertyName)
                     {
                         case "id":
-                            h.HeroId = reader.GetInt64();
+                            a.AbilityId = reader.GetInt64();
                             break;
                         case "name":
-                            h.Name = reader.GetString();
+                            a.Name = reader.GetString();
                             break;
-                        case "localized_name":
-                            h.LocalizedName = reader.GetString();
+                        case "name_loc":
+                            a.LocalizedName = reader.GetString();
+                            break;
+                        case "neutral_item_tier":
+                            a.NeutralItemTier = reader.GetInt32();
                             break;
                         default:
                             break;
                     }
                 }
             }
-            return h;
+            return a;
         }
 
-        public override void Write(Utf8JsonWriter writer, Hero value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, Ability value, JsonSerializerOptions options)
         {
             throw new NotImplementedException(); //This will never be called since CanWrite is false
         }

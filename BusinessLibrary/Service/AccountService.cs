@@ -36,7 +36,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -50,7 +50,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -65,7 +65,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -127,7 +127,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -147,7 +147,7 @@ namespace BusinessLibrary.Service
             }
             catch(Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -190,7 +190,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -203,7 +203,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -228,7 +228,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
