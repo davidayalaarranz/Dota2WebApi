@@ -47,7 +47,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
         public async Task<Build> CreateBuild(Build build, ApplicationUser user)
@@ -78,7 +78,7 @@ namespace BusinessLibrary.Service
             }
             catch(Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -161,7 +161,7 @@ namespace BusinessLibrary.Service
             }
             catch(Exception e)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -180,7 +180,7 @@ namespace BusinessLibrary.Service
             }
             catch (Exception e)
             {
-                throw e;
+                throw;
             }
         }
 

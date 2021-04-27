@@ -45,6 +45,24 @@ namespace DataModel.Model
 
     public class Ability
     {
+        public Ability()
+        {
+            Heroes = new List<HeroAbility>();
+            BuildUpgrades = new List<BuildAbilityUpgrade>();
+            MatchPlayerUpgrades = new List<MatchPlayerAbilityUpgrade>();
+
+            NotesList = new List<AbilityNote>();
+            CastRangeList = new List<AbilityCastRange>();
+            CastPointList = new List<AbilityCastPoint>();
+            ChannelTimeList = new List<AbilityChannelTime>();
+            CooldownList = new List<AbilityCooldown>();
+            DurationList = new List<AbilityDuration>();
+            DamageList = new List<AbilityDamage>();
+            ManaCostList = new List<AbilityManaCost>();
+            GoldCostList = new List<AbilityGoldCost>();
+            SpecialValues = new List<AbilitySpecialValue>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long AbilityId { get; set; }
@@ -67,9 +85,7 @@ namespace DataModel.Model
                 return string.Concat(Name, "_lg.png");
             }
         }
-        // Añadido en 7.29
-        public int NeutralItemTier { get; set; }
-
+        
         public List<HeroAbility> Heroes { get; set; }
         public List<BuildAbilityUpgrade> BuildUpgrades { get; set; }
         public List<MatchPlayerAbilityUpgrade> MatchPlayerUpgrades { get; set; }
@@ -124,5 +140,98 @@ namespace DataModel.Model
                 return 0;
             }
         }
+
+        // Añadido en 7.29
+        public decimal NeutralItemTier { get; set; }
+        public string ShardDescription { get; set; }
+        public string ScepterDescription { get; set; }
+        public int Dispellable { get; set; }
+        public bool IsItem { get; set; }
+        public bool HasShardUpgrade { get; set; }
+        public bool IsGrantedByShard { get; set; }
+        public int ItemInitialCharges { get; set; }
+
+        //[NotMapped]
+        public List<AbilityNote> NotesList { get; set; }
+        public List<AbilityCastRange> CastRangeList { get; set; }
+        public List<AbilityCastPoint> CastPointList { get; set; }
+        public List<AbilityChannelTime> ChannelTimeList { get; set; }
+        public List<AbilityCooldown> CooldownList { get; set; }
+        public List<AbilityDuration> DurationList { get; set; }
+        public List<AbilityDamage> DamageList { get; set; }
+        public List<AbilityManaCost> ManaCostList { get; set; }
+        public List<AbilityGoldCost> GoldCostList { get; set; }
+        public List<AbilitySpecialValue> SpecialValues { get; set; }
+        //special_values
+    }
+
+    public class AbilitySpecialValue
+    {
+        public AbilitySpecialValue()
+        {
+            ValuesFloat = new List<AbilitySpecialFloatValue>();
+            ValuesInt = new List<AbilitySpecialIntValue>();
+        }
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public List<AbilitySpecialFloatValue> ValuesFloat { get; set; }
+        public List<AbilitySpecialIntValue> ValuesInt { get; set; }
+        public bool IsPercentage { get; set; }
+        public string Heading { get; set; }
+    }
+
+    public abstract class ArrayValue<T>
+    {
+        public ArrayValue(T value)
+        {
+            Value = value;
+        }
+
+        public long Id { get; set; }
+        public T Value { get; set; }
+    }
+
+    public class AbilityNote : ArrayValue<String> {
+        public AbilityNote(String value) : base(value) { }
+    }
+    public class AbilityCastRange : ArrayValue<int>
+    {
+        public AbilityCastRange(int value) : base(value) { }
+    }
+    public class AbilityCastPoint : ArrayValue<decimal>
+    {
+        public AbilityCastPoint(decimal value) : base(value) { }
+    }
+    public class AbilityChannelTime : ArrayValue<decimal>
+    {
+        public AbilityChannelTime(decimal value) : base(value) { }
+    }
+    public class AbilityCooldown : ArrayValue<decimal>
+    {
+        public AbilityCooldown(decimal value) : base(value) { }
+    }
+    public class AbilityDuration : ArrayValue<decimal>
+    {
+        public AbilityDuration(decimal value) : base(value) { }
+    }
+    public class AbilityDamage : ArrayValue<int>
+    {
+        public AbilityDamage(int value) : base(value) { }
+    }
+    public class AbilityManaCost : ArrayValue<int>
+    {
+        public AbilityManaCost(int value) : base(value) { }
+    }
+    public class AbilityGoldCost : ArrayValue<int>
+    {
+        public AbilityGoldCost(int value) : base(value) { }
+    }
+    public class AbilitySpecialFloatValue : ArrayValue<decimal>
+    {
+        public AbilitySpecialFloatValue(decimal value) : base(value) { }
+    }
+    public class AbilitySpecialIntValue : ArrayValue<int>
+    {
+        public AbilitySpecialIntValue(int value) : base(value) { }
     }
 }

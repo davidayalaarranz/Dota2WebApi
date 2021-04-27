@@ -83,5 +83,9 @@ namespace DataModel.Model
         public int AttackAcquisitionRange { get; set; }
 
         public int AbilityTalentStart { get; set; }
+
+
+        // v7.29
+        public int ProjectileSpeed { get; set; }
     }
 }

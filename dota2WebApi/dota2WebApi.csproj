@@ -5,6 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="ValveFiles\7.27d\abilities.json" />
+    <Content Remove="ValveFiles\7.27d\GetHeroes en_US.json" />
+    <Content Remove="ValveFiles\7.27d\GetItems en_US.json" />
+    <Content Remove="ValveFiles\7.27d\GetMatchDetails.json" />
+    <Content Remove="ValveFiles\7.27d\GetMatchHistory.json" />
+    <Content Remove="ValveFiles\7.27d\heroes.json" />
+    <Content Remove="ValveFiles\7.27d\heropickerdata.json" />
+    <Content Remove="ValveFiles\7.27d\items.json" />
+    <Content Remove="ValveFiles\7.28a\abilities.json" />
+    <Content Remove="ValveFiles\7.28a\GetHeroes en_US.json" />
+    <Content Remove="ValveFiles\7.28a\GetItems en_US.json" />
+    <Content Remove="ValveFiles\7.28a\GetMatchDetails.json" />
+    <Content Remove="ValveFiles\7.28a\GetMatchHistory.json" />
+    <Content Remove="ValveFiles\7.28a\heroes.json" />
+    <Content Remove="ValveFiles\7.28a\heropickerdata.json" />
+    <Content Remove="ValveFiles\7.28a\items.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5" />
@@ -25,8 +44,25 @@
 
   <ItemGroup>
     <Folder Include="images\" />
-    <Folder Include="ValveFiles\" />
-    <Folder Include="ValveFiles\7.29a\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ValveFiles\7.27d\abilities.json" />
+    <None Include="ValveFiles\7.27d\GetHeroes en_US.json" />
+    <None Include="ValveFiles\7.27d\GetItems en_US.json" />
+    <None Include="ValveFiles\7.27d\GetMatchDetails.json" />
+    <None Include="ValveFiles\7.27d\GetMatchHistory.json" />
+    <None Include="ValveFiles\7.27d\heroes.json" />
+    <None Include="ValveFiles\7.27d\heropickerdata.json" />
+    <None Include="ValveFiles\7.27d\items.json" />
+    <None Include="ValveFiles\7.28a\abilities.json" />
+    <None Include="ValveFiles\7.28a\GetHeroes en_US.json" />
+    <None Include="ValveFiles\7.28a\GetItems en_US.json" />
+    <None Include="ValveFiles\7.28a\GetMatchDetails.json" />
+    <None Include="ValveFiles\7.28a\GetMatchHistory.json" />
+    <None Include="ValveFiles\7.28a\heroes.json" />
+    <None Include="ValveFiles\7.28a\heropickerdata.json" />
+    <None Include="ValveFiles\7.28a\items.json" />
   </ItemGroup>
 
 

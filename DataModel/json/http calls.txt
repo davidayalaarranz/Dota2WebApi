@@ -23,7 +23,7 @@ http://api.steampowered.com/IEconDOTA2_205790/GetRarities/v1
 205790 = test
 570 = production
 
-
+D:\SteamLibrary\steamapps\common\dota 2 beta\game\dota\scripts\npc
 
 https://www.dota2.com/datafeed/herolist?language=english
 https://www.dota2.com/datafeed/herodata?language=english&hero_id=73

@@ -62,6 +62,11 @@ namespace DataAccessLibrary.Data
             /// Ability
             builder.Entity<Ability>()
                 .HasKey(k => new { k.AbilityId, k.PatchVersionId });
+            //builder.Entity<Ability>()
+            //.Property(e => e.NotesList)
+            //.HasConversion(
+            //    v => string.Join(',', v),
+            //    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
             /// HeroItem
             builder.Entity<HeroItem>()
