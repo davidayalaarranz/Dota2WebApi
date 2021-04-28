@@ -1,20 +1,21 @@
-﻿using DataModel.Model;
+﻿using DataAccessLibrary.ValveJsonModel.Current.GetAbilities;
+using DataModel.Model;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
+namespace DataAccessLibrary.ValveJsonModel.Current.GetItems
 {
-    public class AbilitySpecialValueJsonConverter : JsonConverter<AbilitySpecialValue>
+    public class HeroItemSpecialValueJsonConverter : JsonConverter<HeroItemSpecialValue>
     {
-        public override AbilitySpecialValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override HeroItemSpecialValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
                 throw new JsonException();
             }
 
-            AbilitySpecialValue asv = new AbilitySpecialValue();
+            HeroItemSpecialValue asv = new HeroItemSpecialValue();
             while (reader.Read())
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
@@ -55,7 +56,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                             asv.IsPercentage = reader.GetBoolean();
                             break;
                         case "heading_loc":
-                            
+
                             break;
                         default:
                             break;
@@ -65,26 +66,27 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
             return asv;
         }
 
-        public override void Write(Utf8JsonWriter writer, AbilitySpecialValue value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, HeroItemSpecialValue value, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
     }
-    public class AbilitydetailJsonConverter : JsonConverter<Ability>
+
+    public class ItemDetailJsonConverter : JsonConverter<HeroItem>
     {
-        public override Ability Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override HeroItem Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
                 throw new JsonException();
             }
 
-            Ability a = new Ability();
+            HeroItem hi = new HeroItem();
             while (reader.Read())
             {
                 if (reader.TokenType == JsonTokenType.EndObject)
                 {
-                    return a;
+                    return hi;
                 }
 
                 if (reader.TokenType == JsonTokenType.PropertyName)
@@ -94,19 +96,19 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                     switch (propertyName)
                     {
                         case "id":
-                            a.AbilityId = reader.GetInt64();
+                            hi.HeroItemId = reader.GetInt64();
                             break;
                         case "name":
-                            a.Name = reader.GetString();
+                            hi.Name = reader.GetString();
                             break;
                         case "name_loc":
-                            a.LocalizedName = reader.GetString();
+                            hi.LocalizedName = reader.GetString();
                             break;
                         case "desc_loc":
-                            a.Description = reader.GetString();
+                            hi.Description = reader.GetString();
                             break;
                         case "lore_loc":
-                            a.Lore = reader.GetString();
+                            hi.Lore = reader.GetString();
                             break;
                         case "notes_loc":
                             if (reader.TokenType == JsonTokenType.StartArray)
@@ -116,7 +118,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.NotesList.Add(new AbilityNote(reader.GetString()));
+                                    hi.NotesList.Add(new HeroItemNote(reader.GetString()));
                                 }
                             }
                             break;
@@ -128,7 +130,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.CastRangeList.Add(new AbilityCastRange(reader.GetInt32()));
+                                    hi.CastRangeList.Add(new HeroItemCastRange(reader.GetInt32()));
                                 }
                             }
                             break;
@@ -140,7 +142,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.CastPointList.Add(new AbilityCastPoint(reader.GetDecimal()));
+                                    hi.CastPointList.Add(new HeroItemCastPoint(reader.GetDecimal()));
                                 }
                             }
                             break;
@@ -152,7 +154,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.ChannelTimeList.Add(new AbilityChannelTime(reader.GetDecimal()));
+                                    hi.ChannelTimeList.Add(new HeroItemChannelTime(reader.GetDecimal()));
                                 }
                             }
                             break;
@@ -164,7 +166,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.CooldownList.Add(new AbilityCooldown(reader.GetDecimal()));
+                                    hi.CooldownList.Add(new HeroItemCooldown(reader.GetDecimal()));
                                 }
                             }
                             break;
@@ -176,7 +178,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.DurationList.Add(new AbilityDuration(reader.GetDecimal()));
+                                    hi.DurationList.Add(new HeroItemDuration(reader.GetDecimal()));
                                 }
                             }
                             break;
@@ -188,7 +190,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.DamageList.Add(new AbilityDamage(reader.GetInt32()));
+                                    hi.DamageList.Add(new HeroItemDamage(reader.GetInt32()));
                                 }
                             }
                             break;
@@ -200,7 +202,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.ManaCostList.Add(new AbilityManaCost(reader.GetInt32()));
+                                    hi.ManaCostList.Add(new HeroItemManaCost(reader.GetInt32()));
                                 }
                             }
                             break;
@@ -212,12 +214,12 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
                                     // La siguiente línea se añadió porque en la 7.27d, el array de componentes podía contener false en lugar de un string.
                                     if (reader.TokenType == JsonTokenType.False) continue;
-                                    a.GoldCostList.Add(new AbilityGoldCost(reader.GetInt32()));
+                                    hi.GoldCostList.Add(new HeroItemGoldCost(reader.GetInt32()));
                                 }
                             }
-                            break; 
+                            break;
                         case "special_values":
-                           
+
                             if (reader.TokenType == JsonTokenType.StartArray)
                             {
                                 while (reader.Read())
@@ -227,86 +229,20 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                     {
                                         ReadCommentHandling = JsonCommentHandling.Skip
                                     };
-                                    serializeOptions.Converters.Add(new AbilitySpecialValueJsonConverter());
-                                    a.SpecialValues.Add(JsonSerializer.Deserialize<AbilitySpecialValue>(ref reader, serializeOptions));
+                                    serializeOptions.Converters.Add(new HeroItemSpecialValueJsonConverter());
+                                    hi.SpecialValues.Add(JsonSerializer.Deserialize<HeroItemSpecialValue>(ref reader, serializeOptions));
                                 }
                             }
                             break;
-                        case "shard_loc":
-                            a.ShardDescription = reader.GetString();
-                            break;
-                        case "scepter_loc":
-                            a.ScepterDescription = reader.GetString();
-                            break;
-                        //case "type":
-                        //    a.GetType = reader.GetInt32();
-                        //    break;
-                        //case "behavior":
-                        //    a.Behavior = reader.GetString();
-                        //    break;
-                        //case "target_team":
-                        //    a.TargetTeam = reader.GetInt32();
-                        //    break;
-                        //case "target_type":
-                        //    a.TargetType = reader.GetInt32();
-                        //    break;
-                        //case "flags":
-                        //    a.Flags = reader.GetInt32();
-                        //    break;
-                        case "damage":
-                            a.Damage = reader.GetInt32().ToString();
-                            break;
-                        //case "immunity":
-                        //    a.Immunity = reader.GetInt32();
-                        //    break;
-                        case "dispellable":
-                            a.Dispellable = reader.GetInt32();
-                            break;
-                        case "max_level":
-                            a.MaxLevel = reader.GetInt32();
-                            break;
-                        case "is_item":
-                            a.IsItem = reader.GetBoolean();
-                            break;
-                        case "ability_has_scepter":
-                            a.HasScepterUpgrade = reader.GetBoolean();
-                            break;
-                        case "ability_has_shard":
-                            a.HasShardUpgrade = reader.GetBoolean();
-                            break;
-                        case "ability_is_granted_by_scepter":
-                            a.IsGrantedByScepter = reader.GetBoolean();
-                            break;
-                        case "ability_is_granted_by_shard":
-                            a.IsGrantedByShard = reader.GetBoolean();
-                            break;
-                        //case "item_cost":
-                        //    a.ItemCost = reader.GetInt32();
-                        //    break;
-                        case "item_initial_charges":
-                            a.ItemInitialCharges = reader.GetInt32();
-                            break;
-                        case "item_neutral_tier":
-                            a.NeutralItemTier = reader.GetDecimal();
-                            break;
-                        //case "item_stock_max":
-                        //    a.ItemStockMax = reader.GetInt32();
-                        //    break;
-                        //case "item_stock_item":
-                        //    a.ItemStockItem = reader.GetInt32();
-                        //    break;
-                        //case "item_quality":
-                        //    a.ItemQuality = reader.GetInt32();
-                        //    break;
                         default:
                             break;
                     }
                 }
             }
-            return a;
+            return hi;
         }
 
-        public override void Write(Utf8JsonWriter writer, Ability value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, HeroItem value, JsonSerializerOptions options)
         {
             throw new NotImplementedException(); //This will never be called since CanWrite is false
         }

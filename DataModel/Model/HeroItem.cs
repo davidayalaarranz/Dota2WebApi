@@ -56,6 +56,18 @@ namespace DataModel.Model
             Notes = string.Empty;
             Lore = string.Empty;
             Attrib = string.Empty;
+
+            // 7.29
+            NotesList = new List<HeroItemNote>();
+            CastRangeList = new List<HeroItemCastRange>();
+            CastPointList = new List<HeroItemCastPoint>();
+            ChannelTimeList = new List<HeroItemChannelTime>();
+            CooldownList = new List<HeroItemCooldown>();
+            DurationList = new List<HeroItemDuration>();
+            DamageList = new List<HeroItemDamage>();
+            ManaCostList = new List<HeroItemManaCost>();
+            GoldCostList = new List<HeroItemGoldCost>();
+            SpecialValues = new List<HeroItemSpecialValue>();
         }
         
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -110,5 +122,64 @@ namespace DataModel.Model
 
         [NotMapped]
         public List<string> ComponentsName { get; set; }
+
+        // Añadido en 7.29
+        public decimal NeutralItemTier { get; set; }
+        public List<HeroItemNote> NotesList { get; set; }
+        public List<HeroItemCastRange> CastRangeList { get; set; }
+        public List<HeroItemCastPoint> CastPointList { get; set; }
+        public List<HeroItemChannelTime> ChannelTimeList { get; set; }
+        public List<HeroItemCooldown> CooldownList { get; set; }
+        public List<HeroItemDuration> DurationList { get; set; }
+        public List<HeroItemDamage> DamageList { get; set; }
+        public List<HeroItemManaCost> ManaCostList { get; set; }
+        public List<HeroItemGoldCost> GoldCostList { get; set; }
+        public List<HeroItemSpecialValue> SpecialValues { get; set; }
+    }
+
+    public class HeroItemSpecialValue : SpecialValue { }
+    public class HeroItemNote : ArrayValue<string>
+    {
+        public HeroItemNote(string value) : base(value) { }
+    }
+    public class HeroItemCastRange : ArrayValue<int>
+    {
+        public HeroItemCastRange(int value) : base(value) { }
+    }
+    public class HeroItemCastPoint : ArrayValue<decimal>
+    {
+        public HeroItemCastPoint(decimal value) : base(value) { }
+    }
+    public class HeroItemChannelTime : ArrayValue<decimal>
+    {
+        public HeroItemChannelTime(decimal value) : base(value) { }
+    }
+    public class HeroItemCooldown : ArrayValue<decimal>
+    {
+        public HeroItemCooldown(decimal value) : base(value) { }
+    }
+    public class HeroItemDuration : ArrayValue<decimal>
+    {
+        public HeroItemDuration(decimal value) : base(value) { }
+    }
+    public class HeroItemDamage : ArrayValue<int>
+    {
+        public HeroItemDamage(int value) : base(value) { }
+    }
+    public class HeroItemManaCost : ArrayValue<int>
+    {
+        public HeroItemManaCost(int value) : base(value) { }
+    }
+    public class HeroItemGoldCost : ArrayValue<int>
+    {
+        public HeroItemGoldCost(int value) : base(value) { }
+    }
+    public class HeroItemSpecialFloatValue : ArrayValue<decimal>
+    {
+        public HeroItemSpecialFloatValue(decimal value) : base(value) { }
+    }
+    public class HeroItemSpecialIntValue : ArrayValue<int>
+    {
+        public HeroItemSpecialIntValue(int value) : base(value) { }
     }
 }

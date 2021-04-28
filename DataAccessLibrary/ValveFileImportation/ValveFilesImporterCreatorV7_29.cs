@@ -1,6 +1,7 @@
 ﻿using DataAccessLibrary.Data;
 using DataAccessLibrary.ValveJsonModel.Current.GetAbilities;
 using DataAccessLibrary.ValveJsonModel.Current.GetHeroes;
+using DataAccessLibrary.ValveJsonModel.Current.GetItems;
 using DataModel.Model;
 using System;
 using System.Collections.Generic;
@@ -114,7 +115,44 @@ namespace DataAccessLibrary.ValveFileImportation
 
         public override void InitializeItems()
         {
-            //throw new NotImplementedException();
+            try
+            {
+                PatchVersion contextCpv = context.PatchVersions.Where(pv => pv.PatchVersionId == cpv.PatchVersionId).ToList()[0];
+                ItemlistResponseModel alrm = null;
+                string pathJsonHeroAbilities = String.Concat(pathJson, "\\itemlist.json");
+                if (File.Exists(pathJsonHeroAbilities))
+                {
+                    string jsonString = File.ReadAllText(pathJsonHeroAbilities);
+                    var serializeOptions = new JsonSerializerOptions
+                    {
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    };
+                    serializeOptions.Converters.Add(new ItemlistJsonConverter());
+                    alrm = JsonSerializer.Deserialize<ItemlistResponseModel>(jsonString, serializeOptions);
+
+                    foreach (HeroItem hi in alrm.result.data.itemabilities)
+                    {
+                        pathJsonHeroAbilities = string.Concat(pathJson, "items\\", hi.HeroItemId, " - ", hi.ShortName, ".json");
+                        jsonString = File.ReadAllText(pathJsonHeroAbilities);
+                        serializeOptions = new JsonSerializerOptions
+                        {
+                            ReadCommentHandling = JsonCommentHandling.Skip
+                        };
+                        serializeOptions.Converters.Add(new ItemDetailJsonConverter());
+                        ItemDetailResponseModel adrm = JsonSerializer.Deserialize<ItemDetailResponseModel>(jsonString, serializeOptions);
+                        if (adrm != null && adrm.result != null && adrm.result.data != null && adrm.result.data.items.Count == 1)
+                        {
+                            adrm.result.data.items[0].PatchVersion = contextCpv;
+                            context.HeroItems.Add(adrm.result.data.items[0]);
+                        }
+                    }
+                }
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
     }
 }

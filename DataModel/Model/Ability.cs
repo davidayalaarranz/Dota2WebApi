@@ -165,20 +165,31 @@ namespace DataModel.Model
         //special_values
     }
 
-    public class AbilitySpecialValue
+    public abstract class SpecialValue
     {
-        public AbilitySpecialValue()
+        public SpecialValue()
         {
-            ValuesFloat = new List<AbilitySpecialFloatValue>();
-            ValuesInt = new List<AbilitySpecialIntValue>();
+            ValuesFloat = new List<SpecialFloatValue>();
+            ValuesInt = new List<SpecialIntValue>();
         }
         public long Id { get; set; }
         public string Name { get; set; }
-        public List<AbilitySpecialFloatValue> ValuesFloat { get; set; }
-        public List<AbilitySpecialIntValue> ValuesInt { get; set; }
+        public List<SpecialFloatValue> ValuesFloat { get; set; }
+        public List<SpecialIntValue> ValuesInt { get; set; }
         public bool IsPercentage { get; set; }
         public string Heading { get; set; }
     }
+
+    public class SpecialFloatValue : ArrayValue<decimal>
+    {
+        public SpecialFloatValue(decimal value) : base(value) { }
+    }
+    public class SpecialIntValue : ArrayValue<int>
+    {
+        public SpecialIntValue(int value) : base(value) { }
+    }
+
+    public class AbilitySpecialValue : SpecialValue { }
 
     public abstract class ArrayValue<T>
     {
@@ -191,8 +202,8 @@ namespace DataModel.Model
         public T Value { get; set; }
     }
 
-    public class AbilityNote : ArrayValue<String> {
-        public AbilityNote(String value) : base(value) { }
+    public class AbilityNote : ArrayValue<string> {
+        public AbilityNote(string value) : base(value) { }
     }
     public class AbilityCastRange : ArrayValue<int>
     {
@@ -226,12 +237,8 @@ namespace DataModel.Model
     {
         public AbilityGoldCost(int value) : base(value) { }
     }
-    public class AbilitySpecialFloatValue : ArrayValue<decimal>
-    {
-        public AbilitySpecialFloatValue(decimal value) : base(value) { }
-    }
-    public class AbilitySpecialIntValue : ArrayValue<int>
-    {
-        public AbilitySpecialIntValue(int value) : base(value) { }
-    }
+
+
+
+    
 }

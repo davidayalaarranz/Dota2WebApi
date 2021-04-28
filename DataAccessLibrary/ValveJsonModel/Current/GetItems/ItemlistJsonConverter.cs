@@ -37,19 +37,8 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetItems
                         case "name_loc":
                             hi.LocalizedName = reader.GetString();
                             break;
-                        case "cost":
-                            hi.Cost = reader.GetInt32();
-                            break;
-                        case "secret_shop":
-                            hi.IsSecretShop = reader.GetInt16() == 1;
-                            break;
-                        case "side_shop":
-                            hi.IsSideShop = reader.GetInt16() == 1;
-                            break;
-                        case "recipe":
-                            hi.IsRecipe = reader.GetInt16() == 1;
-                            break;
-                        default:
+                        case "neutral_item_tier":
+                            hi.NeutralItemTier = reader.GetInt32();
                             break;
                     }
                 }

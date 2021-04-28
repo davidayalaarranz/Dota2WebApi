@@ -307,8 +307,8 @@ namespace DataAccessLibrary.Data
 
             AbstractValveFilesImporterCreator fic = new ValveFilesImporterCreatorV7_29();
             abstractValveFilesImporter fi = fic.FactoryMethod(pathJson, context, cpv);
-            fi.InitializeAbilities();
-            fi.InitializeHeroes();
+            //fi.InitializeAbilities();
+            //fi.InitializeHeroes();
             fi.InitializeItems();
             //InitializeMatches(pathJson, context, cpv);
         }
