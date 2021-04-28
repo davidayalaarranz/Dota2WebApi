@@ -143,9 +143,9 @@ namespace DataModel.Model
     {
         public HeroItemSpecialFloatValue(decimal value) : base(value) { }
     }
-    public class HeroItemSpecialIntValue : SpecialFloatValue
+    public class HeroItemSpecialIntValue : SpecialIntValue
     {
-        public HeroItemSpecialIntValue(decimal value) : base(value) { }
+        public HeroItemSpecialIntValue(int value) : base(value) { }
     }
     public class HeroItemSpecialValue : SpecialValue
     {

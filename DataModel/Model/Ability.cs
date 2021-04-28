@@ -171,9 +171,9 @@ namespace DataModel.Model
     {
         public AbilitySpecialFloatValue(decimal value) : base(value) { }
     }
-    public class AbilitySpecialIntValue : SpecialFloatValue
+    public class AbilitySpecialIntValue : SpecialIntValue
     {
-        public AbilitySpecialIntValue(decimal value) : base(value) { }
+        public AbilitySpecialIntValue(int value) : base(value) { }
     }
     public class AbilitySpecialValue : SpecialValue {
         public new List<AbilitySpecialFloatValue> ValuesFloat { get; set; }
