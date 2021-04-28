@@ -1,4 +1,5 @@
 ﻿using DataModel.Model;
+using DataModel.Model.Common;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -37,7 +38,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                 while (reader.Read())
                                 {
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
-                                    asv.ValuesFloat.Add(new SpecialFloatValue(reader.GetDecimal()));
+                                    asv.ValuesFloat.Add(new AbilitySpecialFloatValue(reader.GetDecimal()));
                                 }
                             }
                             break;
@@ -47,7 +48,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetAbilities
                                 while (reader.Read())
                                 {
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
-                                    asv.ValuesInt.Add(new SpecialIntValue(reader.GetInt32()));
+                                    asv.ValuesInt.Add(new AbilitySpecialIntValue(reader.GetInt32()));
                                 }
                             }
                             break;

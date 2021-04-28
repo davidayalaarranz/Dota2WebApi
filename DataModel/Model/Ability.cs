@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataModel.Model.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -165,43 +166,22 @@ namespace DataModel.Model
         //special_values
     }
 
-    public abstract class SpecialValue
+    #region Clases para almacenar los special_values
+    public class AbilitySpecialFloatValue : SpecialFloatValue 
     {
-        public SpecialValue()
-        {
-            ValuesFloat = new List<SpecialFloatValue>();
-            ValuesInt = new List<SpecialIntValue>();
-        }
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public List<SpecialFloatValue> ValuesFloat { get; set; }
-        public List<SpecialIntValue> ValuesInt { get; set; }
-        public bool IsPercentage { get; set; }
-        public string Heading { get; set; }
+        public AbilitySpecialFloatValue(decimal value) : base(value) { }
     }
-
-    public class SpecialFloatValue : ArrayValue<decimal>
+    public class AbilitySpecialIntValue : SpecialFloatValue
     {
-        public SpecialFloatValue(decimal value) : base(value) { }
+        public AbilitySpecialIntValue(decimal value) : base(value) { }
     }
-    public class SpecialIntValue : ArrayValue<int>
-    {
-        public SpecialIntValue(int value) : base(value) { }
+    public class AbilitySpecialValue : SpecialValue {
+        public new List<AbilitySpecialFloatValue> ValuesFloat { get; set; }
+        public new List<AbilitySpecialIntValue> ValuesInt { get; set; }
     }
+    #endregion
 
-    public class AbilitySpecialValue : SpecialValue { }
-
-    public abstract class ArrayValue<T>
-    {
-        public ArrayValue(T value)
-        {
-            Value = value;
-        }
-
-        public long Id { get; set; }
-        public T Value { get; set; }
-    }
-
+    #region Clases para almacenar arrays de datos
     public class AbilityNote : ArrayValue<string> {
         public AbilityNote(string value) : base(value) { }
     }
@@ -237,8 +217,5 @@ namespace DataModel.Model
     {
         public AbilityGoldCost(int value) : base(value) { }
     }
-
-
-
-    
+    #endregion
 }

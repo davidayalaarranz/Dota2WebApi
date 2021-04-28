@@ -38,7 +38,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetItems
                                 while (reader.Read())
                                 {
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
-                                    asv.ValuesFloat.Add(new SpecialFloatValue(reader.GetDecimal()));
+                                    asv.ValuesFloat.Add(new HeroItemSpecialFloatValue(reader.GetDecimal()));
                                 }
                             }
                             break;
@@ -48,7 +48,7 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetItems
                                 while (reader.Read())
                                 {
                                     if (reader.TokenType == JsonTokenType.EndArray) break;
-                                    asv.ValuesInt.Add(new SpecialIntValue(reader.GetInt32()));
+                                    asv.ValuesInt.Add(new HeroItemSpecialIntValue(reader.GetInt32()));
                                 }
                             }
                             break;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DataModel.Model.Common;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -137,7 +138,28 @@ namespace DataModel.Model
         public List<HeroItemSpecialValue> SpecialValues { get; set; }
     }
 
-    public class HeroItemSpecialValue : SpecialValue { }
+    #region Clases para almacenar los special_values
+    public class HeroItemSpecialFloatValue : SpecialFloatValue
+    {
+        public HeroItemSpecialFloatValue(decimal value) : base(value) { }
+    }
+    public class HeroItemSpecialIntValue : SpecialFloatValue
+    {
+        public HeroItemSpecialIntValue(decimal value) : base(value) { }
+    }
+    public class HeroItemSpecialValue : SpecialValue
+    {
+        public HeroItemSpecialValue()
+        {
+            ValuesFloat = new List<HeroItemSpecialFloatValue>();
+            ValuesInt = new List<HeroItemSpecialIntValue>();
+        }
+        public new List<HeroItemSpecialFloatValue> ValuesFloat { get; set; }
+        public new List<HeroItemSpecialIntValue> ValuesInt { get; set; }
+    }
+    #endregion
+
+    #region Clases para almacenar arrays de datos
     public class HeroItemNote : ArrayValue<string>
     {
         public HeroItemNote(string value) : base(value) { }
@@ -174,12 +196,5 @@ namespace DataModel.Model
     {
         public HeroItemGoldCost(int value) : base(value) { }
     }
-    public class HeroItemSpecialFloatValue : ArrayValue<decimal>
-    {
-        public HeroItemSpecialFloatValue(decimal value) : base(value) { }
-    }
-    public class HeroItemSpecialIntValue : ArrayValue<int>
-    {
-        public HeroItemSpecialIntValue(int value) : base(value) { }
-    }
+    #endregion
 }
