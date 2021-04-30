@@ -72,9 +72,12 @@ namespace DataAccessLibrary.ValveJsonModel.Current.GetHeroes
                         //case "complexity":
                         //    h.PrincipalAttribute = reader.GetInt32();
                         //    break;
-                        //case "attack_capability":
-                        //    h.PrincipalAttribute = reader.GetInt32();
-                        //    break;
+                        case "attack_capability":
+                            int rightClickAttack = reader.GetInt32();
+                            if (rightClickAttack == 1) h.RightClickAttack = "Melee";
+                            else h.RightClickAttack = "Range";
+
+                            break;
                         case "role_levels":
                             if (reader.TokenType == JsonTokenType.StartArray)
                             {

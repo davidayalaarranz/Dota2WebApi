@@ -32,9 +32,10 @@ namespace dota2WebApi.Controllers
                 MatchResponseModel mr = await _matchService.GetMatches();
                 List<Match> lm = mr.Matches.ToList();
                 Object[] mRet = new Object[lm.Count];
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
                 for (var i = 0; i < lm.Count; i++)
                 {
-                    mRet[i] = Transformers.TransformMatch(lm[i]);
+                    mRet[i] = ajt.TransformMatch(lm[i]);
                 }
                 var ret = new
                 {
@@ -57,7 +58,8 @@ namespace dota2WebApi.Controllers
             try
             {
                 Match m = await _matchService.GetMatch(id);
-                return Ok(Transformers.TransformMatch(m));
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
+                return Ok(ajt.TransformMatch(m));
             }
             catch (Exception e)
             {

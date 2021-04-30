@@ -6,9 +6,20 @@ using System.Threading.Tasks;
 
 namespace dota2WebApi.Common
 {
-    public class Transformers
+    public class JsonTransformerV7_28Creator : AbstractJsonTransformerCreator
     {
-        public static Object TransformMatch(Match m)
+        private JsonTransformerV7_28 _instance;
+        public override AbstractJsonTransformer FactoryMethod()
+        {
+            if (_instance == null)
+                _instance = new JsonTransformerV7_28();
+            return _instance;
+        }
+    }
+
+    public class JsonTransformerV7_28 : AbstractJsonTransformer
+    {
+        public override object TransformMatch(Match m)
         {
             if (m == null) return null;
             Object[] mpRet = new Object[m.MatchPlayers.Count];
@@ -41,7 +52,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        public static object TransformMatchPlayerHeroItemUpgrade(MatchPlayerHeroItemUpgrade mphiu)
+        public override object TransformMatchPlayerHeroItemUpgrade(MatchPlayerHeroItemUpgrade mphiu)
         {
             if (mphiu == null) return null;
             var ret = new
@@ -55,7 +66,8 @@ namespace dota2WebApi.Common
             };
             return ret;
         }
-        public static object TransformHeroItem(HeroItem hi)
+
+        public override object TransformHeroItem(HeroItem hi)
         {
             if (hi == null) return null;
             var ret = new
@@ -100,7 +112,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        public static Object TransformHeroAbilityUpgrade(AbilityUpgrade hau)
+        public override object TransformHeroAbilityUpgrade(AbilityUpgrade hau)
         {
             if (hau == null) return null;
             var ret = new
@@ -112,7 +124,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        internal static object TransformBuild(Build build)
+        public override object TransformBuild(Build build)
         {
             if (build == null) return null;
             Object[] buRet = new Object[build.HeroUpgrades.Count];
@@ -131,7 +143,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        public static Object TransformMatchPlayer(MatchPlayer mp)
+        public override object TransformMatchPlayer(MatchPlayer mp)
         {
             if (mp == null) return null;
             Object[] hauRet = new Object[mp.HeroUpgrades.Count];
@@ -173,9 +185,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        
-
-        public static Object TransformPlayer(Player p)
+        public override object TransformPlayer(Player p)
         {
             if (p == null) return null;
             var ret = new
@@ -185,7 +195,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        public static Object TransformHeroAbility(HeroAbility ha)
+        public override object TransformHeroAbility(HeroAbility ha)
         {
             if (ha == null) return null;
 
@@ -222,7 +232,7 @@ namespace dota2WebApi.Common
             return ret;
         }
 
-        public static Object TransformHero(Hero h)
+        public override object TransformHero(Hero h)
         {
             if (h == null) return null;
             

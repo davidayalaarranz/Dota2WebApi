@@ -7,6 +7,6 @@ namespace BusinessLibrary.Service
     public interface IHeroService
     {
         Task<Hero> GetHero(int id);
-        Task<HeroResponseModel> GetHeroes(DataTableParameters p);
+        Task<HeroResponseModel> GetHeroes(DataTableParameters p, PatchVersion pv = null);
     }
 }

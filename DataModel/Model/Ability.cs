@@ -176,6 +176,11 @@ namespace DataModel.Model
         public AbilitySpecialIntValue(int value) : base(value) { }
     }
     public class AbilitySpecialValue : SpecialValue {
+        public AbilitySpecialValue()
+        {
+            ValuesFloat = new List<AbilitySpecialFloatValue>();
+            ValuesInt = new List<AbilitySpecialIntValue>();
+        }
         public new List<AbilitySpecialFloatValue> ValuesFloat { get; set; }
         public new List<AbilitySpecialIntValue> ValuesInt { get; set; }
     }

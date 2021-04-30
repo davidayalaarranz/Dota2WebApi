@@ -307,9 +307,9 @@ namespace DataAccessLibrary.Data
 
             AbstractValveFilesImporterCreator fic = new ValveFilesImporterCreatorV7_29();
             abstractValveFilesImporter fi = fic.FactoryMethod(pathJson, context, cpv);
-            //fi.InitializeAbilities();
-            //fi.InitializeHeroes();
-            fi.InitializeItems();
+            fi.InitializeAbilities();
+            fi.InitializeHeroes();
+            //fi.InitializeItems();
             //InitializeMatches(pathJson, context, cpv);
         }
 
@@ -355,7 +355,6 @@ namespace DataAccessLibrary.Data
             fi.InitializeAbilities();
             fi.InitializeHeroes();
             fi.InitializeItems();
-
             //InitializeMatches(pathJson, context, cpv);
         }
 
@@ -365,17 +364,17 @@ namespace DataAccessLibrary.Data
             using (Dota2AppDbContext db = new Dota2AppDbContext())
             {
 
-                string itemImageFolderPath = "images/7.28a/items/";
+                string itemImageFolderPath = "images/7.29b/items/";
                 if (!Directory.Exists(itemImageFolderPath))
                 {
                     Directory.CreateDirectory(itemImageFolderPath);
                 }
-                string heroImageFolderPath = "images/7.28a/heroes/";
+                string heroImageFolderPath = "images/7.29b/heroes/";
                 if (!Directory.Exists(heroImageFolderPath))
                 {
                     Directory.CreateDirectory(heroImageFolderPath);
                 }
-                string abilityImageFolderPath = "images/7.28a/abilities/";
+                string abilityImageFolderPath = "images/7.29b/abilities/";
                 if (!Directory.Exists(abilityImageFolderPath))
                 {
                     Directory.CreateDirectory(abilityImageFolderPath);
@@ -384,15 +383,16 @@ namespace DataAccessLibrary.Data
                 using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
                 {
                     List<HeroItem> lhi = (from a in db.HeroItems
-                                          select a).ToList();
+                                          select a)
+                                          .Where(hi => hi.PatchVersionId == 4).ToList();
                     foreach (HeroItem hi in lhi)
                     {
                         try
                         {
-                            using (Stream s = await client.GetStreamAsync(string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/items/", hi.ImagePath)))
+                            using (Stream s = await client.GetStreamAsync(string.Concat("https://cdn.cloudflare.steamstatic.com/apps/dota2/images/items/", hi.ShortName, "_lg.png")))
                             {
 
-                                FileStream fs = new FileStream(string.Concat(itemImageFolderPath, hi.ImagePath), FileMode.OpenOrCreate);
+                                FileStream fs = new FileStream(string.Concat(itemImageFolderPath, hi.ShortName, "_lg.png"), FileMode.OpenOrCreate);
                                 s.CopyTo(fs);
                                 await fs.FlushAsync();
                                 fs.Close();
@@ -405,7 +405,7 @@ namespace DataAccessLibrary.Data
                     }
 
                     List<Hero> lh = (from a in db.Heroes
-                                     select a).ToList();
+                                     select a).Where(hi => hi.PatchVersionId == 4).ToList();
                     foreach (Hero h in lh)
                     {
                         try
@@ -441,7 +441,7 @@ namespace DataAccessLibrary.Data
                     }
 
                     List<Ability> la = (from a in db.Abilities
-                                        select a).ToList();
+                                        select a).Where(hi => hi.PatchVersionId == 4).ToList();
                     foreach (Ability a in la)
                     {
                         try

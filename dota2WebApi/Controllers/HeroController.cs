@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using BusinessLibrary.Model;
 using BusinessLibrary.Service;
+using DataAccessLibrary.Data;
 using DataModel.Model;
 using DataModel.Model.JsonConverters;
 using dota2WebApi.Common;
@@ -19,9 +20,11 @@ namespace dota2WebApi.Controllers
     public class HeroController : ControllerBase
     {
         private readonly IHeroService _heroService;
-        public HeroController(IHeroService heroService)
+        private readonly IPatchVersionService _patchVersionService;
+        public HeroController(IHeroService heroService, IPatchVersionService patchVersionService)
         {
             _heroService = heroService;
+            _patchVersionService = patchVersionService;
         }
 
         // GET: api/<HeroItemController>
@@ -39,15 +42,21 @@ namespace dota2WebApi.Controllers
         //}
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] DataTableParameters parameters)
+        public async Task<IActionResult> Get([FromQuery] DataTableParameters parameters, string patchVersion)
         {
             try
             {
-                HeroResponseModel hrm = await _heroService.GetHeroes(parameters);
+                PatchVersion pv;
+                if (string.IsNullOrEmpty(patchVersion))
+                    pv = AppConfiguration.CurrentDotaPatchVersion;
+                else
+                    pv = await _patchVersionService.GetPatchVersion(patchVersion);
+                HeroResponseModel hrm = await _heroService.GetHeroes(parameters, pv);
                 List<Object> lh = new List<object>();
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
                 foreach (Hero h in hrm.Heroes)
                 {
-                    lh.Add(Transformers.TransformHero(h));
+                    lh.Add(ajt.TransformHero(h));
                 }
 
                 var ret = new
@@ -72,7 +81,8 @@ namespace dota2WebApi.Controllers
             {
                 Hero h = await _heroService.GetHero(id);
                 // Eliminamos los ciclos antes de serializar.
-                var ret = Transformers.TransformHero(h);
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
+                var ret = ajt.TransformHero(h);
                 
                 return Ok(ret);
                 //return Ok(await _heroService.GetHero(id));

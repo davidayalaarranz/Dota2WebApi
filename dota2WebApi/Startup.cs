@@ -40,6 +40,7 @@ namespace dota2WebApi
             services.AddTransient<IUrlService, UrlService>();
             services.AddTransient<IMatchService, MatchService>();
             services.AddTransient<IBuildService, BuildService>();
+            services.AddTransient<IPatchVersionService, PatchVersionService>();
 
             services.AddDbContext<Dota2AppDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Dota2WebApiDbContext"), b => b.MigrationsAssembly("Dota2WebApi")));

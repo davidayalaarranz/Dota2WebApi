@@ -38,9 +38,10 @@ namespace dota2WebApi.Controllers
                 BuildResponseModel brm = await _buildService.GetBuilds(user, parameters);
                 List<Build> lb = brm.Builds.ToList();
                 Object[] mRet = new Object[lb.Count];
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
                 for (var i = 0; i < lb.Count; i++)
                 {
-                    mRet[i] = Transformers.TransformBuild(lb[i]);
+                    mRet[i] = ajt.TransformBuild(lb[i]);
                 }
                 var ret = new
                 {
@@ -62,7 +63,8 @@ namespace dota2WebApi.Controllers
             {
                 //ApplicationUser user = await _accountService.GetUser(idUser.Value);
                 Build b = await _buildService.GetBuild(id);
-                return Ok(Transformers.TransformBuild(b));
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
+                return Ok(ajt.TransformBuild(b));
             }
             return Unauthorized();
         }
@@ -78,8 +80,8 @@ namespace dota2WebApi.Controllers
                 {
                     ApplicationUser user = await _accountService.GetUser(idUser.Value);
                     Build bNew = await _buildService.CreateBuild(build, user);
-
-                    return CreatedAtAction("Get", new { id = bNew.BuildId }, Transformers.TransformBuild(bNew));
+                    AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
+                    return CreatedAtAction("Get", new { id = bNew.BuildId }, ajt.TransformBuild(bNew));
                 }
                 return Unauthorized();
             }
@@ -100,8 +102,8 @@ namespace dota2WebApi.Controllers
                 {
                     ApplicationUser user = await _accountService.GetUser(idUser.Value);
                     Build bNew = await _buildService.UpdateBuild(build);
-
-                    return Ok(Transformers.TransformBuild(bNew));
+                    AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
+                    return Ok(ajt.TransformBuild(bNew));
                 }
                 return Unauthorized();
             }

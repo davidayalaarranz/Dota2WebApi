@@ -30,7 +30,8 @@ namespace dota2WebApi.Controllers
             try
             {
                 HeroItemResponseModel hirm = await _heroItemService.GetHeroItems();
-                var result = hirm.HeroItems.Select(hi => Transformers.TransformHeroItem(hi));
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
+                var result = hirm.HeroItems.Select(hi => ajt.TransformHeroItem(hi));
                 var ret = new
                 {
                     HeroItems = result,
@@ -51,7 +52,8 @@ namespace dota2WebApi.Controllers
             {
                 //Log.Information("Get customer executing");
                 HeroItemResponseModel hirm = await _heroItemService.GetHeroItems(parameters);
-                var result = hirm.HeroItems.Select(hi => Transformers.TransformHeroItem(hi));
+                AbstractJsonTransformer ajt = AbstractJsonTransformerCreator.CreateTransformer();
+                var result = hirm.HeroItems.Select(hi => ajt.TransformHeroItem(hi));
                 var ret = new
                 {
                     HeroItems = result,

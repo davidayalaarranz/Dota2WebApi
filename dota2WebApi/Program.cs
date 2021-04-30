@@ -65,9 +65,9 @@ namespace dota2WebApi
                 {
                     var context = services.GetRequiredService<Dota2AppDbContext>();
                     
-                    DbInitialize dbi = new DbInitialize();
-                    DbInitialize.Initialize(context);
-                    //DbInitialize.GetDotaImages();
+                    //DbInitialize dbi = new DbInitialize();
+                    //DbInitialize.Initialize(context);
+                    //await DbInitialize.GetDotaImages();
                     
                 }
                 catch (Exception ex)

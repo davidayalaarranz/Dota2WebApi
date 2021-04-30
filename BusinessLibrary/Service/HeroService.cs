@@ -59,16 +59,22 @@ namespace BusinessLibrary.Service
             }
         }
 
-        public async Task<HeroResponseModel> GetHeroes(DataTableParameters param)
+        public async Task<HeroResponseModel> GetHeroes(DataTableParameters param, PatchVersion pv = null)
         {
+            if (pv == null) pv = AppConfiguration.CurrentDotaPatchVersion;
             HeroResponseModel crm = new HeroResponseModel();
             using (Dota2AppDbContext db = new Dota2AppDbContext())
             {
-                crm.nHeroes = (from a in db.Heroes.AsNoTracking() select a).Count();
+                crm.nHeroes = (from a in db.Heroes.AsNoTracking() select a)
+                    .Where(h => h.PatchVersionId == pv.PatchVersionId)
+                    .Where(a => a.RightClickAttack != null)
+                    .Count();
                 param.length = param.length < 1 ? crm.nHeroes : param.length;
 
                 var query = (from a in db.Heroes.AsNoTracking()
-                            select a).Where(a => a.RightClickAttack != null);
+                            select a)
+                            .Where(h => h.PatchVersionId == pv.PatchVersionId)
+                            .Where(a => a.RightClickAttack != null);
                 if (!String.IsNullOrWhiteSpace(param.filter))
                     query = query.Where(x => x.Name.Contains(param.filter) || x.LocalizedName.Contains(param.filter));
                 crm.nHeroes = query.Count();
